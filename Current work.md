@@ -1,4 +1,4 @@
-<h1>Point sur la situation :</h1>
+<h2>Point sur la situation :</h2>
 
 <h3>Chaos reader :</h3>
 
