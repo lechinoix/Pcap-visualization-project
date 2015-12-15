@@ -1,0 +1,61 @@
+﻿Projet Visualisation de traces réseau
+- But : Appliquer notre logiciel offline sur une trace (.pcap) pour créer une visualisation permettant de trouver des informations utiles à la découverte de vulnérabilité 
+ 
+1. 3 phases :
+  1. Dissection du réseau pour obtenir des métadonnées -> pcap puis XML
+  2. Analyse de ces données pour trouver des infos
+  3. Visualisation des données intelligentes 
+
+2. Questions
+
+1. Quelles informations peut-on déterminer de cette manière ? -> Spectre large
+  o Données sensibles : en clair, chiffrement faible, password hashes
+  o Informations sur les protocoles utilisés (insecure one ?)
+  o Mauvaise utilisation du réseau/des protocoles
+  o Defaut de configuration
+  o Architecture du réseau
+
+2. Comment générer une trace réseau de test ? Quel protocole analyser ? 
+  o Trace toute faite dispo sur internet / Génération perso
+  o IP, ICMP, Protocoles cryptées (analyse de la taille)
+ 
+3. Quel format pour la trace réseau ? 
+  o XML généré à partir d’un .pcap. 
+
+4. Quelles technologie pour analyser des paquets ? 
+  o Techno Python pour manipuler des XML 
+
+5. Comment analyser ces traces ?
+  o Reconstruire les flux à partir des fragments (Scalpel, tcpxtract, tcpflow, Scapy)
+  o Extraire informations de ces flux (ettercap, NSM Console)
+  o Préparer la visualisation (ggobi rumint)
+
+6. Etat de l’art : Quelles logiciels, à quoi servent-ils, y-a-t-il un outil orienté pentest ?
+
+7. Comment visualiser l’analyse ? 
+
+  o Analyse par services et par port : Représentation paralléle
+  o Analyse spatio-temporelle : Ip source/Dest : carte
+  o Caractérisation volumétrique
+  o Paquets chiffrés : Diagramme de chaleur
+
+8. Quelle technologie pour l’IHM ?
+  o PyQT4 (ou PySide, Camelot, Boa (wxPython), PyGTK)
+
+
+1er  séance : Définition du problème, Recherche bibliographique
+2e séance : Lecture d’articles, recherche bibliographique, redéfinition du problème
+
+Soutenance : Présentation générale, spécification (paliers techniques), état de l’art -> Solutions choisies
+
+Taff : 
+1. créer un repository public pour le soft -> Nico
+2. Etat de l’art : Visu, reconsitution des packets, analyse des paquets
+Solutions retenues
+3. Bibliographie : Lister les documents supports de nos travaux 
+4. Etablir précisément ce qu’on va chercher
+Etablir des paliers technique par rapport aux espérance
+5. Faire les slides -> mercredi
+Reflexion : A partir d’une vue
+	
+
