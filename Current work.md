@@ -22,7 +22,7 @@
 <li>Offre une API de plugin</li>
 </ul>
 
-<h3>Bilan :<h3>
+<h3>Bilan :</h3>
 
 <ul>
 <li>Les fonctions de filtrage et de follow tcp stream sont pas trop compliquées à refaire, on peut donc essayer de faire une interface graphique d'ettercap ou d'un outil de pentest qui permette de mieux visualiser le trafic en l'interfaçant directement avec des outils de pentest.</li>
