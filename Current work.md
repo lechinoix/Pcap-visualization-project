@@ -12,4 +12,4 @@
 
 <h4>Read me for wireshark plugin :</h4>
 
-  <a href="https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=doc/README.plugins>Plugin Wireshark</a>
+  <a href="https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=doc/README.plugins">Plugin Wireshark</a>
