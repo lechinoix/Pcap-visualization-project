@@ -2,7 +2,15 @@
 
 A pcap visualization tool for pentesters, discovering configuration faults, usefull information and other incredible stuff
 
-## Point sur la situation :
+## Les techniques de visualisation :
+
+- **Graphe de réseau :** permet de représenter les noeuds et les échanges réalisés
+- **Vue circulaire :** permet de délimiter une zone interne et une zone externe
+- **Graphe parallèle :** pourrait permettre de voir globalement quels services sont utilisés par quelles machines
+- **Carte proportionnelle :** permet de caractériser les machines sur le réseau facilement
+- **Carte de chaleur :** pourrait être superposées à un autre graphe pour surligner certaines informations
+
+## Les outils de Pentest :
 
 ### Chaos reader :
 
@@ -26,7 +34,7 @@ A pcap visualization tool for pentesters, discovering configuration faults, usef
 
 ### Bilan :
 
-- Les fonctions de filtrage et de follow tcp stream sont pas trop compliquées à refaire, on peut donc essayer de faire une interface graphique d'ettercap ou d'un outil de pentest qui permette de mieux visualiser le trafic en l'interfaçant directement avec des outils de pentest.
+- Les fonctions de filtrage et de follow tcp stream sont simples à refaire, on peut donc essayer de faire une interface graphique d'ettercap ou d'un outil de pentest qui permette de mieux visualiser le trafic en l'interfaçant directement avec des outils de pentest.
 - Il faudrait faire en sorte d'être à peu près sûr de ne pas offrir un service qui soit trop pauvre en fonctionnalités et qui donc serait inutile, ou de trouver une fonctionalité particulière qui fasse en sorte que l'outil soit intéressant en soi.
 - Tant qu'on a pas d'idée géniale sur quelque chose à mettre en valeur via une visualisation, on peut rester sur l'idée de l'interfaçage graphique de la trame réseau avec des outils de pentest
 
