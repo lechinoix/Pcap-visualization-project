@@ -41,4 +41,4 @@ Utilisation de ces données pour réaliser une IHM et un visualisation interacti
 
 On compte réduire la trace en la réorganisant sous forme de sessions et en rendant possible une exploration de la trace en largeur et en profondeur.
 
-Solutions de visu : visu en réseau de communication avec filtres associés, possibilité de zoom in sur une communication intéressante ou un participant.
+Solutions de visu : visu en réseau de communication avec filtres associés (timeline, protocole, host address), possibilité de zoom in sur une partie intéressante ou un participant et de faire tourner des analyses sur une portion de la capture.
