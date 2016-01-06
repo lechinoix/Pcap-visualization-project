@@ -39,6 +39,6 @@ Utilisation de ces données pour réaliser une IHM et un visualisation interacti
 
 ### Eléments de réponse :
 
-On compte réduire la trace en la réorganisant sous forme de sessions et en faisant disparaître l'énorme redondance des détails de la communication (flags, cractéristiques des trames individuelles).
+On compte réduire la trace en la réorganisant sous forme de sessions et en rendant possible une exploration de la trace en largeur et en profondeur.
 
 Solutions de visu : visu en réseau de communication avec filtres associés, possibilité de zoom in sur une communication intéressante ou un participant.
