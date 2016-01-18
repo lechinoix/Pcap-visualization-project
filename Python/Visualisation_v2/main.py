@@ -13,9 +13,11 @@ def main():
     
     pcapFile = options.getargs()
     res = parser.parse(pcapFile)
-    with open('data.json', 'w') as outfile:
-        json.dump(res, outfile)
-    json.dumps(res)
+    with open('trame.json', 'w') as outfile:
+        json.dump(res[0]["trames"], outfile)
+    with open('session.json', 'w') as outfile:
+        json.dump(res[0]["sessions"], outfile)
+   #json.dumps(res[0]["trames"])
     #print json2
 
 
