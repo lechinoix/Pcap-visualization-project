@@ -11,21 +11,23 @@ $(document).ready(function(){
 
 // Network View
 
+var select, svg, diameter, tree, diagonal, nodes, node, link, links;
+
 function displayNetwork(){
 	
-	var diameter = 960;
+	diameter = 960;
 
-	var tree = d3.layout.tree()
+	tree = d3.layout.tree()
 	    .size([360, diameter / 2 - 120])
 	    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
-	var diagonal = d3.svg.diagonal.radial()
+	diagonal = d3.svg.diagonal.radial()
 	    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
 
-    var select = d3.select("#view-wrapper");
+    select = d3.select("#view-wrapper");
     select.selectAll("svg").remove();
-	var svg = select.append("svg")
+	svg = select.append("svg")
 	    .attr("width", diameter)
 	    .attr("height", diameter - 150)
 	  .append("g")
@@ -34,16 +36,16 @@ function displayNetwork(){
 	d3.json("data/flare.json", function(error, root) {
 	  if (error) throw error;
 
-	  var nodes = tree.nodes(root),
-	      links = tree.links(nodes);
+	  nodes = tree.nodes(root),
+	  links = tree.links(nodes);
 
-	  var link = svg.selectAll(".link")
+	  link = svg.selectAll(".link")
 	      .data(links)
 	    .enter().append("path")
 	      .attr("class", "link")
 	      .attr("d", diagonal);
 
-	  var node = svg.selectAll(".node")
+	  node = svg.selectAll(".node")
 	      .data(nodes)
 	    .enter().append("g")
 	      .attr("class", "node")
@@ -65,14 +67,14 @@ function displayNetwork(){
 
 // Parallel View
 
-var line, dragging, x, y;
+var line, dragging, x, y, foreground, background, axis, margin, height, width, g;
 
 function displayParallel(){
 
 	// Define the window width, height and margins
-	var margin = {top: 30, right: 10, bottom: 10, left: 10},
-	    width = 960 - margin.left - margin.right,
-	    height = 500 - margin.top - margin.bottom;
+	margin = {top: 30, right: 10, bottom: 10, left: 10},
+	width = 960 - margin.left - margin.right,
+	height = 500 - margin.top - margin.bottom;
 
 	// Init axis
 	x = d3.scale.ordinal().rangePoints([0, width], 1)
@@ -83,14 +85,12 @@ function displayParallel(){
 	// Init 
 	line = d3.svg.line()
 	
-	var axis = d3.svg.axis().orient("left"),
-	    background,
-	    foreground;
+	axis = d3.svg.axis().orient("left"),	    
 
 	// Create the window and the g container
-	var select = d3.select("#view-wrapper");
+	select = d3.select("#view-wrapper");
 	select.selectAll("svg").remove();
-	var svg = select.append("svg")
+	svg = select.append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
@@ -139,7 +139,7 @@ function displayParallel(){
 	      .attr("d", path);
 
 	  // Add a group element for each dimension.
-	  var g = svg.selectAll(".dimension")
+	  g = svg.selectAll(".dimension")
 	      .data(dimensions)
 	    .enter().append("g")
 	      .attr("class", "dimension")
