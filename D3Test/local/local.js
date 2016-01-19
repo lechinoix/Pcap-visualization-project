@@ -1,11 +1,15 @@
 $(document).ready(function(){
 
-	// $('#left-tab a').click(function (e) {
-	//   e.preventDefault()
-	//   $('this').tab('show')
-	// })
 
-	var line, dragging, x, y;
+
+/* ============================
+
+	Views with D3.js
+
+===============================*/
+
+
+// Network View
 
 function displayNetwork(){
 	
@@ -59,6 +63,10 @@ function displayNetwork(){
 
 }
 
+// Parallel View
+
+var line, dragging, x, y;
+
 function displayParallel(){
 
 	// Define the window width, height and margins
@@ -90,7 +98,7 @@ function displayParallel(){
 
 
 	// Calling the data
-	d3.csv("data/test_pcap.csv", function(error, pcap) {
+	d3.json("data/session.json", function(error, pcap) {
 
 
 		// Slice data for more visiblity
@@ -100,13 +108,13 @@ function displayParallel(){
 	  x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
 
 		// Create ordinals dimensions
-	    if(d.substr(0,4).toLowerCase() == "sour" || d.substr(0,4).toLowerCase() == "dest" || d.substr(0,4).toLowerCase() == "prot" ){
+	    if(d.toLowerCase() != "id" && d.substr(0,4).toLowerCase() != "port" ){
 	    	return y[d] = d3.scale.ordinal()
 	    	.domain(d3.values(cars).map(function(obj){return obj[d];}))
 	    	.rangePoints([height, 0]);
 
 	    // Create linear dimensions
-	    }else if(d.substr(0,3).toLowerCase() != "no." && d.substr(0,4).toLowerCase() != "time" && d.substr(0,4).toLowerCase() != "info"){
+	     }else if(d.substr(0,3).toLowerCase() != "id"){
 			return y[d] = d3.scale.linear()
 	          .domain(d3.extent(cars, function(p) { return +p[d]; }))
 	          .range([height, 0]);
@@ -212,6 +220,13 @@ function brush() {
   });
 }
 
+/* ============================
+
+	Display the datas and graphs
+
+===============================*/
+
+
 $("#parallel-btn").on("click", function(e){
 	displayParallel();
 })
@@ -219,5 +234,7 @@ $("#parallel-btn").on("click", function(e){
 $("#network-btn").on("click", function(e){
 	displayNetwork();
 })
+
+displayParallel();
 
 })
