@@ -1,9 +1,35 @@
 {% extends "base.html" %}
 
+{% block navbar %}
+				<li><a href="" data-toggle="modal" data-target="#upModal">New Pcap</a></li>
+	            <li class="dropdown">
+	              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Options<span class="caret"></span></a>
+	              <ul class="dropdown-menu">
+	                <li><a href="#">Action</a></li>
+	                <li><a href="#">Another action</a></li>
+	                <li><a href="#">Something else here</a></li>
+	                <!-- <li role="separator" class="divider"></li>
+	                <li class="dropdown-header">Nav header</li>
+	                <li><a href="#">Separated link</a></li>
+	                <li><a href="#">One more separated link</a></li> -->
+	              </ul>
+	            </li>
+	            <li><a href="">About</a></li>
+{% endblock %}
+
 {% block content %}
 
 		<div id="content" class="container-fluid">
 			<div class="row">
+				{% with messages = get_flashed_messages(category_filter="error") %}
+		        {% if messages %}
+		            <ul>
+		            {% for m in messages %}
+		                <li>{{ m }}</li>
+		            {% endfor %}
+		            </ul>
+		        {% endif %}
+		        {% endwith %}
 				<div class="left-bar col-md-3">
 					<ul id="left-tab" class="nav nav-tabs" role="tablist">
 						<li role="presentation" class="active"><a href="#hosts" aria-controls="hosts" role="tab" data-toggle="tab">Hosts</a></li>
@@ -66,5 +92,30 @@
 			</div>
 		</div>
 		
+{% endblock %}
+
+{% block footer %}
+		<!-- Modal -->
+		<div class="modal fade" id="upModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Upload new Pcap file</h4>
+		      </div>
+		      <div class="modal-body">
+		        <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+		        	<div class="form-group">
+					    <label for="upPcap">Upload your Pcap</label>
+					    <input type="file" id="upPcap" name="upPcap">
+					    <p class="help-block">It will be parsed and then displayed.</p>
+					</div>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        	<button type="submit" class="btn btn-primary">Save changes</button>
+		        </form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 {% endblock %}
 		

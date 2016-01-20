@@ -1,9 +1,12 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
-from utils import parser, options
+from utils.parser import parse
+from dbus.decorators import method
+from flask.helpers import flash
+import os
 
 app = Flask(__name__)
 app.config.from_object('config.default')
@@ -12,13 +15,28 @@ app.config.from_object('config.default')
 def index():
     return render_template('index.html')
 
-@app.route('/upload')
+@app.route('/upload', methods=["GET", "POST"])
 def upload():
-    pcap = request.files['pcap']
-    nom_fichier = pcap.filename
-    if nom_fichier[-5:] != '.html':
-        nom_fichier = secure_filename(nom_fichier)
-        pcap.save('./uploads/' + nom_fichier)
+    if request.method == "POST":
+        tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
+        request.files['upPcap'].save(tmpPath)
+        pcap = parse(tmpPath)
+        os.remove(tmpPath)
+        
+        sessions = open('uploads/sessions.json', 'w')
+        print(pcap['sessions'])
+        sessions.write(pcap['sessions'])
+        sessions.close()
+         
+        trames = open('uploads/trames.json', 'w')
+        trames.write(pcap['trames'])
+        trames.close()
+         
+#             flash(u"Impossible to download ", "error")
+#             print("error")
+         
+        return redirect(url_for('index'))
+    
 
 
 @app.errorhandler(404)
