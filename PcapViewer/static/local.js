@@ -33,7 +33,7 @@ function displayNetwork(){
 	  .append("g")
 	    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
-	d3.json("static/flare.json", function(error, root) {
+	d3.json("static/parsed/flare.json", function(error, root) {
 	  if (error) throw error;
 
 	  nodes = tree.nodes(root),
@@ -98,7 +98,7 @@ function displayParallel(){
 
 
 	// Calling the data
-	d3.json("static/session.json", function(error, pcap) {
+	d3.json("static/parsed/sessions.json", function(error, pcap) {
 
 
 		// Slice data for more visiblity

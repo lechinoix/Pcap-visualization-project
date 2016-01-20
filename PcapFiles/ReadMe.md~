@@ -1,0 +1,8 @@
+### Our Pcap database
+
+Pcaps for testing. Progressive size of company network dumps.
+
+- Extracted from : ftp://ftp.bro-ids.org/enterprise-traces/hdr-traces05/
+- Original format : .dump.anon
+- Desired format : .pcap
+- Converted with wireshark command line tool text2pcap : text2pcap -d inputFile.dump.anon outputFile.pcap

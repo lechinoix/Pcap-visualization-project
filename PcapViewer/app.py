@@ -7,6 +7,7 @@ from utils.parser import parse
 from dbus.decorators import method
 from flask.helpers import flash
 import os
+import json
 
 app = Flask(__name__)
 app.config.from_object('config.default')
@@ -18,29 +19,28 @@ def index():
 @app.route('/upload', methods=["GET", "POST"])
 def upload():
     if request.method == "POST":
-        tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
-        request.files['upPcap'].save(tmpPath)
-        pcap = parse(tmpPath)
-        os.remove(tmpPath)
+        try:
+            tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
+            request.files['upPcap'].save(tmpPath)
+            pcap = parse(tmpPath)
+            os.remove(tmpPath)
+    
+            with open('static/parsed/sessions.json', 'w') as sessions:
+                json.dump(pcap['sessions'], sessions)
+             
+            with open('static/parsed/trames.json', 'w') as trames:
+                json.dump(pcap['trames'], trames)
         
-        sessions = open('uploads/sessions.json', 'w')
-        print(pcap['sessions'])
-        sessions.write(pcap['sessions'])
-        sessions.close()
-         
-        trames = open('uploads/trames.json', 'w')
-        trames.write(pcap['trames'])
-        trames.close()
-         
-#             flash(u"Impossible to download ", "error")
-#             print("error")
+        except:
+            flash(u"Impossible to download ", "error")
+            print("error")
          
         return redirect(url_for('index'))
-    
+
 
 
 @app.errorhandler(404)
-def ma_page_404(error):
+def page_404(error):
     return render_template("404.html"), 404
 
 if __name__ == '__main__':
