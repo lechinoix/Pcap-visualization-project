@@ -1,46 +1,81 @@
 # Pcap-visualization-project
 
-A pcap visualization tool for pentesters, discovering configuration faults, usefull information and other incredible stuff
 
-## Les techniques de visualisation :
+Web based pcap visualisation tool, using a **Flask** server to parse a pcap with **scapy** and store it in a postgresql database and a web-browser interface to display datas with **D3.js**.
 
-- **Graphe de réseau :** permet de représenter les noeuds et les échanges réalisés
-- **Vue circulaire :** permet de délimiter une zone interne et une zone externe
-- **Graphe parallèle :** pourrait permettre de voir globalement quels services sont utilisés par quelles machines
-- **Carte proportionnelle :** permet de caractériser les machines sur le réseau facilement
-- **Carte de chaleur :** pourrait être superposées à un autre graphe pour surligner certaines informations
-
-## Les outils de Pentest :
-
-### Chaos reader :
+It will be possible to target a part of a pcap thanks to filters (on hosts, services, time...), and then processing analysis on reconstructed pcap with classic pentest tools like **Ettercap** or **ChaosReader**.
 
 
-- Ce qu'il y a de visuel dans des pcap : tout ce qui est images, on peut en faire la reconstruction
-- Les pages web, c'est pareil on peut les reconstruire
+## Getting started
 
-### Wireshark :
+### Installation
+
+Clone project from https://github.com/lechinoix/Pcap-visualization-project.git
+
+You need to have python 2.7 or later and to download Flask (http://flask.pocoo.org/docs/0.10/installation/)
+
+You also need to install Psycopg2 and postgresql
+
+```sudo apt-get install postgresql-9.4 ```
+
+```sudo apt-get install python-psycopg2```
+
+To create database and init program, type in a shell :
+
+```python /path/to/PcapViewer/init.py '<name_postgresql_user>' ```
+
+Then run :
+
+```python /path/to/PcapViewer/app.py ```
+
+Then, you can access the app from a browser such as Chrome or Firefox at http://localhost:5000/
+
+### Start a new visualisation
+
+Go to the Pcap Files menu, then click on add new pcap. Choose your pcap file and upload it. Wait for the file to be processed and then select it in the Pcap list.
+
+### How can you use the tool ?
+
+Start looking at the treemap visu, and find the most importants nodes in the network. You can remove uninteresting nodes by clicking on a close button of their square. 
+
+Look more closely at those, with the network visualization of its communications with other hosts. This view could be a tree with the node on top and then ramifications with the communications by protocol to different users. Big users could be written bigger.
+
+This could also be seen on the parallel view that gives and idea about what the network looks like globally. You could reload the tool with only certain users, and only certain services, or remove one of those in the sidebar.
+
+There will be an analysis button at the bottom of this bar to run analysis on the current selection.
+
+Unsecure protocols will be highlighted by default, and it will be possible to follow TCP stream on chosen clear sessions to see if he can get informations. This feature will be displayed on a right bar or under the graph, we'll see.
+
+### How data will be processed ?
+
+Each packet will be scanned and we will extract information from it. A postgresql database will be created on these infos. The structure is detailed in (schema.json)[schema.json]
+
+We think about processing data in background while displaying the current content of the database. We will need to launch another thread to process the data in background, or to regularly call an update function in AJAX to refresh the content. We don't know yet if it can be done on the Flask test server or if we will have to had a new techno above it.
 
 
-- Meilleur interfaçage pour une vue pentesters des trames plutôt que la vue "liste" de wireshark
-- Problème : ne doit pas réduire les possibilités par rapport à wireshark, si il faut reforger le pcap chaque fois que l'on veut faire une opération dessus (filtrage, follow stream...) l'outil est inutile
-- Il faut quand même pouvoir appliquer des filtres et suivre des flux, ou sinon modifier l'interface de wireshark directement pour profiter des outils qu'il offre sans en perdre les fonctionnalités
+## The tools we used :
 
-### Ettercap :
+### Python tools
 
+**Flask :** A micro web-framework python based that offers minimal services like templating and routing.
 
-- Propose des outils orientés pentest actif (rejeu, mitm...) et passif (détection d'OS, récupération de mdp...)
-- Offre une API de plugin
+**Scapy :** A python library to manipulate packets and pcap files.
 
+### Web tools
 
-### Bilan :
+**D3.js :** A data visualisation library which permits svg creation along a provided data.
 
-- Les fonctions de filtrage et de follow tcp stream sont simples à refaire, on peut donc essayer de faire une interface graphique d'ettercap ou d'un outil de pentest qui permette de mieux visualiser le trafic en l'interfaçant directement avec des outils de pentest.
-- Il faudrait faire en sorte d'être à peu près sûr de ne pas offrir un service qui soit trop pauvre en fonctionnalités et qui donc serait inutile, ou de trouver une fonctionalité particulière qui fasse en sorte que l'outil soit intéressant en soi.
-- Tant qu'on a pas d'idée géniale sur quelque chose à mettre en valeur via une visualisation, on peut rester sur l'idée de l'interfaçage graphique de la trame réseau avec des outils de pentest
+**Boostrap :** Web framework to ensure scalability of the application and precreated useful components.
+
+### Pentest tools
+
+**Chaos reader :** Usefull to reconstruct files or images. 
+
+**Ettercap :** Can process a pcap to catch passwords, detect OS and other passive analysis. Offers an API that we need to interface with our python program.
 
 <br><hr><br>
 
-###### Some interesting docs about wireshark visu projects :
+#### Some interesting docs about wireshark visu projects :
 
 *A wireshark plugin coded during a google summer code :* [Wireviz](https://www.wireshark.org/lists/wireshark-dev/201107/msg00218.html)
 
