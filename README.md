@@ -14,16 +14,6 @@ Clone project from https://github.com/lechinoix/Pcap-visualization-project.git
 
 You need to have python 2.7 or later and to download Flask (http://flask.pocoo.org/docs/0.10/installation/)
 
-You also need to install Psycopg2 and postgresql
-
-```sudo apt-get install postgresql-9.4 ```
-
-```sudo apt-get install python-psycopg2```
-
-To create database and init program, type in a shell :
-
-```python /path/to/PcapViewer/init.py '<name_postgresql_user>' ```
-
 Then run :
 
 ```python /path/to/PcapViewer/app.py ```
