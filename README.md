@@ -55,7 +55,7 @@ We think about processing data in background while displaying the current conten
 
 **D3.js :** A data visualisation library which permits svg creation along a provided data.
 
-**Boostrap :** Web framework to ensure scalability of the application and precreated useful components.
+**Bootstrap :** Web framework to ensure scalability of the application and precreated useful components.
 
 ### Pentest tools
 
