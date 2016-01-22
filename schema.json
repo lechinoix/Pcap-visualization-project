@@ -1,0 +1,67 @@
+{
+	"Packets":
+	[
+		{
+			"id":1,
+			"hostSrc":"127.0.0.1",
+			"hostDest":"192.168.0.1",
+			"portSrc":8000,
+			"portDest":80,
+			"data":"Lorem ipsum",
+			"protocol":"TCP",
+			"timestamp":"2016-01-04 11:06:55",
+			"id_session":1
+		}
+	],
+	
+	"Session":
+	[
+		{
+			"id":1,
+			"id_packets":[1]
+		}
+	],
+	
+	"Users":
+	[
+		{
+			"id":1,
+			"address":"127.0.0.1",
+			"exchanged":
+			{
+				"HTTP":
+				{
+					"volumeIn":253,
+					"volumeOut":650,
+					"nbIn":56,
+					"nbOut":88
+				},
+				"SMB":
+				{
+					"volumeIn":8565,
+					"volumeOut":22512,
+					"nbIn":126,
+					"nbOut":197
+				}
+			}
+		}
+	],
+
+	"Stats":
+	{
+		"timeToProcess":87,
+		"Packets":
+		{
+			"TCP":
+			{
+				"number":850,
+				"volume":15034
+			},
+			"UDP":
+			{
+				"number":153,
+				"volume":5421
+			}
+		}
+	}
+}
