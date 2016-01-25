@@ -39,7 +39,7 @@ Unsecure protocols will be highlighted by default, and it will be possible to fo
 
 ### How data will be processed ?
 
-Each packet will be scanned and we will extract information from it. A postgresql database will be created on these infos. The structure is detailed in (schema.json)[schema.json]
+Each packet will be scanned and we will extract information from it. A postgresql database will be created on these infos. The structure is detailed in schema.json
 
 We think about processing data in background while displaying the current content of the database. We will need to launch another thread to process the data in background, or to regularly call an update function in AJAX to refresh the content. We don't know yet if it can be done on the Flask test server or if we will have to had a new techno above it.
 
