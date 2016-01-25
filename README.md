@@ -18,15 +18,19 @@ Then you need to set up the database.
 
 First, check that you installed postgresql.
 
-```$ which psql
-/usr/bin/psql```
+```
+$ which psql
+/usr/bin/psql
+```
 
 Then create a new user and a database.
 
-```$ sudo -u postgres createuser -Pd username
+```
+$ sudo -u postgres createuser -Pd username
 Enter password for new role: 
 Enter it again:
-$ createdb -U username --locale=en_US.utf-8 -E utf-8 -O username PcapViewer -T template0```
+$ createdb -U username --locale=en_US.utf-8 -E utf-8 -O username PcapViewer -T template0
+```
 
 Install psycopg2 and Flask-Alchemy
 
@@ -35,14 +39,18 @@ $ pip install Flask-SQLAlchemy```
 
 Go to PcapVierwer/config/default.py and change the database URI :
 
-```SQLALCHEMY_DATABASE_URI = 'postgresql://username:password@localhost/PcapViewer'```
+```
+SQLALCHEMY_DATABASE_URI = 'postgresql://username:password@localhost/PcapViewer'
+```
 
 Then, initialize the database with :
 
-```$ cd path/to/PcapViewer
+```
+$ cd path/to/PcapViewer
 $ python
 >>> from database import init_db
->>> init_db()```
+>>> init_db()
+```
 
 Ready to go !
 
