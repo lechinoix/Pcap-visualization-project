@@ -34,8 +34,10 @@ $ createdb -U username --locale=en_US.utf-8 -E utf-8 -O username PcapViewer -T t
 
 Install psycopg2 and Flask-Alchemy
 
-```$ pip install -U psycopg2
-$ pip install Flask-SQLAlchemy```
+```
+$ pip install -U psycopg2
+$ pip install Flask-SQLAlchemy
+```
 
 Go to PcapVierwer/config/default.py and change the database URI :
 
@@ -56,7 +58,9 @@ Ready to go !
 
 To start the application run :
 
-```$ python /path/to/PcapViewer/app.py ```
+```
+$ python /path/to/PcapViewer/app.py 
+```
 
 Then, you can access it from a browser such as Chrome or Firefox at http://localhost:5000/
 
