@@ -13,8 +13,12 @@ app = Flask(__name__)
 app.config.from_object('config.default')
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def index(pcap = ''):
+    return render_template('index.html', pcap=pcap)
+
+# @app.route('/list')
+# def listPcap():
+#     return render_template('list.html')
 
 @app.route('/upload', methods=["GET", "POST"])
 def upload():
