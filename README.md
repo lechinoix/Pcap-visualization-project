@@ -14,11 +14,43 @@ Clone project from https://github.com/lechinoix/Pcap-visualization-project.git
 
 You need to have python 2.7 or later and to download Flask (http://flask.pocoo.org/docs/0.10/installation/)
 
-Then run :
+Then you need to set up the database.
 
-```python /path/to/PcapViewer/app.py ```
+First, check that you installed postgresql.
 
-Then, you can access the app from a browser such as Chrome or Firefox at http://localhost:5000/
+```$ which psql
+/usr/bin/psql```
+
+Then create a new user and a database.
+
+```$ sudo -u postgres createuser -Pd username
+Enter password for new role: 
+Enter it again:
+$ createdb -U username --locale=en_US.utf-8 -E utf-8 -O username PcapViewer -T template0```
+
+Install psycopg2 and Flask-Alchemy
+
+```$ pip install -U psycopg2
+$ pip install Flask-SQLAlchemy```
+
+Go to PcapVierwer/config/default.py and change the database URI :
+
+```SQLALCHEMY_DATABASE_URI = 'postgresql://username:password@localhost/PcapViewer'```
+
+Then, initialize the database with :
+
+```$ cd path/to/PcapViewer
+$ python
+>>> from database import init_db
+>>> init_db()```
+
+Ready to go !
+
+To start the application run :
+
+```$ python /path/to/PcapViewer/app.py ```
+
+Then, you can access it from a browser such as Chrome or Firefox at http://localhost:5000/
 
 ### Start a new visualisation
 
