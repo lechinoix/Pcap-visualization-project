@@ -1,2 +1,0 @@
-FORMS += \
-    frame.ui
