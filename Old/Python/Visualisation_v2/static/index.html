@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Network Visualization Tool (NVT)</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script>    
+    $(function() {
+        var tabs = $( "#tabs" ).tabs({
+            heightStyle: "fill"
+        });
+        
+        $("#tabs").css("height", $(window).height()-20);
+        
+        $("body").on("resize", function() {
+            tabs.tabs("refresh");
+        });
+        
+        $("iframe").css("height", $(window).height()-75 );
+    });
+    </script>
+</head>
+<body>
+
+<h2>Network Visualization Tool (NVT) v0.2</h2>
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-0">Home</a></li>
+        <li><a href="#tabs-1">Protocol Usage</a></li>
+        <li><a href="#tabs-2">Destination by Source</a></li>
+        <li><a href="#tabs-3">Traffic by Destination</a></li>
+        <li><a href="#tabs-4">Traffic over Time</a></li>
+    </ul>
+    
+    <div id="tabs-0" class="tab">
+       <iframe src="tab-0.html" frameborder="0" width="100%"></iframe>
+    </div>
+
+    <div id="tabs-1" class="tab">
+        <iframe src="tab-1.html" frameborder="0" width="100%"></iframe>
+    </div>
+
+    <div id="tabs-2" class="tab">
+        <iframe src="tab-2.html" frameborder="0" width="100%"></iframe>
+    </div>
+    
+    <div id="tabs-3" class="tab">
+        <iframe src="tab-3.html" frameborder="0" width="100%"></iframe>
+    </div>
+    
+    <div id="tabs-4" class="tab">
+        <iframe src="tab-4.html" frameborder="0" width="100%"></iframe>
+    </div>
+
+</div>
+</body>
+</html>
