@@ -267,7 +267,7 @@ $("form#upload-form").on('submit', function(e){
 	e.preventDefault();
 
 	$('.status-container').html('Upload and Process to parse pcap');
-	$('progress').style('display', 'inline-block');
+	$('progress').css('display', 'inline-block');
 	
     var formData = new FormData();
     formData.append("files", $(this)[0][0].files[0])
@@ -293,6 +293,7 @@ $("form#upload-form").on('submit', function(e){
     uploadRequest.done(function(response){
     	if('success' in response){
     		$('.status-container').html(response['success']);
+    		location.reload();
     	}else{
     		$('.status-container').html('An error occured');
     	}
