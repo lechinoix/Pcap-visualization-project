@@ -19,15 +19,15 @@ def main():
     t1 = time.clock() - ti
     print "----------------------"
     print "Parsing time :" + str(t1)
-    with open('dev/trame.json', 'w') as outfile:
-        json.dump(res["trames"], outfile)
-    #print res["trames"][0:15]
-    with open('dev/session.json', 'w') as outfile:
-        json.dump(res["sessions"], outfile)
-    with open('dev/user.json', 'w') as outfile:
-        json.dump(res["user"], outfile)
-    print "----------------------"
-    print "Writing time : " + str(time.clock() - t1)        
+    # with open('dev/trame.json', 'w') as outfile:
+    #     json.dump(res["trames"], outfile)
+    # #print res["trames"][0:15]
+    # with open('dev/session.json', 'w') as outfile:
+    #     json.dump(res["sessions"], outfile)
+    # with open('dev/user.json', 'w') as outfile:
+    #     json.dump(res["user"], outfile)
+    # print "----------------------"
+    # print "Writing time : " + str(time.clock() - t1)        
     print "Total time : " + str(time.clock() - ti)
    #json.dumps(res[0]["trames"])
     #print json2

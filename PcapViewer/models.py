@@ -13,7 +13,7 @@ class Packet(Base):
     protocol = Column(String(80))
     data = Column(JSON)
     timestamp = Column(DateTime)
-    session_id = Column(Integer, ForeignKey('Session.id'))
+    sessionId = Column(Integer, ForeignKey('Session.id'))
     session =  relationship('Session', backref=backref('posts', lazy='dynamic'))
     
     def __init__(self, hostSrc, hostDest, portSrc, portDest, protocol, data={}, timestamp=None, session=None):
@@ -74,4 +74,4 @@ class Stat(Base):
         self.comment = comment
         
     def __repr__(self):
-        return '<Stat %s>' % (self.name)
+        return '<Stat %s : %s>' % (self.name,self.value)
