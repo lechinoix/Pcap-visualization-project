@@ -2,53 +2,47 @@ from scapy.all import *
 from datetime import datetime
 import json
 import sys
-from netaddr import IPNetwork, IPAddress
+#from netaddr import IPNetwork, IPAddress
 
 def onlyascii (text):
     #if ord(char) < 48 or ord(char) > 127 : return '.'
     #else: return char
      return ''.join([i if ord(i) < 128 else '.' for i in text])
 
-def in_network(ip,network = "192.168.0.0/16"):
 
-    if IPAddress(ip) in IPNetwork(network):
-        return True
-    else:
-        return False
-
-def get_protocol(ip):
+def get_protocol(pkt):
     protocol = "Autre"
-    if ip.haslayer(TCP):
-        if ip[TCP].dport == 7 or ip[TCP].sport == 7:
+    if pkt.haslayer(TCP):
+        if pkt[TCP].dport == 7 or pkt[TCP].sport == 7:
             protocol = "ICMP"
-        elif ip[TCP].dport == 80 or ip[TCP].sport == 80:
+        elif pkt[TCP].dport == 80 or pkt[TCP].sport == 80:
             protocol = "HTTP"
-        elif ip[TCP].dport == 443 or ip[TCP].sport == 443:
+        elif pkt[TCP].dport == 443 or pkt[TCP].sport == 443:
             protocol = "HTTPS"                
-        elif ip[TCP].dport == 445 or ip[TCP].sport == 445:
+        elif pkt[TCP].dport == 445 or pkt[TCP].sport == 445:
             protocol = "SMB"
-        elif ip[TCP].dport == 21 or ip[TCP].sport == 21:
+        elif pkt[TCP].dport == 21 or pkt[TCP].sport == 21:
             protocol = "FTP"
-        elif ip[TCP].dport == 22 or ip[TCP].sport == 22:
+        elif pkt[TCP].dport == 22 or pkt[TCP].sport == 22:
             protocol = "SSH"
-        elif ip[TCP].dport == 25 or ip[TCP].sport == 25:
+        elif pkt[TCP].dport == 25 or pkt[TCP].sport == 25:
             protocol = "SMTP"
-        elif ip[TCP].dport == 88 or ip[TCP].sport == 88:
+        elif pkt[TCP].dport == 88 or pkt[TCP].sport == 88:
             protocol = "KERBEROS"
-        elif ip[TCP].dport == 110 or ip[TCP].sport == 110:
+        elif pkt[TCP].dport == 110 or pkt[TCP].sport == 110:
             protocol = "POP3"
-        elif ip[TCP].dport == 110 or ip[TCP].sport == 110:
+        elif pkt[TCP].dport == 110 or pkt[TCP].sport == 110:
             protocol = "IMAP"
-        elif ip[TCP].dport == 389 or ip[TCP].sport == 110:
+        elif pkt[TCP].dport == 389 or pkt[TCP].sport == 110:
             protocol = "LDAP"
-        elif ip[TCP].dport == 636 or ip[TCP].sport == 110:
+        elif pkt[TCP].dport == 636 or pkt[TCP].sport == 110:
             protocol = "LDAPS"
-    elif ip.haslayer(UDP):
-        if ip[UDP].dport == 53 or ip[UDP].sport == 53:
+    elif pkt.haslayer(UDP):
+        if pkt[UDP].dport == 53 or pkt[UDP].sport == 53:
             protocol = "DNS"
-    elif ip.haslayer(ARP):
+    elif pkt.haslayer(ARP):
         protocol = "ARP"
-    elif ip.haslayer(ICMP):
+    elif pkt.haslayer(ICMP):
         protocol = "ICMP"
     return protocol
 
@@ -60,77 +54,39 @@ def feed_stats(stats, packet):
     else:
         stats[protocol] = 1  
 
-def get_web(filename):
-    webpkts = []
-    result = ""
-    pcap = rdpcap(filename)
-    for packet in pcap:
-        if TCP in packet:
-            if packet.getlayer('TCP').dport == 80 or packet.getlayer('TCP').dport == 8080:
-                webpkts.append(packet)
-    for packet in webpkts:
-        if packet.getlayer('TCP').flags == 24:
-            result = result + '''<div class="ui vertical segment"><p>'''
-            result = result + packet.getlayer('Raw').load.replace(' ','&nbsp;').replace('\n','<br/>')
-            result = result + '''</p></div>'''
-    if result == "":
-        result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
-    result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
-    return result
-
-def get_mail(filename):
-    mailpkts = []
-    result = "<p>"
-    pcap = rdpcap(filename)
-    for packet in pcap:
-        if TCP in packet:
-            if packet.getlayer('TCP').dport == 110 or packet.getlayer('TCP').sport == 110 or packet.getlayer('TCP').dport == 143 or packet.getlayer('TCP').sport == 143 :
-                mailpkts.append(packet)
-    for packet in mailpkts:
-        if packet.getlayer('TCP').flags == 24:
-            result = result + packet.getlayer('Raw').load.replace(' ','&nbsp;').replace('\n','<br/>')
-    if result == "<p>":
-        result = result + "No Mail Packets!"
-    result = result + "</p>"
-    result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
-    return result
-
 def extract_trame(pkt,id):
 
         packet = {}
         packet['ts'] = datetime.fromtimestamp(pkt.time).strftime('%Y-%m-%d %H:%M:%S')
         packet['id'] = id
-        
+        protocol = get_protocol(pkt)
+
         if pkt.haslayer(IP):
             #stats["ip"] += 1
             ip = pkt.getlayer(IP) 
-            
+
+            packet["proto"]=protocol
+            packet["IpSrc"]=ip.src
+            packet["IpDest"]=ip.src
+
             if ip.haslayer(TCP):
-                #stats["tcp"] += 1
                 tcp = ip.getlayer(TCP)
-                packet["proto"] = "tcp"
-                packet["src"] = ( ip.src, tcp.sport )
-                packet["dst"] = ( ip.dst, tcp.dport )
+                packet["PortSrc"] = tcp.sport
+                packet["PortDst"] = tcp.dport
                 
             elif ip.haslayer(UDP):
-                #stats["udp"] += 1
                 udp = ip.getlayer(UDP)
-                packet["proto"] = "udp"
-                packet["src"] = ( ip.src, udp.sport )
-                packet["dst"] = ( ip.dst, udp.dport )
+                packet["PortSrc"] = udp.sport
+                packet["PortDst"] = udp.dport
                 
-            elif ip.haslayer(ICMP):
-                #stats["icmp"] += 1
-                icmp = ip.getlayer(ICMP)
-                packet["proto"] = "icmp"
-                packet["src"] = ( ip.src, None )
-                packet["dst"] = ( ip.dst, None )
+            else:
+                packet["PortSrc"]=None
+                packet["PortDest"]=None
                 
         elif pkt.haslayer(ARP):
-            #stats["arp"] += 1 
             arp = pkt.getlayer(ARP)
             
-            packet["proto"] = "arp"
+            packet["proto"] = "ARP"
             packet["src"] = ( arp.psrc , None )
             packet["dst"] = ( arp.pdst, None )  
             
@@ -163,6 +119,7 @@ def extract_session(summary,data,sessionId):
         return sess        
     else:
         return None
+
 
 #Probleme : le volume est toujours egal a 64...
 def feed_treemap(treemap,pkt,tid):
@@ -248,8 +205,6 @@ def parse(filename):
     print "Temps de lecture du pcap : " + str(time.clock()-ttot)
 
     resultat={"stats":{"total":0},"trames":[],"sessions":[],"treemap":{}} 
-    #web = get_web(filename)
-    #mail = get_mail(filename)
     id=0
     tid=0
     t0 = 0
@@ -291,3 +246,47 @@ def parse(filename):
     #print "\n", web
     
     return resultat
+
+#-----------------------------------UNUSED FUNCTION-----------------------------------------#
+
+# def get_web(filename):
+#     webpkts = []
+#     result = ""
+#     pcap = rdpcap(filename)
+#     for packet in pcap:
+#         if TCP in packet:
+#             if packet.getlayer('TCP').dport == 80 or packet.getlayer('TCP').dport == 8080:
+#                 webpkts.append(packet)
+#     for packet in webpkts:
+#         if packet.getlayer('TCP').flags == 24:
+#             result = result + '''<div class="ui vertical segment"><p>'''
+#             result = result + packet.getlayer('Raw').load.replace(' ','&nbsp;').replace('\n','<br/>')
+#             result = result + '''</p></div>'''
+#     if result == "":
+#         result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
+#     result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
+#     return result
+
+# def get_mail(filename):
+#     mailpkts = []
+#     result = "<p>"
+#     pcap = rdpcap(filename)
+#     for packet in pcap:
+#         if TCP in packet:
+#             if packet.getlayer('TCP').dport == 110 or packet.getlayer('TCP').sport == 110 or packet.getlayer('TCP').dport == 143 or packet.getlayer('TCP').sport == 143 :
+#                 mailpkts.append(packet)
+#     for packet in mailpkts:
+#         if packet.getlayer('TCP').flags == 24:
+#             result = result + packet.getlayer('Raw').load.replace(' ','&nbsp;').replace('\n','<br/>')
+#     if result == "<p>":
+#         result = result + "No Mail Packets!"
+#     result = result + "</p>"
+#     result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
+#     return result
+
+# def in_network(ip,network = "192.168.0.0/16"):
+
+#     if IPAddress(ip) in IPNetwork(network):
+#         return True
+#     else:
+#         return False
