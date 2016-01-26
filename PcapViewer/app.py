@@ -8,6 +8,7 @@ from dbus.decorators import method
 from flask.helpers import flash
 import os
 import json
+from flask.json import jsonify
 
 app = Flask(__name__)
 app.config.from_object('config.default')
@@ -20,7 +21,7 @@ def index(pcap = ''):
 # def listPcap():
 #     return render_template('list.html')
 
-@app.route('/upload', methods=["GET", "POST"])
+@app.route('/upload', methods=["GET", "POST", "AJAX"])
 def upload():
     if request.method == "POST":
         try:
@@ -37,9 +38,9 @@ def upload():
         
         except:
             flash(u"Impossible to download ", "error")
-            print("error")
+            return jsonify(error='An error occured')
          
-        return redirect(url_for('index'))
+        return jsonify(success='Pcap uploaded successfully !')
 
 
 

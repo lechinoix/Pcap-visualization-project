@@ -36,7 +36,7 @@
 						<li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">Services</a></li>
 					</ul>
 					<div class="tab-content">
-						<div role="tabpanel" class="tab-pane active" id="hosts">
+						<div id="hosts" role="tabpanel" class="tab-pane active">
 						  <table class="table table-striped">
 				            <thead>
 				              <tr>
@@ -51,10 +51,15 @@
 				                <td>192.168.0.1</td>
 				                <td>Ubuntu</td>
 				              </tr>
+				              <tr>
+				                <td>1</td>
+				                <td>192.168.0.1</td>
+				                <td>Ubuntu</td>
+				              </tr>
 				            </tbody>
 				          </table>
 						</div>
-						<div role="tabpanel" class="tab-pane" id="services">
+						<div id="services" role="tabpanel" class="tab-pane">
 							<table class="table table-striped">
 				            <thead>
 				              <tr>
@@ -104,7 +109,7 @@
 		        <h4 class="modal-title" id="myModalLabel">Upload new Pcap file</h4>
 		      </div>
 		      <div class="modal-body">
-		        <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+		        <form id="upload-form" action="" method="post" enctype="multipart/form-data">
 		        	<div class="form-group">
 					    <label for="upPcap">Upload your Pcap</label>
 					    <input type="file" id="upPcap" name="upPcap">
@@ -113,9 +118,16 @@
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		        	<button type="submit" class="btn btn-primary">Save changes</button>
 		        </form>
+		        <div class="status-container"></div>
 		      </div>
 		    </div>
 		  </div>
 		</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+var url_upload = "{{ url_for('upload') }}";
+</script>
 {% endblock %}
 		

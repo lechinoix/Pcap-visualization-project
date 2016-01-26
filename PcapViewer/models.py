@@ -25,7 +25,7 @@ class Packet(Base):
         self.data = data
         self.timestamp = timestamp
         self.session = session
-        
+
     def __repr__(self):
         return '<Paket %s -> %s>' % (self.hostSrc, self.hostDest)
 
@@ -68,7 +68,7 @@ class Stat(Base):
     value = Column(Float)
     comment = Column(String(200))
     
-    def __init__(self, name, value, comment):
+    def __init__(self, name, value, comment=None):
         self.name = name
         self.value = value
         self.comment = comment
