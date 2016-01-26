@@ -247,23 +247,65 @@ $("#network-btn").on("click", function(e){
 	displayNetwork();
 })
 
-$("#upload-form").on('submit', function(e){
-	e.preventDefault()
-	
-	data = $(this).serialize()
-	
-	$(".status-container").html('Processing pcap parsing...')
-	
-	$.post(url_upload, data, function(response){
+$('#upload-form :file').change(function(){
+    var file = this.files[0];
+    var name = file.name;
+    var size = file.size;
+    var type = file.type;
+    
+    console.log(type);
+    
+});
 
-		if('success' in response){
-			$(".modal-body .status-container").html(response['success'])
-		}else{
-			$(".modal-body .status-container").html(response['error'])
-		}
-	})
-})
+function progressHandlingFunction(e){
+    if(e.lengthComputable){
+        $('progress').attr({value:e.loaded,max:e.total});
+    }
+}
+
+$("form#upload-form").on('submit', function(e){
+	e.preventDefault();
+
+	$('.status-container').html('Upload and Process to parse pcap');
+	$('progress').css('display', 'inline-block');
+	
+    var formData = new FormData();
+    formData.append("files", $(this)[0][0].files[0])
+    
+    var uploadRequest = $.ajax({
+        url: url_upload,
+        type: 'POST',
+        xhr: function() {  // Custom XMLHttpRequest
+            var myXhr = $.ajaxSettings.xhr();
+            if(myXhr.upload){ // Check if upload property exists
+                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+            }
+            return myXhr;
+        },
+        // Form data
+        data: formData,
+        //Options to tell jQuery not to process data or worry about content-type.
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+    
+    uploadRequest.done(function(response){
+    	if('success' in response){
+    		$('.status-container').html(response['success']);
+    		location.reload();
+    	}else{
+    		$('.status-container').html('An error occured');
+    	}
+    });
+    uploadRequest.fail(function(error){
+    	console.log(error);
+    });
+    
+	
+});
 
 displayParallel();
+
 
 })

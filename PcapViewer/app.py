@@ -21,24 +21,25 @@ def index(pcap = ''):
 # def listPcap():
 #     return render_template('list.html')
 
-@app.route('/upload', methods=["GET", "POST", "AJAX"])
+@app.route('/upload', methods=["GET", "POST"])
 def upload():
     if request.method == "POST":
-        try:
-            tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
-            request.files['upPcap'].save(tmpPath)
-            pcap = parse(tmpPath)
-            os.remove(tmpPath)
-    
-            with open('static/parsed/sessions.json', 'w') as sessions:
-                json.dump(pcap['sessions'], sessions)
-             
-            with open('static/parsed/trames.json', 'w') as trames:
-                json.dump(pcap['trames'], trames)
+        print 'ok'
+        print vars(request.files['files'])
+        tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
+        request.files['files'].save(tmpPath)
+        pcap = parse(tmpPath)
+        os.remove(tmpPath)
+
+        with open('static/parsed/sessions.json', 'w') as sessions:
+            json.dump(pcap['sessions'], sessions)
+         
+        with open('static/parsed/trames.json', 'w') as trames:
+            json.dump(pcap['trames'], trames)
         
-        except:
-            flash(u"Impossible to download ", "error")
-            return jsonify(error='An error occured')
+#         except:
+#             flash(u"Impossible to download ", "error")
+#             return jsonify(error='An error occured')
          
         return jsonify(success='Pcap uploaded successfully !')
 
