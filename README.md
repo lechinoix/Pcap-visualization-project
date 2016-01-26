@@ -35,7 +35,7 @@ $ createdb -U username --locale=en_US.utf-8 -E utf-8 -O username PcapViewer -T t
 Install psycopg2 and Flask-Alchemy
 
 ```
-$ pip install -U psycopg2
+$ sudo apt-get install python-psycopg2
 $ pip install Flask-SQLAlchemy
 ```
 
