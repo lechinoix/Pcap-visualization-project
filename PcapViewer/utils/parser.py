@@ -200,49 +200,52 @@ def parse(filename):
     """
     Parses pcap file into JSON files
     """
-    ttot = time.clock()
-    pcap = rdpcap(filename)
-    print "Temps de lecture du pcap : " + str(time.clock()-ttot)
 
-    resultat={"stats":{"total":0},"trames":[],"sessions":[],"treemap":{}} 
-    id=0
-    tid=0
-    t0 = 0
-    t1 =0
-    t2= 0
-    t3 = 0
-    for pkt in pcap:
-        id += 1
-        t0 = time.clock()
-        packet = extract_trame(pkt,id)
-        resultat["trames"].append(packet)
-        t1 += time.clock() - t0  
-        t0 = time.clock()
-        tid = feed_treemap(resultat["treemap"],pkt,tid)
-        t2 += time.clock() - t0
-        feed_stats(resultat["stats"],pkt)
-    #returnjson =  json.dumps(res, sort_keys=True)
+    try:
+        ttot = time.clock()
+        pcap = rdpcap(filename)
+        print "Temps de lecture du pcap : " + str(time.clock()-ttot)
 
-    s = pcap.sessions()
-    sessionId = 0
-    for summary,data in s.iteritems():
-        t0 = time.clock()
-        sess = extract_session(summary,data,sessionId)
-        if sess != None:
-            sessionId = sess["Id"]
-            resultat["sessions"].append(sess)
-        t3 += time.clock()-t0
+        resultat={"stats":{"total":0},"trames":[],"sessions":[],"treemap":{}} 
+        id=0
+        tid=0
+        t0 = 0
+        t1 =0
+        t2= 0
+        t3 = 0
+        for pkt in pcap:
+            id += 1
+            t0 = time.clock()
+            packet = extract_trame(pkt,id)
+            resultat["trames"].append(packet)
+            t1 += time.clock() - t0  
+            t0 = time.clock()
+            tid = feed_treemap(resultat["treemap"],pkt,tid)
+            t2 += time.clock() - t0
+            feed_stats(resultat["stats"],pkt)
+        #returnjson =  json.dumps(res, sort_keys=True)
 
-    print "Trames generated in "+str(t1)+" seconds"
-    #print json.dumps(resultat["sessions"],indent=4) 
-    print "Sessions generated in "+str(t3)+" seconds"
-    #print json.dumps(resultat["sessions"],indent=4)    
-    print "Treemap generated "+str(t2)+" seconds"
-    #print json.dumps(resultat["treemap"],indent=4)
+        s = pcap.sessions()
+        sessionId = 0
+        for summary,data in s.iteritems():
+            t0 = time.clock()
+            sess = extract_session(summary,data,sessionId)
+            if sess != None:
+                sessionId = sess["Id"]
+                resultat["sessions"].append(sess)
+            t3 += time.clock()-t0
 
-    print "Done parsing, here are some statistics: "
-    print "\t", resultat["stats"]
+        print "Trames generated in "+str(t1)+" seconds"
+        #print json.dumps(resultat["sessions"],indent=4) 
+        print "Sessions generated in "+str(t3)+" seconds"
+        #print json.dumps(resultat["sessions"],indent=4)    
+        print "Treemap generated "+str(t2)+" seconds"
+        #print json.dumps(resultat["treemap"],indent=4)
 
+        print "Done parsing, here are some statistics: "
+        print "\t", resultat["stats"]
+    except Exception, e:
+        return {"Error":e}
     #print "\n", web
     
     return resultat
