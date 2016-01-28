@@ -30,12 +30,6 @@ def upload():
         request.files['files'].save(tmpPath)
         pcap = parse(tmpPath)
         os.remove(tmpPath)
-
-        with open('static/parsed/sessions.json', 'w') as sessions:
-            json.dump(pcap['sessions'], sessions)
-         
-        with open('static/parsed/trames.json', 'w') as trames:
-            json.dump(pcap['trames'], trames)
         
 #         except:
 #             flash(u"Impossible to download ", "error")
