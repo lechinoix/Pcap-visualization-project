@@ -18,7 +18,7 @@ Obtenir d'autres visu moins générales : Zoom sur une IP / Plage d'IP
 L'attaquant lance le serveur. Il upload son fichier pcap et attend le chargement des résultats.
 
 La sidebar lui permet de voir tous les protocoles en jeux dans ce pcap :
--(LDAP,POP3,IMAP,SMTP,DNS,HTTP) sont intéressant,
+- (LDAP,POP3,IMAP,SMTP,DNS,HTTP) sont intéressant,
 - (LDAPS ,IMAPS,HTTPS ,KERBROS,ARP,ICMP,SMB) le sont moins.
 
 La sidebar lui permet aussi de voir toutes les IP en jeux dans le pcap, et ainsi reperer des sous-réseau.
