@@ -1,0 +1,206 @@
+\documentclass{beamer}
+
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{beamerthemecs}
+\usepackage{beamerouterthemecs}
+\usepackage{beamerfontthemecs}
+\usepackage{beamerinnerthemecs}
+\usepackage{beamercolorthemecs}
+
+\usetheme{cs}
+\useoutertheme{cs}
+\usefonttheme{cs}
+\useinnertheme{cs}
+\usecolortheme{cs}
+
+\title[Visualisation de traces réseaux]{Visualisation de traces réseaux}
+\author{\textbf{Thibault \textsc{Lengagne}et Nicolas \textsc{Ngô-Maï}}}
+\institute{Centrale Supélec - Campus de Rennes}
+
+\begin{document}
+
+  \begin{frame}
+    \titlepage
+  \end{frame}
+  
+  \AtBeginSection[] {
+    \begin{frame}
+      \frametitle{Plan}
+      \tableofcontents[currentsection, hideothersubsections, pausesubsections]
+    \end{frame} 
+  }
+
+ \section{Introduction}
+  \begin{frame}
+   \frametitle{Réseaux Zigbee}
+   \begin{itemize}
+    \item Histoire breve
+    \item Intérêt, application (domotique)
+    \item Droit, license, implémentation
+    \item Avenir
+
+   \end{itemize}
+  \end{frame}
+  
+  \begin{frame}
+   \frametitle{Fonctions principales}
+   Depuis \textit{Zigbee}
+   \begin{itemize}
+    \item 
+    \item 
+    \item 
+    \item 
+   \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+     \frametitle{Stratégie}
+    \begin{itemize}
+     \item 
+     \item 
+    \end{itemize}
+    \begin{alertblock}{Example}
+      Example
+    \end{alertblock}
+  \end{frame}
+  
+ \section{La norme IEEE 802.15.4}
+  \begin{frame}
+    \frametitle{Zigbee et la norme 802.15.4}
+    Le protocole Zigbee utilise ce protocole comme cadre de fonctionnement :
+      \begin{center}
+       \includegraphics[scale=0.4]{OSI-Zigbee.png}
+      \end{center}  
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Détails}
+    Protocole de communication de la famille des LR WPAN
+    \begin{itemize}
+      \item Faible consommation
+      \item Faible portée
+      \item Faible débit
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Comparatif}
+    \begin{block}{Schema comparatif des différents protocole sans fil}
+      \begin{center}
+       \includegraphics[scale=0.3]{Range.png}
+      \end{center} 
+    \end{block}
+  \end{frame}
+  
+  \begin{frame}
+    \frametitle{La couche physique}
+    Contient l'émetteur/récepteur radio, avec un mécanisme de contrôle de qualité du signal et CCA
+    \begin{block}{Débit}
+      \begin{center}
+       \includegraphics[scale=0.25]{Vitesse-Zigbee.png}
+      \end{center}
+    \end{block}
+  \end{frame}
+  
+  \begin{frame}
+    \frametitle{La couche d'accès au medium (MAC)}
+    \begin{block}{Rôle des éléments du réseau}
+      \begin{itemize}
+        \item Le coordinateur (ZC) est le noeud principal, il est unique
+        \item Les FFD ou routeurs gèrent le routage et les terminaux
+        \item Les RFD ou terminaux sont de simple capteurs aux extremités du réseau
+      \end{itemize}
+    \end{block}
+  \end{frame}
+  
+  \begin{frame}
+    \frametitle{La couche d'accès au medium (MAC)}
+    \begin{block}{Format de trame}
+      \begin{itemize}
+        \item En-tête (contrôle de trame, numéro de séquence, adressage)
+        \item Données
+        \item Pied (CRC)
+        \begin{center}
+         \includegraphics[scale=0.5]{Couche-MAC.png}
+        \end{center} 
+      \end{itemize}
+    \end{block}
+    \begin{block}{Il existe deux modes de fonctionnement}
+      \begin{itemize}
+        \item Le mode non-coordonnée
+        \item Le mode coordonnée, ou balisé
+      \end{itemize}
+    \end{block}
+  \end{frame}
+  
+  \begin{frame}
+    \frametitle{La couche d'accès au medium (MAC)}
+    \begin{block}{Le mode non-Coordonnée}
+      \begin{itemize}
+        \item Pas d'emission de \textit{beacon}
+        \item Fonctionnement CSMA/CA pour gérer les collisions
+        \item Le coordinateur est éveillé en permanence
+      \end{itemize}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{La sous-couche d'accès au medium (MAC)}
+    \begin{block}{Le mode Coordonnée}
+      Le coordinateur diffuse périodiquement des \textit{beacon}. Tous les dispositifs sont informés de :
+      \begin{itemize}
+        \item La durée de la \textit{superframe} et quand ils peuvent transmettre des données en CSMA/CA
+        \item A partir de quel moment le coordinateur rentre en hibernation et pour quelle durée
+	\begin{center}
+	\includegraphics[scale=0.4]{Supertrame.png}
+	\end{center} 
+      \end{itemize}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{La sous-couche de convergence (LLC)}
+    \begin{itemize}
+      \item Vérification de l'intégrité des données reçues
+      \item Contrôle de flux, afin d'éviter la saturation
+      \item La convergence d'adressage (correspondance entre les couches 2 et 3 du modèle OSI, gestion du boradcast et en multicast)
+    \end{itemize}
+  \end{frame}
+
+  \section{Les couches 4 à 7}
+  \begin{frame}
+    \frametitle{Présentation}
+    \begin{itemize}
+      \item 
+      \item 
+    \end{itemize}
+    Example : 
+    \begin{itemize}
+      \item 
+      \item 
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Adressage}
+    \begin{itemize}
+      \item Zigbee propose un algorithme de distribution d'adresses atomatique et décentralisé
+      \item 
+    \end{itemize}
+    Example : 
+    \begin{itemize}
+      \item 
+      \item 
+    \end{itemize}
+  \end{frame}
+
+  \section{Conclusion}
+  \begin{frame}
+    \begin{center}
+      Merci de votre attention !
+    \end{center}
+  \end{frame}
+
+\end{document}

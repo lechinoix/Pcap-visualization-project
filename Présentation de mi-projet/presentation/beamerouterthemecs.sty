@@ -1,0 +1,125 @@
+%%(encoding:utf-8)
+%% author: Frédéric Boulanger, frederic.boulanger@centralesupelec.fr
+%% copyright CentraleSupélec 2015
+%% v1.0: initial release
+\ProvidesPackage{beamerouterthemecs}[2015/10/21 v1.1 Beamer outer theme for CentraleSupelec]
+
+\mode <all>
+
+\mode<presentation>
+
+\setbeamercolor{frametitle}{parent=titlelike}
+\setbeamercolor*{author in head/foot}{parent=palette tertiary}
+\setbeamercolor*{title in head/foot}{parent=palette secondary}
+\setbeamercolor*{date in head/foot}{parent=palette primary}
+
+\setbeamercolor*{section in head/foot}{parent=palette tertiary}
+\setbeamercolor*{subsection in head/foot}{parent=palette primary}
+
+%\AtBeginDocument{
+%  {
+%    \usebeamerfont*{headline}
+%
+%    \usebeamercolor{normal text}
+%    \usebeamercolor{title in head/foot}
+%    \usebeamercolor{subsection in head/foot}
+%    \usebeamercolor{section in head/foot}
+%    \usebeamercolor{frametitle}
+%
+%    \pgfdeclareverticalshading{beamer@treeshade}{\the\paperwidth}{%
+%      color(0ex)=(normal text.bg);%
+%      color(1ex)=(subsection in head/foot.bg);%
+%      color(3.25ex)=(subsection in head/foot.bg);%
+%      color(4.25ex)=(section in head/foot.bg);%
+%      color(6.5ex)=(section in head/foot.bg);%
+%      color(7.5ex)=(title in head/foot.bg);%
+%      color(10.25ex)=(title in head/foot.bg)%
+%    }
+%    
+%    \pgfdeclareverticalshading{beamer@aboveframetitle}{\the\paperwidth}{%
+%      color(0ex)=(frametitle.bg);%
+%      color(1ex)=(frametitle.bg);%
+%      color(2ex)=(subsection in head/foot.bg)
+%    }
+%
+%    \pgfdeclareverticalshading{beamer@belowframetitle}{\the\paperwidth}{%
+%      color(0ex)=(normal text.bg);%
+%      color(1ex)=(frametitle.bg)
+%    }
+%  }
+%}
+  
+\defbeamertemplate*{footline}{infolines theme} {%
+  \leavevmode\hbox{%
+  \csname tikzexternaldisable\endcsname
+  \begin{tikzpicture}[x=1mm,y=1mm]
+    \path[fill=cs-darkgray] (0,0) -- ++(0,3) 
+      -- ++(\linewidth+\beamer@rightmargin+\beamer@leftmargin,0) 
+      -- ++(0,-3) -- cycle ;
+    \node[align=left] at (0.02\paperwidth,1.0) {\raisebox{0pt}[0pt][0pt]{\makebox[0pt][l]{%
+      \usebeamercolor[fg]{title in head/foot}\usebeamerfont{title in head/foot}\beamer@shorttitle
+    }}} ;
+    \node[align=flush center] at (0.5\paperwidth,1.0) {\raisebox{0pt}[0pt][0pt]{\makebox[0pt]{%
+      \usebeamercolor[fg]{section in head/foot}\usebeamerfont{section in head/foot}\insertsectionhead
+    }}} ;
+    \node[align=right] at (0.94\paperwidth,1.0) {\raisebox{0pt}[0pt][0pt]{\makebox[0pt][r]{%
+      \usebeamercolor[fg]{date in head/foot}\usebeamerfont{date in head/foot}%
+      \insertshortdate{}\hspace{2em}\insertframenumber{} / \inserttotalframenumber
+    }}} ;
+  \end{tikzpicture}%
+  }%
+}
+
+
+\defbeamertemplate*{headline}{cs} {%
+  \usebeamerfont{headline}%
+  {\csname tikzexternaldisable\endcsname
+  \begin{tikzpicture}[x=1mm,y=1mm]
+    \path[fill=cs-darkgray] (0,0) -- ++(0,-10) -- ++(\textwidth,0) -- ++(0,10) -- cycle ;
+	\begin{scope}%
+	  \path[clip] (0,0) rectangle (12,-10.05) ;
+	  \path[fill=white] (0,-20.0) arc[start angle=-90, end angle=90, x radius=12, y radius=10] ;
+	\end{scope}%
+	\node[inner sep=0pt] at (6,-7) {\pgfuseimage{logocs}} ;
+  \end{tikzpicture}%
+  }%
+}
+
+\defbeamertemplate*{frametitle}{cs} {%
+  \nointerlineskip
+  \vspace*{-11mm}% annulation de l'espace vertical de l'en-tête
+  \hspace*{-\beamer@leftmargin}%
+  {\csname tikzexternaldisable\endcsname
+  \noindent\begin{tikzpicture}[x=1mm,y=1mm]
+    \path (0,0) rectangle (\paperwidth,-12mm) ;
+    \node at (70,-6) {\parbox{11cm}{\centering
+      \usebeamerfont{frametitle}%
+      \usebeamercolor[fg]{frametitle}%
+      \insertframetitle
+      \ifx\insertframesubtitle\@empty
+      \else
+        \usebeamerfont{framesubtitle}%
+        \\[-0.5ex]
+        \usebeamercolor[fg]{framesubtitle}%
+        \insertframesubtitle
+      \fi
+    }} ;
+  \end{tikzpicture}%
+  }%
+  \hspace*{-\beamer@rightmargin}%
+}
+
+\defbeamertemplate*{sidebar right}{cs} {%
+  \vfill
+  \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
+  \vskip2pt%
+}
+
+\setbeamerfont{block title}{size={}}
+\setbeamerfont{institute}{size=\footnotesize}
+\setbeamersize{text margin left=1em,text margin right=1em}
+  
+\mode
+<all>
+
+\endinput
