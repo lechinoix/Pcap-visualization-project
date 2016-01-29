@@ -9,8 +9,9 @@ from database import db_session,init_db
 def hexdump(x):
     """Given a Raw string, return an ASCII string with "." instead of non recognised characters"""
     x = str(x)
+    l = len(x)
     result = ""
-    for i in range(len(x)):
+    for i in range(l):
         result += sane_color(x[i])
     return result
 
