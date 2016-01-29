@@ -32,11 +32,13 @@ Enter it again:
 $ createdb -U username --locale=en_US.utf-8 -E utf-8 -O username PcapViewer -T template0
 ```
 
-Install psycopg2 and Flask-Alchemy
+Install psycopg2, Flask-Alchemy, Flask-SocketIO and Eventlet :
 
 ```
 $ sudo apt-get install python-psycopg2
 $ pip install Flask-SQLAlchemy
+$ pip install flask-socketio
+$ pip install eventlet
 ```
 
 Go to PcapVierwer/config/default.py and change the database URI :
