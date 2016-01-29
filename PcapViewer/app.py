@@ -10,6 +10,7 @@ from flask.helpers import flash
 import os
 import json
 from flask.json import jsonify
+from database import db_session
 
 from models import User, Session, Stat
 
@@ -19,6 +20,7 @@ socketio = SocketIO(app)
 
 @app.route('/')
 def index(pcap = ''):
+    """Display home page"""
     users = User.query.all()
     stats = Stat.query.all()
     sessions = Session.query.all()
@@ -30,6 +32,7 @@ def index(pcap = ''):
 
 @socketio.on('uploadPcap')
 def upload(data):
+    """Upload a new Pcap File"""
     tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
     with open(tmpPath, 'w') as f:
         f.write(data['fileContent'])
@@ -40,6 +43,7 @@ def upload(data):
     
     
 def reloadData():
+    """Send new data to display to Client"""
     users = []
     sessions = []
     stats = []
@@ -75,10 +79,17 @@ def reloadData():
     
 @app.errorhandler(404)
 def page_404(error):
+    """Display 404 error page"""
     return render_template("404.html"), 404
+
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
 
 if __name__ == '__main__':
     socketio.run(app)
+
 
 # Syntaxe pour définir un filtre
 

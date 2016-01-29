@@ -131,6 +131,19 @@
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script>
+var loadedSessions = [
+            {% for session in sessions %}
+            {	
+            	'id':'{{ session.id }}',
+            	'hostSrc':'{{ session.hostSrc }}',
+            	'hostDest':'{{ session.hostDest }}',
+            	'portSrc':'{{ session.portSrc }}',
+            	'portDest':'{{ session.portDest }}',
+            	'protocol':'{{ session.protocol }}'
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+           ]
+</script>
 {% endblock %}
 		
