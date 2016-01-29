@@ -118,7 +118,7 @@ function displayParallel(){
 	  x.domain(dimensions = d3.keys(sessions[0]).filter(function(d) {
 
 		// Create ordinals dimensions
-	    if(d.toLowerCase() != "id" && d.substr(0,4).toLowerCase() != "port" ){
+	    if(d.toLowerCase() != "id" && d.substr(0,4).toLowerCase() != "port" && d.substr(0,4).toLowerCase() != "nomb" ){
 	    	return y[d] = d3.scale.ordinal()
 	    	.domain(d3.values(sessions).map(function(obj){return obj[d];}))
 	    	.rangePoints([height, 0]);
