@@ -20,7 +20,9 @@ socketio = SocketIO(app)
 @app.route('/')
 def index(pcap = ''):
     users = User.query.all()
-    return render_template('index.html', pcap=pcap, users=users)
+    stats = Stat.query.all()
+    sessions = Session.query.all()
+    return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions)
 
 # @app.route('/list')
 # def listPcap():

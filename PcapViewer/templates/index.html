@@ -46,7 +46,7 @@
 				              <tr>
 				                <th>#</th>
 				                <th>Name</th>
-				                <th>OS</th>
+				                <th>Exchanged Volume</th>
 				              </tr>
 				            </thead>
 				            <tbody>
@@ -54,7 +54,7 @@
 				              <tr>
 				                <td>{{ loop.index }}</td>
 				                <td>{{ user.address }}</td>
-				                <td>Linux</td>
+				                <td>{{ user.exchanged["Volume"]}}</td>
 				              </tr>
 				             {% endfor %}
 				            </tbody>
@@ -66,15 +66,17 @@
 				              <tr>
 				                <th>#</th>
 				                <th>Protocol</th>
-				                <th>Port</th>
+				                <th>Packets</th>
 				              </tr>
 				            </thead>
 				            <tbody>
+				            {% for stat in stats %}
 				              <tr>
-				                <td>1</td>
-				                <td>HTTP</td>
-				                <td>80</td>
+				                <td>{{ loop.index }}</td>
+				                <td>{{ stat.name }}</td>
+				                <td>{{ stat.value }}</td>
 				              </tr>
+				             {% endfor %}
 				            </tbody>
 				          </table>
 						</div>

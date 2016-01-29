@@ -20,7 +20,7 @@ def initiate():
 
 def get_protocol(pkt):
     """Identified the protocol of a given packet"""
-    protocol = "Autre"
+    protocol = "AUTRE"
     if pkt.haslayer(TCP):
         if pkt[TCP].dport == 7 or pkt[TCP].sport == 7:
             protocol = "ICMP"
@@ -77,7 +77,7 @@ def feed_trames(pkt,session):
     timestamp = datetime.fromtimestamp(pkt.time).strftime('%Y-%m-%d %H:%M:%S')
     protocol = get_protocol(pkt)
     data={}
-    if protocol != "Autre":
+    if protocol != "AUTRE":
         if pkt.haslayer(IP):
             ip = pkt.getlayer(IP) 
             hostSrc = ip.src
@@ -206,7 +206,7 @@ def parse(filename):
 
     t0 = 0; t1 = 0; t2 = 0; t3 = 0; t4 = 0
     user = {}
-    stat = { "total" : 0 }
+    stat = { "TOTAL" : 0 }
 
     try:
         initiate()

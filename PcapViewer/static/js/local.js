@@ -111,9 +111,8 @@ function displayParallel(){
 	// Calling the data
 	d3.json("static/parsed/sessions.json", function(error, pcap) {
 
-
-		// Slice data for more visiblity
-		sessions = pcap.slice(0, 300);
+	  // Slice data for more visiblity
+	  sessions = pcap.slice(0, 300);
 		
 	  // Extract the list of dimensions and create a scale for each.
 	  x.domain(dimensions = d3.keys(sessions[0]).filter(function(d) {
@@ -265,7 +264,17 @@ function appendUser(user){
 	  $('.left-bar .tab-content #hosts table tbody').append("<tr>" +
 		  		"<td>" + user['id'] + "</td>" +
 		  		"<td>" + user['address'] + "</td>" +
-		  		"<td>" + 'Linux' + "</td>" +
+		  		"<td>" + user['exchanged']["Volume"] + "</td>" +
+		  		"<td></td>" +
+		  		"</tr>");
+}
+
+// Update side bar
+function appendStat(stat){
+	  $('.left-bar .tab-content #services table tbody').append("<tr>" +
+		  		"<td>" + stat['id'] + "</td>" +
+		  		"<td>" + stat['name'] + "</td>" +
+		  		"<td>" + stat['value'] + "</td>" +
 		  		"<td></td>" +
 		  		"</tr>");
 }
@@ -283,6 +292,14 @@ socket.on('newData', function(data){
 		for(i=0;i<users.length;i++){
 			console.log(users[i]);
 			appendUser(users[i]);
+		}
+	}
+	if('stats' in data){
+		$('.left-bar .tab-content #services table tbody').html('');
+		stats = data['stats'];
+		for(i=0;i<stats.length;i++){
+			console.log(stats[i]);
+			appendStat(stats[i]);
 		}
 	}
 })

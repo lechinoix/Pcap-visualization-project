@@ -89,29 +89,12 @@ class User(Base):
                 'id':self.id,
                 'address':self.address
                 }
-
-# class Conso(Base):
-#     __tablename__ = 'Conso'
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(80))
-#     nombre = Column(Integer)
-#     volume = Column(Integer)
-#     userId = Column(Integer)
-    
-#     def __init__(self, name, nombre, volume, userId):
-#         self.name = name
-#         self.nombre = nombre
-#         self.volume = volume
-#         self.userId = userId
-        
-#     def __repr__(self):
-#         return '<Conso %s>' % (self.address)
         
 class Stat(Base):
     __tablename__ = 'Stat'
     id = Column(Integer, primary_key=True)
     name = Column(String(80))
-    value = Column(Float)
+    value = Column(Integer)
     comment = Column(String(200))
     
     def __init__(self, name, value, comment=None):
