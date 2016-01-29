@@ -226,7 +226,13 @@ function brush() {
       extents = actives.map(function(p) { return y[p].brush.extent(); });
   foreground.style("display", function(d) {
     return actives.every(function(p, i) {
-      return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+    	console.log('d[' + p + '] = ' + d[p]);
+    	console.log('y[' + p + '](' + d[p] + ') = ' + y[p](d[p]));
+    	if(d[p].toString().split('.').length > 3){
+    		return extents[i][0] <= y[p](d[p]) && y[p](d[p]) <= extents[i][1];
+    	}else{
+    		return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+    	}
     }) ? null : "none";
   });
 }
@@ -251,9 +257,6 @@ $("form#upload-form").on('submit', function(e){
 	e.preventDefault();
 
 	$('.status-container').html('Upload and Process to parse pcap');
-	
-    var formData = new FormData();
-    formData.append("files", $(this)[0][0].files[0])
     
     socket.emit('uploadPcap', {fileContent: $(this)[0][0].files[0]});
 	
