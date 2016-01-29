@@ -29,6 +29,19 @@ class Packet(Base):
     def __repr__(self):
         return '<Packet %s -> %s>' % (self.hostSrc, self.hostDest)
 
+    def as_dict(self):
+        return {
+                'id':self.id,
+                'hostSrc':self.hostSrc,
+                'hostDest':self.hostDest,
+                'portSrc':self.posrtSrc,
+                'portDest':self.portDest,
+                'protocol':self.protocol,
+                'data':self.data,
+                'timestamp':self.timestamp,
+                'sessionId':self.session.id
+                }
+
 class Session(Base):
     __tablename__ = 'Session'
     id = Column(Integer, primary_key=True)
@@ -48,6 +61,16 @@ class Session(Base):
     def __repr__(self):
         return '<Session %s -> %s>' % (self.hostSrc, self.hostDest)
         
+    def as_dict(self):
+        return {
+                'id':self.id,
+                'hostSrc':self.hostSrc,
+                'hostDest':self.hostDest,
+                'portSrc':self.portSrc,
+                'portDest':self.portDest,
+                'protocol':self.protocol
+                }
+        
 class User(Base):
     __tablename__ = 'User'
     id = Column(Integer, primary_key=True)
@@ -60,6 +83,12 @@ class User(Base):
         
     def __repr__(self):
         return '<User %s>' % (self.address)
+    
+    def as_dict(self):
+        return {
+                'id':self.id,
+                'address':self.address
+                }
 
 # class Conso(Base):
 #     __tablename__ = 'Conso'
@@ -92,3 +121,11 @@ class Stat(Base):
         
     def __repr__(self):
         return '%s' % (self.name)
+    
+    def as_dict(self):
+        return {
+                'id':self.id,
+                'name':self.name,
+                'value':self.value,
+                'comment':self.comment
+                }

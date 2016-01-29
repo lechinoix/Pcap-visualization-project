@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 from flask import Flask, render_template, request, redirect, url_for
+from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 from utils.parser import parse
 from dbus.decorators import method
@@ -10,42 +11,72 @@ import os
 import json
 from flask.json import jsonify
 
+from models import User, Session, Stat
+
 app = Flask(__name__)
 app.config.from_object('config.default')
+socketio = SocketIO(app)
 
 @app.route('/')
 def index(pcap = ''):
-    return render_template('index.html', pcap=pcap)
+    users = User.query.all()
+    return render_template('index.html', pcap=pcap, users=users)
 
 # @app.route('/list')
 # def listPcap():
 #     return render_template('list.html')
 
-@app.route('/upload', methods=["GET", "POST"])
-def upload():
-    if request.method == "POST":
-        print 'ok'
-        print vars(request.files['files'])
-        tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
-        request.files['files'].save(tmpPath)
-        pcap = parse(tmpPath)
-        os.remove(tmpPath)
-        
-#         except:
-#             flash(u"Impossible to download ", "error")
-#             return jsonify(error='An error occured')
-         
-        return jsonify(success='Pcap uploaded successfully !')
+@socketio.on('uploadPcap')
+def upload(data):
+    tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
+    with open(tmpPath, 'w') as f:
+        f.write(data['fileContent'])
+    parse(tmpPath)
+    os.remove(tmpPath)
+    reloadData()
+    socketio.emit('successfullUpload', {'success': 'Got it !'})
+    
+    
+def reloadData():
+    users = []
+    sessions = []
+    stats = []
+    for user in User.query.all():
+        users.append( user.as_dict() )
+    for session in Session.query.all():
+        sessions.append( session.as_dict() )
+    for stat in Stat.query.all():
+        stats.append( stat.as_dict() )
+    data = {
+            'users':users,
+            'sessions':sessions,
+            'stats':stats
+            }
+    socketio.emit('newData', json.dumps(data))
 
-
-
+    
+# @app.route('/upload', methods=["GET", "POST"])
+# def upload():
+#     if request.method == "POST":
+#         print 'ok'
+#         print vars(request.files['files'])
+#         tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
+#         request.files['files'].save(tmpPath)
+#         pcap = parse(tmpPath)
+#         os.remove(tmpPath)
+#         
+# #         except:
+# #             flash(u"Impossible to download ", "error")
+# #             return jsonify(error='An error occured')
+#          
+#         return jsonify(success='Pcap uploaded successfully !')
+    
 @app.errorhandler(404)
 def page_404(error):
     return render_template("404.html"), 404
 
 if __name__ == '__main__':
-
-    app.run(debug=True)
+    socketio.run(app)
 
 # Syntaxe pour définir un filtre
 

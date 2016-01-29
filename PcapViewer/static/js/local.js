@@ -1,7 +1,18 @@
 $(document).ready(function(){
 
 
+/* ============================
 
+	Initiating socket
+
+===============================*/
+
+	
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+        
+    });
+	
 /* ============================
 
 	Views with D3.js
@@ -188,16 +199,6 @@ function displayParallel(){
 	      .attr("x", -8)
 	      .attr("width", 16);
 	  
-	  // Update side bar
-	  function updateSidebar(el, i, array){
-		  $('.left-bar .tab-content #hosts table tbody').append("<tr>" +
-			  		"<td>" + i + "</td>" +
-			  		"<td>" + el.address + "</td>" +
-			  		"<td>" + el.os + "</td>" +
-			  		"<td></td>" +
-			  		"</tr>")
-	  }
-	  
 	});
 
 }
@@ -233,7 +234,7 @@ function brush() {
 
 /* ============================
 
-	Display the datas and graphs
+	Events and connectors
 
 ===============================*/
 
@@ -247,65 +248,58 @@ $("#network-btn").on("click", function(e){
 	displayNetwork();
 })
 
-$('#upload-form :file').change(function(){
-    var file = this.files[0];
-    var name = file.name;
-    var size = file.size;
-    var type = file.type;
-    
-    console.log(type);
-    
-});
-
-function progressHandlingFunction(e){
-    if(e.lengthComputable){
-        $('progress').attr({value:e.loaded,max:e.total});
-    }
-}
-
 $("form#upload-form").on('submit', function(e){
 	e.preventDefault();
 
 	$('.status-container').html('Upload and Process to parse pcap');
-	$('progress').css('display', 'inline-block');
 	
     var formData = new FormData();
     formData.append("files", $(this)[0][0].files[0])
     
-    var uploadRequest = $.ajax({
-        url: url_upload,
-        type: 'POST',
-        xhr: function() {  // Custom XMLHttpRequest
-            var myXhr = $.ajaxSettings.xhr();
-            if(myXhr.upload){ // Check if upload property exists
-                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
-            }
-            return myXhr;
-        },
-        // Form data
-        data: formData,
-        //Options to tell jQuery not to process data or worry about content-type.
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-    
-    uploadRequest.done(function(response){
-    	if('success' in response){
-    		$('.status-container').html(response['success']);
-    		location.reload();
-    	}else{
-    		$('.status-container').html('An error occured');
-    	}
-    });
-    uploadRequest.fail(function(error){
-    	console.log(error);
-    });
-    
+    socket.emit('uploadPcap', {fileContent: $(this)[0][0].files[0]});
 	
 });
 
+// Update side bar
+function appendUser(user){
+	  $('.left-bar .tab-content #hosts table tbody').append("<tr>" +
+		  		"<td>" + user['id'] + "</td>" +
+		  		"<td>" + user['address'] + "</td>" +
+		  		"<td>" + 'Linux' + "</td>" +
+		  		"<td></td>" +
+		  		"</tr>");
+}
+
+socket.on('successfullUpload', function(data){
+	$('#upModal').modal('hide');
+	$('.status-container').html(data['success']);
+})
+
+socket.on('newData', function(data){
+	data = JSON.parse(data);
+	if('users' in data){
+		$('.left-bar .tab-content #hosts table tbody').html('');
+		users = data['users'];
+		for(i=0;i<users.length;i++){
+			console.log(users[i]);
+			appendUser(users[i]);
+		}
+	}
+})
+
 displayParallel();
 
+
+// Unused
+
+//$('#upload-form :file').change(function(){
+//    var file = this.files[0];
+//    var name = file.name;
+//    var size = file.size;
+//    var type = file.type;
+//    
+//    console.log(type);
+//    
+//});
 
 })
