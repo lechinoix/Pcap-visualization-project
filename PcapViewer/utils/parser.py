@@ -57,6 +57,8 @@ def get_protocol(pkt):
     elif pkt.haslayer(UDP):
         if pkt[UDP].dport == 53 or pkt[UDP].sport == 53:
             protocol = "DNS"
+        elif pkt[UDP].dport == 5353 or pkt[UDP].sport == 5353:
+            protocol = "MDNS"
     elif pkt.haslayer(ARP):
         protocol = "ARP"
     elif pkt.haslayer(ICMP):
@@ -201,13 +203,26 @@ def add(user,stat):
         S = Stat(el,stat[el])
         db_session.add(S)
 
+def get_mail(packet,mailpkts):
+    result = "<p>"
+    if TCP in packet:
+        if get_protocol(packet)=="IMAP":
+            if packet.haslayer(Raw):
+                result = result + packet.getlayer('Raw').load.replace(' ','&nbsp;').replace('\n','<br/>')
+    if result == "<p>":
+        result = result + "No Mail Packets!"
+    result = result + "</p>"
+    result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
+    return result
+
 def parse(filename):
     """ Parses pcap file and populate de PostgreSQL Database. Populates User, Session, Stat and Packet Tables"""
 
     t0 = 0; t1 = 0; t2 = 0; t3 = 0; t4 = 0
     user = {}
     stat = { "TOTAL" : 0 }
-
+    mailpkts=[]
+    result = ""
     try:
         initiate()
     except Exception as e:
@@ -225,7 +240,8 @@ def parse(filename):
         t0 = time.clock()
         feed_stats(stat,pkt)
         t2 += time.clock()-t0
-    
+        result += get_mail(pkt,mailpkts)
+    print result
     add(user,stat)
     
     print "Treemap Table generated : " + str(t1) + " seconds"
