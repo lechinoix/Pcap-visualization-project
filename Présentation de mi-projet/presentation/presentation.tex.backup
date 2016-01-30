@@ -15,8 +15,8 @@
 \useinnertheme{cs}
 \usecolortheme{cs}
 
-\title[Les Réseaux Zigbee]{Les Réseaux Zigbee}
-\author{\textbf{Thibault \textsc{Lengagne}, Sofian \textsc{Medbouhi} et Staninslas \textsc{Fechner}}}
+\title[Visualisation de traces réseaux]{Visualisation de traces réseaux}
+\author{\textbf{Thibault \textsc{Lengagne}et Nicolas \textsc{Ngô-Maï}}}
 \institute{Centrale Supélec - Campus de Rennes}
 
 \begin{document}
@@ -32,14 +32,15 @@
     \end{frame} 
   }
 
- \section{Introduction}
+ \section{Sujet - Objectifs - Choix}
   \begin{frame}
-   \frametitle{Réseaux Zigbee}
+   \frametitle{Rappel du Sujet}
+   Créer un outils pour pentester, permettant d'analyser efficacement une trace réseau
    \begin{itemize}
-    \item Histoire breve
-    \item Intérêt, application (domotique)
-    \item Droit, license, implémentation
-    \item Avenir
+    \item Les adresse IP identifiées ( + géolocalisation, résolution DNS)
+    \item Les protocoles utilisés ( en particulier non chiffrés ou mal configurés)
+    \item Les noeuds importants du réseau (serveur de fichier, DNS, LDAP...)
+    \item Extraire des traces rés
 
    \end{itemize}
   \end{frame}
@@ -70,31 +71,37 @@
   \begin{frame}
     \frametitle{Zigbee et la norme 802.15.4}
     Le protocole Zigbee utilise ce protocole comme cadre de fonctionnement :
-     %TO DO : Mettre imag   
+      \begin{center}
+       %\includegraphics[scale=0.4]{OSI-Zigbee.png}
+      \end{center}  
   \end{frame}
 
   \begin{frame}
     \frametitle{Détails}
-    802.15.4 est un protocole de communication de la famille des LR WPAN (Low Range Wireless Personal Area Network)
+    Protocole de communication de la famille des LR WPAN
     \begin{itemize}
-      \item Faible consommation, Faible portée, Faible débit
-      \item Réseau de type étoile ou maillé
-      \item Protocole très simple (non sécurisé)
+      \item Faible consommation
+      \item Faible portée
+      \item Faible débit
     \end{itemize}
   \end{frame}
 
   \begin{frame}
     \frametitle{Comparatif}
     \begin{block}{Schema comparatif des différents protocole sans fil}
-    %TO DO METTRE IMAGE
+      \begin{center}
+       %\includegraphics[scale=0.3]{Range.png}
+      \end{center} 
     \end{block}
   \end{frame}
   
   \begin{frame}
     \frametitle{La couche physique}
-    La couche physique contient l'émetteur/récepteur radio, avec un mécanisme de contrôle de qualité du signal et CCA
+    Contient l'émetteur/récepteur radio, avec un mécanisme de contrôle de qualité du signal et CCA
     \begin{block}{Débit}
-     %TO DO METTRE IMAGE
+      \begin{center}
+       %\includegraphics[scale=0.25]{Vitesse-Zigbee.png}
+      \end{center}
     \end{block}
   \end{frame}
   
@@ -116,7 +123,9 @@
         \item En-tête (contrôle de trame, numéro de séquence, adressage)
         \item Données
         \item Pied (CRC)
-        %TO DO METTRE IMAGE
+        \begin{center}
+         %\includegraphics[scale=0.5]{Couche-MAC.png}
+        \end{center} 
       \end{itemize}
     \end{block}
     \begin{block}{Il existe deux modes de fonctionnement}
@@ -129,7 +138,7 @@
   
   \begin{frame}
     \frametitle{La couche d'accès au medium (MAC)}
-    \begin{block}{Le mode non-coordonnée}
+    \begin{block}{Le mode non-Coordonnée}
       \begin{itemize}
         \item Pas d'emission de \textit{beacon}
         \item Fonctionnement CSMA/CA pour gérer les collisions
@@ -140,12 +149,14 @@
 
   \begin{frame}
     \frametitle{La sous-couche d'accès au medium (MAC)}
-    \begin{block}{Le mode coordonnée}
+    \begin{block}{Le mode Coordonnée}
       Le coordinateur diffuse périodiquement des \textit{beacon}. Tous les dispositifs sont informés de :
       \begin{itemize}
         \item La durée de la \textit{superframe} et quand ils peuvent transmettre des données en CSMA/CA
         \item A partir de quel moment le coordinateur rentre en hibernation et pour quelle durée
-        %TO DO METTRE IMAGE
+	\begin{center}
+	%\includegraphics[scale=0.4]{Supertrame.png}
+	\end{center} 
       \end{itemize}
     \end{block}
   \end{frame}
@@ -155,7 +166,7 @@
     \begin{itemize}
       \item Vérification de l'intégrité des données reçues
       \item Contrôle de flux, afin d'éviter la saturation
-      \item La convergence d'adressage (correspondance co uche 2 et 3 du modèle OSI, gestion du boradcast et en multicast)
+      \item La convergence d'adressage (correspondance entre les couches 2 et 3 du modèle OSI, gestion du boradcast et en multicast)
     \end{itemize}
   \end{frame}
 

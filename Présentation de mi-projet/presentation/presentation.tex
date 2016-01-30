@@ -32,169 +32,67 @@
     \end{frame} 
   }
 
- \section{Introduction}
+ \section{Sujet - Objectifs - Choix}
   \begin{frame}
-   \frametitle{Réseaux Zigbee}
+   \frametitle{Rappel du Sujet}
+   Créer un outils pour pentester, permettant d'analyser efficacement une trace réseau
    \begin{itemize}
-    \item Histoire breve
-    \item Intérêt, application (domotique)
-    \item Droit, license, implémentation
-    \item Avenir
-
+    \item Les adresse IP identifiées ( + géolocalisation, résolution DNS)
+    \item Les protocoles utilisés ( en particulier non chiffrés ou mal configurés)
+    \item Les noeuds importants du réseau (serveur de fichier, DNS, LDAP...)
+    \item Extraire des traces réseaux filtrées, extraire les données sensibles
    \end{itemize}
   \end{frame}
   
   \begin{frame}
-   \frametitle{Fonctions principales}
-   Depuis \textit{Zigbee}
-   \begin{itemize}
-    \item 
-    \item 
-    \item 
-    \item 
-   \end{itemize}
-  \end{frame}
-
-  \begin{frame}
-     \frametitle{Stratégie}
-    \begin{itemize}
-     \item 
-     \item 
-    \end{itemize}
-    \begin{alertblock}{Example}
-      Example
-    \end{alertblock}
-  \end{frame}
-  
- \section{La norme IEEE 802.15.4}
-  \begin{frame}
-    \frametitle{Zigbee et la norme 802.15.4}
-    Le protocole Zigbee utilise ce protocole comme cadre de fonctionnement :
-      \begin{center}
-       \includegraphics[scale=0.4]{OSI-Zigbee.png}
-      \end{center}  
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Détails}
-    Protocole de communication de la famille des LR WPAN
-    \begin{itemize}
-      \item Faible consommation
-      \item Faible portée
-      \item Faible débit
-    \end{itemize}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Comparatif}
-    \begin{block}{Schema comparatif des différents protocole sans fil}
-      \begin{center}
-       \includegraphics[scale=0.3]{Range.png}
-      \end{center} 
-    \end{block}
+   \frametitle{Retour sur les choix technologique}
+   Nous voulions interfacer plusieurs outils (Ettercap, ChaosReader, tcptrace...)
+   -> Finalement, nous utilisons uniquement Scapy
+   Pour stocker les résultats, la manipulation des JSON étant laborieuse, nous avons choisi d'utiliser une base de donnée PostGreSQL
+   Nous avons trouvé un outil très puissant de visualisation : D3.js
+   -> Nous avons donc créer une interface web (Flask, SQLAlchemy) connectée à PostgreSQL
   \end{frame}
   
   \begin{frame}
-    \frametitle{La couche physique}
-    Contient l'émetteur/récepteur radio, avec un mécanisme de contrôle de qualité du signal et CCA
-    \begin{block}{Débit}
-      \begin{center}
-       \includegraphics[scale=0.25]{Vitesse-Zigbee.png}
-      \end{center}
-    \end{block}
+   Schéma fonctionnel :
+  \end{frame}
+
+  \begin{frame}
+     \frametitle{Retour sur les objectifs fixés}
+    Nous avons remplis les objectifs suivants :
+    \begin{itemize}
+     \item Extraction de sessions, des utilisateurs, et des protocoles
+     \item Création de statistiques, extraction des données http
+     \item Visualisation en barre parallèle
+    \end{itemize}
   \end{frame}
   
+ \section{Démonstration}
   \begin{frame}
-    \frametitle{La couche d'accès au medium (MAC)}
-    \begin{block}{Rôle des éléments du réseau}
-      \begin{itemize}
-        \item Le coordinateur (ZC) est le noeud principal, il est unique
-        \item Les FFD ou routeurs gèrent le routage et les terminaux
-        \item Les RFD ou terminaux sont de simple capteurs aux extremités du réseau
-      \end{itemize}
-    \end{block}
-  \end{frame}
-  
-  \begin{frame}
-    \frametitle{La couche d'accès au medium (MAC)}
-    \begin{block}{Format de trame}
-      \begin{itemize}
-        \item En-tête (contrôle de trame, numéro de séquence, adressage)
-        \item Données
-        \item Pied (CRC)
-        \begin{center}
-         \includegraphics[scale=0.5]{Couche-MAC.png}
-        \end{center} 
-      \end{itemize}
-    \end{block}
-    \begin{block}{Il existe deux modes de fonctionnement}
-      \begin{itemize}
-        \item Le mode non-coordonnée
-        \item Le mode coordonnée, ou balisé
-      \end{itemize}
-    \end{block}
-  \end{frame}
-  
-  \begin{frame}
-    \frametitle{La couche d'accès au medium (MAC)}
-    \begin{block}{Le mode non-Coordonnée}
-      \begin{itemize}
-        \item Pas d'emission de \textit{beacon}
-        \item Fonctionnement CSMA/CA pour gérer les collisions
-        \item Le coordinateur est éveillé en permanence
-      \end{itemize}
-    \end{block}
+    \frametitle{Lancement de l'outil}
+    Le projet est disponible sur https://github.com/lechinoix/Pcap-visualization-project
+    Après avoir suivi la procédure d'installation, on démarre le serveur pour accéder à l'interface web
+    Il suffit de disposer d'un fichier .pcap à analyser
   \end{frame}
 
-  \begin{frame}
-    \frametitle{La sous-couche d'accès au medium (MAC)}
-    \begin{block}{Le mode Coordonnée}
-      Le coordinateur diffuse périodiquement des \textit{beacon}. Tous les dispositifs sont informés de :
-      \begin{itemize}
-        \item La durée de la \textit{superframe} et quand ils peuvent transmettre des données en CSMA/CA
-        \item A partir de quel moment le coordinateur rentre en hibernation et pour quelle durée
-	\begin{center}
-	\includegraphics[scale=0.4]{Supertrame.png}
-	\end{center} 
-      \end{itemize}
-    \end{block}
-  \end{frame}
+  %Ici une démonstration live de 5 min
 
   \begin{frame}
-    \frametitle{La sous-couche de convergence (LLC)}
+    \frametitle{Question, remarques ?}
+  \end{frame}
+
+  \section{Travail à venir}
+  \begin{frame}
+    Nous devons encore remplir ces objectifs
     \begin{itemize}
-      \item Vérification de l'intégrité des données reçues
-      \item Contrôle de flux, afin d'éviter la saturation
-      \item La convergence d'adressage (correspondance entre les couches 2 et 3 du modèle OSI, gestion du boradcast et en multicast)
+     \item Ajouter les différents filtres possibles
+     \item Extraire d'un pcap a partir des trames filtrées
+     \item Extraire les données non chiffrées des protocoles SMTP,IMAP,POP,LDAP
+     \item Ajouter la résolution DNS
+     \item Ajouter d'autres mode de visualisation (carte des IP,..)
     \end{itemize}
   \end{frame}
 
-  \section{Les couches 4 à 7}
-  \begin{frame}
-    \frametitle{Présentation}
-    \begin{itemize}
-      \item 
-      \item 
-    \end{itemize}
-    Example : 
-    \begin{itemize}
-      \item 
-      \item 
-    \end{itemize}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Adressage}
-    \begin{itemize}
-      \item Zigbee propose un algorithme de distribution d'adresses atomatique et décentralisé
-      \item 
-    \end{itemize}
-    Example : 
-    \begin{itemize}
-      \item 
-      \item 
-    \end{itemize}
-  \end{frame}
 
   \section{Conclusion}
   \begin{frame}

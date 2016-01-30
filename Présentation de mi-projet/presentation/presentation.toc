@@ -1,6 +1,6 @@
 \beamer@endinputifotherversion {3.33pt}
 \select@language {french}
-\beamer@sectionintoc {1}{Introduction}{2}{0}{1}
-\beamer@sectionintoc {2}{La norme IEEE 802.15.4}{6}{0}{2}
-\beamer@sectionintoc {3}{Les couches 4 \IeC {\`a} 7}{16}{0}{3}
-\beamer@sectionintoc {4}{Conclusion}{19}{0}{4}
+\beamer@sectionintoc {1}{Sujet - Objectifs - Choix}{2}{0}{1}
+\beamer@sectionintoc {2}{D\IeC {\'e}monstration}{7}{0}{2}
+\beamer@sectionintoc {3}{Travail \IeC {\`a} venir}{10}{0}{3}
+\beamer@sectionintoc {4}{Conclusion}{12}{0}{4}
