@@ -66,7 +66,7 @@ def get_protocol(pkt):
 def feed_stats(stat, packet):
     """Create statistiques about protocols used, which will be added to the DB during add() execution"""
     protocol = get_protocol(packet)
-    stat["total"] += 1
+    stat["TOTAL"] += 1
     if protocol in  stat:
         stat[protocol] += 1 
     else:
