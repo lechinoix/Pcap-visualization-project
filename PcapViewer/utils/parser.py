@@ -203,18 +203,6 @@ def add(user,stat):
         S = Stat(el,stat[el])
         db_session.add(S)
 
-def get_mail(packet,mailpkts):
-    result = "<p>"
-    if TCP in packet:
-        if get_protocol(packet)=="IMAP":
-            if packet.haslayer(Raw):
-                result = result + packet.getlayer('Raw').load.replace(' ','&nbsp;').replace('\n','<br/>')
-    if result == "<p>":
-        result = result + "No Mail Packets!"
-    result = result + "</p>"
-    result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
-    return result
-
 def parse(filename):
     """ Parses pcap file and populate de PostgreSQL Database. Populates User, Session, Stat and Packet Tables"""
 
@@ -239,8 +227,7 @@ def parse(filename):
         t1 += time.clock() - t0
         t0 = time.clock()
         feed_stats(stat,pkt)
-        t2 += time.clock()-t0
-        result += get_mail(pkt,mailpkts)
+        t2 += time.clock()-t0s
     print result
     add(user,stat)
     
