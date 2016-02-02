@@ -1,6 +1,6 @@
 # Scenario d'utilisation du soft
 
-Un attaquant dispose d'un fichier pcap créé à l'intérieur d'un réseau qu'il souhaite attaquer en boite noire. L'attaquant veut voir immédiatement les informations du pcap, et pouvoir lui même déduire des choses. L'identification d'un protocole non sécurisé est immédiate, mais voir que beaucoup de machines se connectent toute à une seule machine en SMB est très utile pour l'attaquant
+Un attaquant dispose d'un fichier pcap créé à l'intérieur d'un réseau qu'il souhaite attaquer en boite noire. L'attaquant veut voir immédiatement les informations du pcap, et pouvoir lui même déduire des choses. L'identification d'un protocole non sécurisé est immédiate, mais voir que beaucoup de machines se connectent toute à une seule machine en DNS est très utile pour l'attaquant
 
 - L'attaquant espère soutirer des informations sur le réseau :
 - Les adresses IP identifiées

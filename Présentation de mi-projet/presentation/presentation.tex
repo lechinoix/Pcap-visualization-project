@@ -34,45 +34,76 @@
 
  \section{Sujet - Objectifs - Choix}
   \begin{frame}
-   \frametitle{Rappel du Sujet}
-   Créer un outils pour pentester, permettant d'analyser efficacement une trace réseau
-   \begin{itemize}
-    \item Les adresse IP identifiées ( + géolocalisation, résolution DNS)
-    \item Les protocoles utilisés ( en particulier non chiffrés ou mal configurés)
-    \item Les noeuds importants du réseau (serveur de fichier, DNS, LDAP...)
-    \item Extraire des traces réseaux filtrées, extraire les données sensibles
-   \end{itemize}
+    \frametitle{Rappel du Sujet}
+    Le but est de créer un outil destiné aux pentesters, permettant d'analyser efficacement une trace réseau. \\
+    L'attaquant dispose d'une trace réseau mais n'a aucune connaissance de ce réseau.\\
+    Un fichier pcap devient rapidement très volumineux et son analyse est laborieuse, nécessitant l'utilisation de plusieurs outils
   \end{frame}
   
   \begin{frame}
-   \frametitle{Retour sur les choix technologique}
-   Nous voulions interfacer plusieurs outils (Ettercap, ChaosReader, tcptrace...)
-   -> Finalement, nous utilisons uniquement Scapy
-   Pour stocker les résultats, la manipulation des JSON étant laborieuse, nous avons choisi d'utiliser une base de donnée PostGreSQL
-   Nous avons trouvé un outil très puissant de visualisation : D3.js
-   -> Nous avons donc créer une interface web (Flask, SQLAlchemy) connectée à PostgreSQL
-  \end{frame}
-  
-  \begin{frame}
-   Schéma fonctionnel :
+    \frametitle{Rappel du Sujet}
+    L'attaquant espère soutirer des informations sur le réseau :
+    \begin{itemize}
+      \item Les adresse IP identifiées ( + géolocalisation, résolution DNS)
+      \item Les protocoles utilisés ( en particulier non chiffrés ou mal configurés)
+      \item Les noeuds importants du réseau (serveur de fichier, DNS, LDAP...)
+      \item Extraire des traces réseaux filtrées, extraire les données sensibles
+    \end{itemize}
   \end{frame}
 
   \begin{frame}
-     \frametitle{Retour sur les objectifs fixés}
-    Nous avons remplis les objectifs suivants :
+   \frametitle{Retour sur les choix technologique}
+   Nous voulions à l'origine interfacer plusieurs outils (Ettercap, ChaosReader, tcptrace...) pour offrir une logiciel comportant tous les outils. \\
+   Finalement, Scapy nous permet de manipuler la trace réseau de façon satisfaisante.
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Retour sur les choix technologique}
+   Pour stocker les résultats, la manipulation des JSON étant laborieuse, nous avons choisi d'utiliser une base de donnée PostGreSQL\\
+   Nous avons trouvé un outil très puissant pour faire de la visualisation : D3.js \\
+   Nous avons donc choisi de mettre en place un serveur web en python (Flask) \\
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Retour sur les objectifs fixés}
+    Nous avons d'ores et déjà remplis les objectifs suivants :
     \begin{itemize}
      \item Extraction de sessions, des utilisateurs, et des protocoles
-     \item Création de statistiques, extraction des données http
+     \item Création de statistiques, extraction des données en clair
      \item Visualisation en barre parallèle
     \end{itemize}
   \end{frame}
   
+  \section{Détails techniques}
+  \begin{frame}
+   Schéma fonctionnel de notre programme :
+  \end{frame}
+  \begin{frame}
+    \frametitle{Analyse du fichier pcap}
+    Libraire Scapy permet de lire nos fichiers .pcap, puis de manipuler les packets.\\
+    Une fonction parse parcourt tous les paquets. Des statistiques sont alors tirées du protocole en jeux, \\
+    La fonction parse parcourt également tous les sessions, et enregistre les trames de chaque session\\
+    %Montrer le code réduit
+  \end{frame}
+  
+  \begin{frame}
+    \frametitle{Performances du parser}
+    Les fichiers pcap peuvent atteindre plusieurs Giga assez rapidement. \\
+    Le programme n'écrit dans la base de donnée qu'une seule fois, à la fin de la collecte des données
+    Certaines tables sont simplement commit. Pour d'autre tables, le résultat est stocké dans un dictionnaire jusqu'à la fin.
+    %Afficher les résultats
+  \end{frame}
+  
+
+
+
+  
  \section{Démonstration}
   \begin{frame}
     \frametitle{Lancement de l'outil}
-    Le projet est disponible sur https://github.com/lechinoix/Pcap-visualization-project
-    Après avoir suivi la procédure d'installation, on démarre le serveur pour accéder à l'interface web
-    Il suffit de disposer d'un fichier .pcap à analyser
+    Le projet est disponible sur https://github.com/lechinoix/Pcap-visualization-project  \\
+    Après avoir suivi la procédure d'installation, on démarre le serveur pour accéder à l'interface web \\
+    Il suffit alors d'uploader un fichier .pcap à analyser
   \end{frame}
 
   %Ici une démonstration live de 5 min
