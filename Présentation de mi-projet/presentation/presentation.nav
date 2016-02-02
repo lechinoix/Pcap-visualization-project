@@ -16,33 +16,42 @@
 \headcommand {\beamer@framepages {6}{6}}
 \headcommand {\slideentry {1}{0}{7}{7/7}{}{0}}
 \headcommand {\beamer@framepages {7}{7}}
-\headcommand {\slideentry {1}{0}{8}{8/8}{}{0}}
+\headcommand {\sectionentry {2}{D\IeC {\'e}tails techniques}{8}{D\IeC {\'e}tails techniques}{0}}
+\headcommand {\beamer@sectionpages {2}{7}}
+\headcommand {\beamer@subsectionpages {2}{7}}
+\headcommand {\slideentry {2}{0}{8}{8/8}{}{0}}
 \headcommand {\beamer@framepages {8}{8}}
-\headcommand {\sectionentry {2}{D\IeC {\'e}monstration}{9}{D\IeC {\'e}monstration}{0}}
-\headcommand {\beamer@sectionpages {2}{8}}
-\headcommand {\beamer@subsectionpages {2}{8}}
 \headcommand {\slideentry {2}{0}{9}{9/9}{}{0}}
 \headcommand {\beamer@framepages {9}{9}}
 \headcommand {\slideentry {2}{0}{10}{10/10}{}{0}}
 \headcommand {\beamer@framepages {10}{10}}
 \headcommand {\slideentry {2}{0}{11}{11/11}{}{0}}
 \headcommand {\beamer@framepages {11}{11}}
-\headcommand {\sectionentry {3}{Travail \IeC {\`a} venir}{12}{Travail \IeC {\`a} venir}{0}}
-\headcommand {\beamer@sectionpages {9}{11}}
-\headcommand {\beamer@subsectionpages {9}{11}}
+\headcommand {\sectionentry {3}{D\IeC {\'e}monstration}{12}{D\IeC {\'e}monstration}{0}}
+\headcommand {\beamer@sectionpages {8}{11}}
+\headcommand {\beamer@subsectionpages {8}{11}}
 \headcommand {\slideentry {3}{0}{12}{12/12}{}{0}}
 \headcommand {\beamer@framepages {12}{12}}
 \headcommand {\slideentry {3}{0}{13}{13/13}{}{0}}
 \headcommand {\beamer@framepages {13}{13}}
-\headcommand {\sectionentry {4}{Conclusion}{14}{Conclusion}{0}}
-\headcommand {\beamer@sectionpages {12}{13}}
-\headcommand {\beamer@subsectionpages {12}{13}}
-\headcommand {\slideentry {4}{0}{14}{14/14}{}{0}}
+\headcommand {\slideentry {3}{0}{14}{14/14}{}{0}}
 \headcommand {\beamer@framepages {14}{14}}
+\headcommand {\sectionentry {4}{Travail \IeC {\`a} venir}{15}{Travail \IeC {\`a} venir}{0}}
+\headcommand {\beamer@sectionpages {12}{14}}
+\headcommand {\beamer@subsectionpages {12}{14}}
 \headcommand {\slideentry {4}{0}{15}{15/15}{}{0}}
 \headcommand {\beamer@framepages {15}{15}}
-\headcommand {\beamer@partpages {1}{15}}
-\headcommand {\beamer@subsectionpages {14}{15}}
-\headcommand {\beamer@sectionpages {14}{15}}
-\headcommand {\beamer@documentpages {15}}
-\headcommand {\def \inserttotalframenumber {15}}
+\headcommand {\slideentry {4}{0}{16}{16/16}{}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\sectionentry {5}{Conclusion}{17}{Conclusion}{0}}
+\headcommand {\beamer@sectionpages {15}{16}}
+\headcommand {\beamer@subsectionpages {15}{16}}
+\headcommand {\slideentry {5}{0}{17}{17/17}{}{0}}
+\headcommand {\beamer@framepages {17}{17}}
+\headcommand {\slideentry {5}{0}{18}{18/18}{}{0}}
+\headcommand {\beamer@framepages {18}{18}}
+\headcommand {\beamer@partpages {1}{18}}
+\headcommand {\beamer@subsectionpages {17}{18}}
+\headcommand {\beamer@sectionpages {17}{18}}
+\headcommand {\beamer@documentpages {18}}
+\headcommand {\def \inserttotalframenumber {18}}
