@@ -76,7 +76,6 @@ Start looking at the treemap visu, and find the most importants nodes in the net
 
 Look more closely at those, with the network visualization of its communications with other hosts. This view could be a tree with the node on top and then ramifications with the communications by protocol to different users. Big users could be written bigger.
 
->>>>>>> FlaskApplication
 This could also be seen on the parallel view that gives and idea about what the network looks like globally. You could reload the tool with only certain users, and only certain services, or remove one of those in the sidebar.
 
 There will be an analysis button at the bottom of this bar to run analysis on the current selection.
