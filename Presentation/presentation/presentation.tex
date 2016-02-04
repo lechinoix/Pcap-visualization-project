@@ -38,11 +38,11 @@
     \begin{itemize}
      \item Le but est de créer un outil destiné aux pentesters, permettant d'analyser efficacement une trace réseau.
      \item L'attaquant dispose d'une trace réseau mais n'a aucune connaissance de ce réseau.
-     \item Un fichier pcap devient rapidement très volumineux et son analyse est laborieuse, nécessitant l'utilisation de plusieurs outils.
+     \item L'analyse lui permet d'obtenir des mots de passe, la connaissance machines non sécurisées, du contenu non chiffré
     \end{itemize}
   \end{frame}
   
-  \begin{frame}
+   \begin{frame}
     \frametitle{Rappel du Sujet}
     L'attaquant espère soutirer des informations sur le réseau :
     \begin{itemize}
@@ -50,6 +50,19 @@
       \item Les protocoles utilisés ( en particulier non chiffrés ou mal configurés)
       \item Les noeuds importants du réseau (serveur de fichier, DNS, LDAP...)
       \item Extraire des traces réseaux filtrées, extraire les données sensibles
+    \end{itemize}
+    Cela lui permettra d'attaquer plus facilement le réseau
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Rappel du Sujet}
+    Scénario d'utilisation
+    \begin{itemize}
+     \item Upload du fichier Pcap, affichage en continu des données analysées
+     \item Liste des protocoles / hosts filtrables dans la sidebar.
+     \item Vue treemap qui permet de caractériser les hosts
+     \item Passage en coordonées parallèle avec seulement les hôtes filtrés qui permet de valider les hypothèses
+     \item L'outil permet de trouver des machines mal configurées et d'extraire des informations.
     \end{itemize}
   \end{frame}
 
@@ -68,7 +81,7 @@
     \begin{itemize}
      \item Extraction de sessions, des utilisateurs, et des protocoles
      \item Création de statistiques, extraction des données en clair
-     \item Visualisation en barre parallèle
+     \item Visualisation en coordonnées parallèles
     \end{itemize}
   \end{frame}
   
@@ -158,20 +171,18 @@
 
   %Ici une démonstration live de 5 min
 
-  \section{Travail à venir}
+  \section{Travail à venir}  
   \begin{frame}
-    Scénario d'utilisation
+    Objectifs à remplir
     \begin{itemize}
-     \item Upload du fichier Pcap, affichage en continu des données analysées
-     \item Liste des protocoles / hosts avec des chiffres dans la sidebar
-     \item Vue treemap qui permet de caractériser les hosts, filtrage dans la
-     barre à gauche
-     \item Passage en coordonées parallèle avec seulement les hôtes filtrés qui
-     permet de valider les hypothèses
-     \item Vue géographique ?
+     \item Ajouter les différents filtres possibles
+     \item Extraire un .pcap a partir de trames filtrées
+     \item Extraire les données non chiffrées des protocoles SMTP,IMAP,POP,LDAP
+     \item Ajouter la résolution DNS
+     \item Ajouter d'autres mode de visualisation (carte des IP,..)
     \end{itemize}
   \end{frame}
-  
+
   \begin{frame}
     Problématiques à venir
     \begin{itemize}
@@ -182,23 +193,18 @@
      \end{itemize}
   \end{frame}
   
-  \begin{frame}
-    Objectifs à remplir
-    \begin{itemize}
-     \item Ajouter les différents filtres possibles
-     \item Extraire d'un pcap a partir des trames filtrées
-     \item Extraire les données non chiffrées des protocoles SMTP,IMAP,POP,LDAP
-     \item Ajouter la résolution DNS
-     \item Ajouter d'autres mode de visualisation (carte des IP,..)
-    \end{itemize}
-  \end{frame}
-
-
   \section{Conclusion}
   \begin{frame}
     \begin{center}
       Merci de votre attention ! \\
       https://github.com/lechinoix/Pcap-visualization-project
+    \end{center}
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Détail du champs exchanged de Users}
+    \begin{center}
+       \includegraphics[scale=0.4]{json.png}
     \end{center}
   \end{frame}
 
