@@ -1,0 +1,69 @@
+%%(encoding:utf-8)
+%% author: Frédéric Boulanger, frederic.boulanger@centralesupelec.fr
+%% copyright CentraleSupélec 2015
+%% v1.0: initial release
+%%
+%% Options:
+%%   Cecile (default=false): use orange for titles and "alert" elements
+%%
+\ProvidesPackage{beamercolorthemecs}[2015/10/21 v1.1 Beamer color theme for CentraleSupelec]
+
+\DeclareOptionBeamer{Cecile}[true]{%
+  \def\beamer@themecs@Cecile{#1}%
+}
+\ExecuteOptionsBeamer{Cecile=false}
+\ProcessOptionsBeamer
+
+\mode<presentation>
+\definecolor{cs-logored}{RGB}{176,11,58}
+\definecolor{cs-lightred}{RGB}{222,137,148}
+\definecolor{cs-logoblue}{RGB}{125,99,142}
+\definecolor{cs-lightblue}{RGB}{196,181,206}
+\definecolor{cs-dark}{RGB}{35,31,32}
+\definecolor{cs-darkgray}{RGB}{145,143,144}
+\definecolor{cs-gray}{RGB}{167,165,166}
+\definecolor{cs-ligthgray}{RGB}{211,210,210}
+%\definecolor{cs-deepblue}{cmyk}{0.96,0.65,0.25,0.09}
+%\definecolor{cs-blue}{cmyk}{0.91,0.54,0.15,0.02}
+%\definecolor{cs-lightblue}{cmyk}{0.85,0.45,0.09,0}
+\definecolor{cs-orange}{cmyk}{0,0.45,0.87,0}
+\setbeamercolor{structure}{fg=cs-logoblue}
+\setbeamercolor{item projected}{bg=cs-darkgray}
+%%
+\setbeamercolor*{palette primary}{use=structure,fg=white,bg=structure.fg}
+\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=cs-logoblue}
+\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=cs-lightblue}
+\setbeamercolor*{palette quaternary}{fg=white,bg=black}
+%%
+\setbeamercolor*{sidebar}{use=structure,bg=structure.fg}
+\setbeamercolor*{palette sidebar primary}{use=structure,fg=cs-logoblue}
+\setbeamercolor*{palette sidebar secondary}{fg=white}
+\setbeamercolor*{palette sidebar tertiary}{use=structure,fg=cs-lightblue}
+\setbeamercolor*{palette sidebar quaternary}{fg=white}
+
+\def\beamer@themecs@tmp{true}
+\ifx\beamer@themecs@Cecile\beamer@themecs@tmp
+  \setbeamercolor*{titlelike}{parent=palette primary,fg=cs-lightblue}
+  \setbeamercolor{alert}{fg=cs-orange}
+  \setbeamercolor{alerted text}{fg=cs-orange}
+\else
+  \setbeamercolor*{titlelike}{parent=palette primary}
+  \setbeamercolor{alert}{fg=cs-logored}
+  \setbeamercolor{alerted text}{fg=cs-logored}
+  \setbeamercolor{example}{fg=cs-logoblue}
+  \setbeamercolor{example text}{fg=cs-logoblue}
+\fi
+
+\setbeamercolor*{separation line}{}
+\setbeamercolor*{fine separation line}{}
+%%
+\setbeamercolor*{block body}{}
+\setbeamercolor*{block body alerted}{}
+\setbeamercolor*{block body example}{}
+\setbeamercolor*{block title}{parent=structure}
+\setbeamercolor*{block title alerted}{parent=alerted text}
+\setbeamercolor*{block title example}{parent=example text}
+\mode
+<all>
+
+\endinput
