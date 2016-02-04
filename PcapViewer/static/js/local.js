@@ -15,6 +15,10 @@ $(document).ready(function(){
     
     // Catching sessions on first load
     var sessions = loadedSessions;
+    var users = loadedUsers.sort(function(a, b){
+    	return a['exchanged']['Volume'] - b['exchanged']['Volume'];
+    });
+    console.log(users);
 	
 /* ============================
 
@@ -116,7 +120,7 @@ function displayParallel(data){
 	// Create ordinals dimensions
     if(d.toLowerCase() != "id" && d.substr(0,4).toLowerCase() != "port" && d.substr(0,4).toLowerCase() != "nomb" ){
     	return y[d] = d3.scale.ordinal()
-    	.domain(d3.values(data).sort(function(a, b) { return d3.ascending(a, b); }).map(function(obj){return obj[d];}))
+    	.domain(d3.values(data).sort(function(a, b) {return d3.ascending(a[d], b[d]); }).map(function(obj){return obj[d];}))
     	.rangePoints([height, 0]);
 
     // Create linear dimensions
@@ -259,23 +263,27 @@ $("form#upload-form").on('submit', function(e){
 });
 
 // Update side bar
-function appendUser(user){
-	  $('.left-bar .tab-content #hosts table tbody').append("<tr>" +
-		  		"<td>" + user['id'] + "</td>" +
-		  		"<td>" + user['address'] + "</td>" +
-		  		"<td>" + user['exchanged']["Volume"] + "</td>" +
-		  		"<td></td>" +
-		  		"</tr>");
+function updateUsers(){
+	for(i=0;i<users.length;i++){
+		$('.left-bar .tab-content #hosts table tbody').append("<tr>" +
+	  		"<td>" + (i+1) + "</td>" +
+	  		"<td>" + users[i]['address'] + "</td>" +
+	  		"<td>" + users[i]['exchanged']["Volume"] + "</td>" +
+	  		"<td></td>" +
+	  		"</tr>");
+	}
 }
 
 // Update side bar
-function appendStat(stat){
-	  $('.left-bar .tab-content #services table tbody').append("<tr>" +
-		  		"<td>" + stat['id'] + "</td>" +
-		  		"<td>" + stat['name'] + "</td>" +
-		  		"<td>" + stat['value'] + "</td>" +
-		  		"<td></td>" +
-		  		"</tr>");
+function updateStats(stats){
+	for(i=0;i<stats.length;i++){
+		$('.left-bar .tab-content #services table tbody').append("<tr>" +
+	  		"<td>" + (i+1) + "</td>" +
+	  		"<td>" + stats[i]['name'] + "</td>" +
+	  		"<td>" + stats[i]['value'] + "</td>" +
+	  		"<td></td>" +
+	  		"</tr>");
+	}
 }
 
 socket.on('successfullUpload', function(data){
@@ -287,19 +295,17 @@ socket.on('newData', function(data){
 	data = JSON.parse(data);
 	if('users' in data){
 		$('.left-bar .tab-content #hosts table tbody').html('');
-		users = data['users'];
-		for(i=0;i<users.length;i++){
-			console.log(users[i]);
-			appendUser(users[i]);
-		}
+		users = data['users'].sort(function(a, b){
+			return a["exchanged"]["volume"] - b["exchanged"]["volume"];
+		});
+		updateUsers(users);
 	}
 	if('stats' in data){
 		$('.left-bar .tab-content #services table tbody').html('');
-		stats = data['stats'];
-		for(i=0;i<stats.length;i++){
-			console.log(stats[i]);
-			appendStat(stats[i]);
-		}
+		stats = data['stats'].sort(function(a, b){
+			return a["value"] - b["value"];
+		});
+		updateStats(stats);
 	}
 	if('sessions' in data){
 		sessions = data['sessions']
@@ -307,7 +313,10 @@ socket.on('newData', function(data){
 	}
 })
 
+
 displayParallel(sessions);
+
+updateUsers();
 
 // Unused
 

@@ -50,13 +50,6 @@
 				              </tr>
 				            </thead>
 				            <tbody>
-				            {% for user in users %}
-				              <tr>
-				                <td>{{ loop.index }}</td>
-				                <td>{{ user.address }}</td>
-				                <td>{{ user.exchanged["Volume"]}}</td>
-				              </tr>
-				             {% endfor %}
 				            </tbody>
 				          </table>
 						</div>
@@ -70,7 +63,7 @@
 				              </tr>
 				            </thead>
 				            <tbody>
-				            {% for stat in stats %}
+				            {% for stat in stats | sort(True, attribute="value") %}
 				              <tr>
 				                <td>{{ loop.index }}</td>
 				                <td>{{ stat.name }}</td>
@@ -143,15 +136,15 @@ var loadedSessions = [
             }{% if not loop.last %},{% endif %}
             {% endfor %}
            ];
-// var loadedUsers = [
-//             {% for user in users %}
-//             {	
-//             	'id':'{{ user.id }}',
-//             	'name':'{{ user.hostSrc }}',
-//             	'exchanged':'{{ user.exchanged }}'
-//             }{% if not loop.last %},{% endif %}
-//             {% endfor %}
-//            ]
+ var loadedUsers = [
+             {% for user in users %}
+             {	
+             	'id':'{{ user.id }}',
+             	'address':'{{ user.address }}',
+             	'exchanged':{{ user.exchanged | tojson }}
+             }{% if not loop.last %},{% endif %}
+             {% endfor %}
+            ];
 </script>
 {% endblock %}
 		
