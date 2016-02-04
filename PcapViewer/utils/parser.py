@@ -54,15 +54,20 @@ def get_protocol(pkt):
             protocol = "IMAPS"
         elif pkt[TCP].dport == 995 or pkt[TCP].sport == 995:
             protocol = "POP3S"
+        else:
+            protocol = "TCP"
     elif pkt.haslayer(UDP):
         if pkt[UDP].dport == 53 or pkt[UDP].sport == 53:
             protocol = "DNS"
         elif pkt[UDP].dport == 5353 or pkt[UDP].sport == 5353:
             protocol = "MDNS"
+        else:
+            protocol = "UDP"
     elif pkt.haslayer(ARP):
         protocol = "ARP"
     elif pkt.haslayer(ICMP):
         protocol = "ICMP"
+
     return protocol
 
 def feed_stats(stat, packet):
@@ -227,7 +232,7 @@ def parse(filename):
         t1 += time.clock() - t0
         t0 = time.clock()
         feed_stats(stat,pkt)
-        t2 += time.clock()-t0s
+        t2 += time.clock()-t0
     print result
     add(user,stat)
     

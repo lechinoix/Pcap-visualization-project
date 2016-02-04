@@ -86,7 +86,7 @@
 
 					<button id="parallel-btn" class="btn btn-default" type="button">Parallel</button>
 					<button id="network-btn" class="btn btn-default" type="button">Network</button>
-
+					<button id="treemap-btn" class="btn btn-default" type="button">Treemap</button>
 					<div id="view-wrapper" class="panel panel-default">
 						
 					</div>
@@ -143,7 +143,16 @@ var loadedSessions = [
             	'protocol':'{{ session.protocol }}'
             }{% if not loop.last %},{% endif %}
             {% endfor %}
-           ]
+           ];
+// var loadedUsers = [
+//             {% for user in users %}
+//             {	
+//             	'id':'{{ user.id }}',
+//             	'name':'{{ user.hostSrc }}',
+//             	'exchanged':'{{ user.exchanged }}'
+//             }{% if not loop.last %},{% endif %}
+//             {% endfor %}
+//            ]
 </script>
 {% endblock %}
 		
