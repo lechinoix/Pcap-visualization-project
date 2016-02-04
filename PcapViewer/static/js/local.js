@@ -22,63 +22,6 @@ $(document).ready(function(){
 
 ===============================*/
 
-
-// Network View
-
-var select, svg, diameter, tree, diagonal, nodes, node, link, links;
-
-function displayNetwork(){
-	
-	diameter = 960;
-
-	tree = d3.layout.tree()
-	    .size([360, diameter / 2 - 120])
-	    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
-
-	diagonal = d3.svg.diagonal.radial()
-	    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
-
-
-    select = d3.select("#view-wrapper");
-    select.selectAll("svg").remove();
-	svg = select.append("svg")
-	    .attr("width", diameter)
-	    .attr("height", diameter - 150)
-	  .append("g")
-	    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-
-	d3.json("static/parsed/flare.json", function(error, root) {
-	  if (error) throw error;
-
-	  nodes = tree.nodes(root),
-	  links = tree.links(nodes);
-
-	  link = svg.selectAll(".link")
-	      .data(links)
-	    .enter().append("path")
-	      .attr("class", "link")
-	      .attr("d", diagonal);
-
-	  node = svg.selectAll(".node")
-	      .data(nodes)
-	    .enter().append("g")
-	      .attr("class", "node")
-	      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-
-	  node.append("circle")
-	      .attr("r", 4.5);
-
-	  node.append("text")
-	      .attr("dy", ".31em")
-	      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-	      .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
-	      .text(function(d) { return d.name; });
-	});
-
-	d3.select(self.frameElement).style("height", diameter - 150 + "px");
-
-}
-
 //Treemap View
 
 function displayTreemap(){
@@ -137,7 +80,7 @@ function displayTreemap(){
 
 // Parallel View
 
-var line, dragging, x, y, foreground, background, axis, margin, height, width, g, slicedData;
+var line, dragging, x, y, foreground, background, axis, margin, height, width, g, data;
 
 function displayParallel(data){
 	
@@ -166,22 +109,20 @@ function displayParallel(data){
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	slicedData = data.slice(0, 300);	
 	
   // Extract the list of dimensions and create a scale for each.
-  x.domain(dimensions = d3.keys(slicedData[0]).filter(function(d) {
+  x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
 
 	// Create ordinals dimensions
     if(d.toLowerCase() != "id" && d.substr(0,4).toLowerCase() != "port" && d.substr(0,4).toLowerCase() != "nomb" ){
     	return y[d] = d3.scale.ordinal()
-    	.domain(d3.values(slicedData).map(function(obj){return obj[d];}))
+    	.domain(d3.values(data).sort(function(a, b) { return d3.ascending(a, b); }).map(function(obj){return obj[d];}))
     	.rangePoints([height, 0]);
 
     // Create linear dimensions
      }else if(d.substr(0,3).toLowerCase() != "id"){
 		return y[d] = d3.scale.linear()
-          .domain(d3.extent(slicedData, function(p) { return +p[d]; }))
+          .domain(d3.extent(data, function(p) { return +p[d]; }))
           .range([height, 0]);
     }
 	  
@@ -191,7 +132,7 @@ function displayParallel(data){
   background = svg.append("g")
       .attr("class", "background")
     .selectAll("path")
-      .data(slicedData)
+      .data(data)
     .enter().append("path")
       .attr("d", path);
 
@@ -199,7 +140,7 @@ function displayParallel(data){
   foreground = svg.append("g")
       .attr("class", "foreground")
     .selectAll("path")
-      .data(slicedData)
+      .data(data)
     .enter().append("path")
       .attr("d", path);
 
@@ -280,7 +221,7 @@ function brush() {
       extents = actives.map(function(p) { return y[p].brush.extent(); });
   foreground.style("display", function(d) {
     return actives.every(function(p, i) {
-    	if(d[p].toString().split('.').length > 3){
+    	if(typeof y[p].rangePoints === "function"){
     		return extents[i][0] <= y[p](d[p]) && y[p](d[p]) <= extents[i][1];
     	}else{
     		return extents[i][0] <= d[p] && d[p] <= extents[i][1];
@@ -379,5 +320,62 @@ displayParallel(sessions);
 //    console.log(type);
 //    
 //});
+
+
+//Network View
+
+//var select, svg, diameter, tree, diagonal, nodes, node, link, links;
+//
+//function displayNetwork(){
+//	
+//	diameter = 960;
+//
+//	tree = d3.layout.tree()
+//	    .size([360, diameter / 2 - 120])
+//	    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+//
+//	diagonal = d3.svg.diagonal.radial()
+//	    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+//
+//
+// select = d3.select("#view-wrapper");
+// select.selectAll("svg").remove();
+//	svg = select.append("svg")
+//	    .attr("width", diameter)
+//	    .attr("height", diameter - 150)
+//	  .append("g")
+//	    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+//
+//	d3.json("static/parsed/flare.json", function(error, root) {
+//	  if (error) throw error;
+//
+//	  nodes = tree.nodes(root),
+//	  links = tree.links(nodes);
+//
+//	  link = svg.selectAll(".link")
+//	      .data(links)
+//	    .enter().append("path")
+//	      .attr("class", "link")
+//	      .attr("d", diagonal);
+//
+//	  node = svg.selectAll(".node")
+//	      .data(nodes)
+//	    .enter().append("g")
+//	      .attr("class", "node")
+//	      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+//
+//	  node.append("circle")
+//	      .attr("r", 4.5);
+//
+//	  node.append("text")
+//	      .attr("dy", ".31em")
+//	      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+//	      .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
+//	      .text(function(d) { return d.name; });
+//	});
+//
+//	d3.select(self.frameElement).style("height", diameter - 150 + "px");
+//
+//}
 
 })

@@ -87,7 +87,8 @@ class User(Base):
     def as_dict(self):
         return {
                 'id':self.id,
-                'address':self.address
+                'address':self.address,
+                'exchanged':self.exchanged
                 }
         
 class Stat(Base):
