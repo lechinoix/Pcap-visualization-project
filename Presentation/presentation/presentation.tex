@@ -63,15 +63,6 @@
   \end{frame}
   
   \begin{frame}
-  \frametitle{Resumé des choix technologiques}
-   \begin{itemize}
-    \item Pour stocker les résultats, nous avons choisi d'utiliser une base de donnée PostGreSQL
-    \item Nous avons trouvé un outil très puissant pour faire de la visualisation : D3.js
-    \item Nous avons donc choisi de mettre en place un serveur web en python (Flask)
-   \end{itemize}
-  \end{frame}
-  
-  \begin{frame}
   \frametitle{Retour sur les objectifs fixés}
     Nous avons d'ores et déjà remplis les objectifs suivants :
     \begin{itemize}
@@ -82,6 +73,46 @@
   \end{frame}
   
   \section{Détails techniques}
+  \begin{frame}
+  \frametitle{Nos choix de technologies}
+   \begin{itemize}
+    \item Le travail s'articule principalement autour de deux technologies :
+    Scapy et D3.js
+    \item Scapy est une librairie Python pour faire de la manipulation de trames
+    réseaux
+    \item D3.js est une librairie Javascript qui permet de faire de la
+    manipulation de SVG lié à des données.
+   \end{itemize}
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Nos choix de technologies}
+   \begin{itemize}
+    \item Serveur web Flask (Python) associé à une base de données Postgres et
+    un ORM python, SQLAlchemy
+    \item Pour réaliser un update continu en fonction des données analysées par
+    le serveur, nous avons installé SocketIO
+   \end{itemize}
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Présentation de D3.js}
+   \begin{itemize}
+    \item Framework JS pour faire de la manipulation d'objets du DOM en les
+    liant à des données
+    \item On peut ainsi faire apparaître des balises html ou SVG en fonction
+    d'une donnée arbitraire
+    \item Du coup, les graphes s'adaptent aux données de façon automatique
+    \\-\textgreater \hspace{0.3mm} La structure des données est ce qui détermine
+    le graphe
+   \end{itemize}
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Démonstation D3.js}
+  % Ici démonstration live de 3min
+  \end{frame}
+
   \begin{frame}
    Quatres tables dans la base de données :
    \begin{center}
@@ -104,6 +135,8 @@
     \begin{itemize}
      \item Les fichiers pcap peuvent atteindre plusieurs Giga assez rapidement. 
      \item L'écriture dans la base de donnée étant couteuse,le programme écrit dans la base de donnée une seule fois, à la fin de la collecte des données
+     \item Nous réalisons nos tests sur des traces d'entreprise anonymisées
+     (ftp://ftp.bro-ids.org/enterprise-traces/hdr-traces05/)
     \end{itemize}
     %Afficher les résultats
   \end{frame}
@@ -131,6 +164,29 @@
   %Ici une démonstration live de 5 min
 
   \section{Travail à venir}
+  \begin{frame}
+    Scénario d'utilisation
+    \begin{itemize}
+     \item Upload du fichier Pcap, affichage en continu des données analysées
+     \item Liste des protocoles / hosts avec des chiffres dans la sidebar
+     \item Vue treemap qui permet de caractériser les hosts, filtrage dans la
+     barre à gauche
+     \item Passage en coordonées parallèle avec seulement les hôtes filtrés qui
+     permet de valider les hypothèses
+     \item Vue géographique ?
+    \end{itemize}
+  \end{frame}
+  
+  \begin{frame}
+    Problématiques à venir
+    \begin{itemize}
+     \item Technos suffisantes ? Tests de performance à venir
+     \item Morcellement de l'analyse du Pcap
+     \item Création de vues interactives, et donc d'une belle architecture de
+     données
+     \end{itemize}
+  \end{frame}
+  
   \begin{frame}
     Objectifs à remplir
     \begin{itemize}
