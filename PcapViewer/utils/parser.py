@@ -1,6 +1,5 @@
 from scapy.all import *
 from datetime import datetime
-import json
 import sys
 from models import Stat ,User, Packet, Session
 from database import db_session,init_db
@@ -116,6 +115,8 @@ def feed_trames(pkt,session):
         
         P = Packet(hostSrc,hostDest,portSrc,portDest,protocol,data,timestamp,session)
         db_session.add(P)
+    if protocol == "IMAP":
+        print pkt
 
 def extract_session(summary,data):
     """Populate the Packet Table is the session is TCP or UDP protocol only"""
@@ -128,8 +129,8 @@ def extract_session(summary,data):
         portSrc = Src[1]
         hostDest = Dst[0]
         portDest = Dst[1]
-        protocol = s[0]
-        if hostDest != "255.255.255.255":
+        protocol = get_protocol(data[0])
+        if not(hostDest.endswith(".255") or hostSrc.endswith(".255")):
             sess = Session(hostSrc,hostDest,portSrc,portDest,protocol) 
             db_session.add(sess) 
             for pkt in data:
