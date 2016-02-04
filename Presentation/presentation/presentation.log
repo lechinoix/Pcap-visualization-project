@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.1.26)  2 FEB 2016 20:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.1.26)  2 FEB 2016 21:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1362,57 +1362,31 @@ LaTeX Font Info:    Font shape `OMS/phv/m/n' in size <10> not available
 
 ] [11
 
-] (./presentation.toc) [12
+])
+Runaway argument?
+\let \AtEndDocument \@firstofone \@enddocumenthook \@checkend {docume\ETC.
+! File ended while scanning use of \beamer@collect@@body.
+<inserted text> 
+                \par 
+<*> presentation.tex
+                    
+I suspect you have forgotten a `}', causing me
+to read past where you wanted me to stop.
+I'll try to recover; but if the error is serious,
+you'd better type `E' or `X' now and fix your file.
 
-] [13
+! Emergency stop.
+<*> presentation.tex
+                    
+*** (job aborted, no legal \end found)
 
-]
-[14
-
-] (./presentation.toc) [15
-
-] [16
-
-] (./presentation.toc) [17
-
-] [18
-
-]
-\tf@nav=\write6
-\openout6 = `presentation.nav'.
-
-\tf@toc=\write7
-\openout7 = `presentation.toc'.
-
-\tf@snm=\write8
-\openout8 = `presentation.snm'.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 145.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 145.
-
-(./presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 145.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 145.
-Package rerunfilecheck Info: File `presentation.out' has not changed.
-(rerunfilecheck)             Checksum: 09638C218D8561B28C153184F48AD6D9;265.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 145.
- ) 
+ 
 Here is how much of TeX's memory you used:
- 21142 strings out of 494991
- 408344 string characters out of 6180055
+ 21118 strings out of 494991
+ 408069 string characters out of 6180055
  480426 words of memory out of 5000000
- 23810 multiletter control sequences out of 15000+600000
+ 23805 multiletter control sequences out of 15000+600000
  44545 words of font info for 59 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  50i,18n,59p,392b,873s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/urw/helvetic/uhvr8a.pfb>
-Output written on presentation.pdf (18 pages, 68658 bytes).
-PDF statistics:
- 570 PDF objects out of 1000 (max. 8388607)
- 531 compressed objects within 6 object streams
- 42 named destinations out of 1000 (max. 500000)
- 106 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+!  ==> Fatal error occurred, no output PDF file produced!

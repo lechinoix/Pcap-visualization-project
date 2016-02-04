@@ -1,0 +1,80 @@
+%%(encoding:utf-8)
+%% author: Frédéric Boulanger, frederic.boulanger@centralesupelec.fr
+%% copyright CentraleSupélec 2015
+%% v1.1: fixed width of frame title text, added commands for the logo
+%% v1.0: initial release
+%%
+%% Options:
+%%   Cecile (default=false): use orange "alert" elements
+%%   rounded (default=true): use rounded rectangles for blocks and titles
+%%   shadow  (default=true): draw a shadow for rounded rectangles (requires 'rounded')
+%%
+\ProvidesPackage{beamerthemecs}[2015/10/21 v1.1 Beamer theme for CentraleSupelec]
+\RequirePackage{tikz}
+\RequirePackage{graphicx}
+
+\DeclareOptionBeamer{Cecile}[true]{%
+  \def\beamer@themecs@Cecile{#1}%
+}
+\DeclareOptionBeamer{rounded}[true]{%
+  \def\beamer@themecs@rounded{#1}%
+}
+\DeclareOptionBeamer{shadow}[true]{%
+  \def\beamer@themecs@shadow{#1}%
+}
+\ExecuteOptionsBeamer{Cecile=false}
+\ExecuteOptionsBeamer{rounded}
+\ExecuteOptionsBeamer{shadow}
+\ProcessOptionsBeamer
+
+\pgfdeclareimage[width=10mm]{logocs}{beamerthemecslogo}
+
+\newcommand{\logocs}[1][1.0]{%
+  \scalebox{#1}{%
+    \tikz{%
+      \clip (-0.212,-0.097) rectangle (0.173,0.258);
+      \node[inner sep=0pt, outer sep=0pt]{\pgfuseimage{logocs}};
+    }%
+  }%
+}
+\newcommand{\logocstext}[1][1.0]{%
+  \scalebox{#1}{\pgfuseimage{logocs}}%
+}
+
+\newcommand*{\mylistSettings}{%
+  \setlength{\itemsep}{0pt}%
+  \setlength{\parsep}{0pt}%
+}
+
+\newcount\beamer@themecs@seconds
+\newcount\beamer@themecs@minutes
+\newcount\beamer@themecs@hours
+\newcount\beamer@themecs@tmpcount
+
+\newcommand{\timestamp}{%
+  \the\year-%
+  \ifnum\the\month<10 0\fi\the\month-%
+  \ifnum\the\day<100\fi\the\day\space
+  \beamer@themecs@minutes=\time
+  \beamer@themecs@hours=\beamer@themecs@minutes
+  \divide\beamer@themecs@hours by 60%
+  \beamer@themecs@tmpcount=\beamer@themecs@hours
+  \multiply\beamer@themecs@tmpcount by 60%
+  \advance\beamer@themecs@minutes-\beamer@themecs@tmpcount
+  \the\beamer@themecs@hours:%
+  \ifnum\beamer@themecs@minutes<10 0\fi\the\beamer@themecs@minutes
+}
+
+\mode<presentation>
+
+\usecolortheme[Cecile=\beamer@themecs@Cecile]{cs}
+\useoutertheme{cs}
+\usefonttheme{cs}
+\useinnertheme[rounded=\beamer@themecs@rounded,shadow=\beamer@themecs@shadow]{cs}
+
+%\setbeamerfont{block title}{size={}}
+
+\mode
+<all>
+
+\endinput
