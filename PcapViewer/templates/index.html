@@ -1,48 +1,86 @@
 {% extends "base.html" %}
 
+{% block navbar %}
+				<li><a href="" data-toggle="modal" data-target="#upModal">New Pcap</a></li>
+	            <li class="dropdown">
+	              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Options<span class="caret"></span></a>
+	              <ul class="dropdown-menu">
+	                <li><a href="#">Action</a></li>
+	                <li><a href="#">Another action</a></li>
+	                <li><a href="#">Something else here</a></li>
+	                <!-- <li role="separator" class="divider"></li>
+	                <li class="dropdown-header">Nav header</li>
+	                <li><a href="#">Separated link</a></li>
+	                <li><a href="#">One more separated link</a></li> -->
+	              </ul>
+	            </li>
+	            <li><a href="">About</a></li>
+{% endblock %}
+
 {% block content %}
 
 		<div id="content" class="container-fluid">
 			<div class="row">
+			
+			<!-- Flash messages for debug -->
+				{% with messages = get_flashed_messages(category_filter="error") %}
+		        {% if messages %}
+		            <ul>
+		            {% for m in messages %}
+		                <li>{{ m }}</li>
+		            {% endfor %}
+		            </ul>
+		        {% endif %}
+		        {% endwith %}
+		    <!-- End flash messages -->
+		    
 				<div class="left-bar col-md-3">
 					<ul id="left-tab" class="nav nav-tabs" role="tablist">
 						<li role="presentation" class="active"><a href="#hosts" aria-controls="hosts" role="tab" data-toggle="tab">Hosts</a></li>
 						<li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">Services</a></li>
 					</ul>
 					<div class="tab-content">
-						<div role="tabpanel" class="tab-pane active" id="hosts">
+						<div id="hosts" role="tabpanel" class="tab-pane active">
 						  <table class="table table-striped">
 				            <thead>
 				              <tr>
 				                <th>#</th>
 				                <th>Name</th>
-				                <th>OS</th>
+				                <th>Exchanged Volume</th>
 				              </tr>
 				            </thead>
 				            <tbody>
+				            {% for user in users %}
 				              <tr>
-				                <td>1</td>
-				                <td>192.168.0.1</td>
-				                <td>Ubuntu</td>
+				                <td>{{ loop.index }}</td>
+				                <td>{{ user.address }}</td>
+				                {% if user.exchanged %}
+				                <td>{{ user.exchanged["Volume"]}}</td>
+				                {% else %}
+				                <td>None</td>
+				                {% endif %}
 				              </tr>
+				             {% endfor %}
 				            </tbody>
 				          </table>
 						</div>
-						<div role="tabpanel" class="tab-pane" id="services">
+						<div id="services" role="tabpanel" class="tab-pane">
 							<table class="table table-striped">
 				            <thead>
 				              <tr>
 				                <th>#</th>
 				                <th>Protocol</th>
-				                <th>Port</th>
+				                <th>Packets</th>
 				              </tr>
 				            </thead>
 				            <tbody>
+				            {% for stat in stats %}
 				              <tr>
-				                <td>1</td>
-				                <td>HTTP</td>
-				                <td>80</td>
+				                <td>{{ loop.index }}</td>
+				                <td>{{ stat.name }}</td>
+				                <td>{{ stat.value }}</td>
 				              </tr>
+				             {% endfor %}
 				            </tbody>
 				          </table>
 						</div>
@@ -66,5 +104,50 @@
 			</div>
 		</div>
 		
+{% endblock %}
+
+{% block footer %}
+		<!-- Modal -->
+		<div class="modal fade" id="upModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Upload new Pcap file</h4>
+		      </div>
+		      <div class="modal-body">
+		        <form id="upload-form" action="" method="post" enctype="multipart/form-data">
+		        	<div class="form-group">
+					    <label for="upPcap">Upload your Pcap</label>
+					    <input type="file" id="upPcap" name="upPcap">
+					    <p class="help-block">It will be parsed and then displayed.</p>
+					</div>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        	<button type="submit" class="btn btn-primary">Save changes</button>
+		        </form>
+		        <br>
+		        <progress style="display:none"></progress>
+		        <div class="status-container"></div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+var loadedSessions = [
+            {% for session in sessions %}
+            {	
+            	'id':'{{ session.id }}',
+            	'hostSrc':'{{ session.hostSrc }}',
+            	'hostDest':'{{ session.hostDest }}',
+            	'portSrc':'{{ session.portSrc }}',
+            	'portDest':'{{ session.portDest }}',
+            	'protocol':'{{ session.protocol }}'
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+           ]
+</script>
 {% endblock %}
 		

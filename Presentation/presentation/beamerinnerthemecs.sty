@@ -1,0 +1,133 @@
+%%(encoding:utf-8)
+%% author: Frédéric Boulanger, frederic.boulanger@centralesupelec.fr
+%% copyright CentraleSupélec 2015
+%% v1.0: initial release
+%%
+%% Options:
+%%   rounded (default=true): use rounded rectangles for blocks and titles
+%%   shadow  (default=true): draw a shadow for rounded rectangles (requires 'rounded')
+%%
+\ProvidesPackage{beamerinnerthemecs}[2015/10/21 v1.1 Beamer inner theme for CentraleSupelec]
+
+\DeclareOptionBeamer{rounded}[true]{%
+  \def\beamer@themecs@rounded{#1}%
+}
+\DeclareOptionBeamer{shadow}[true]{%
+  \def\beamer@themecs@shadow{#1}%
+}
+\ExecuteOptionsBeamer{rounded}
+\ExecuteOptionsBeamer{shadow}
+\ProcessOptionsBeamer
+
+\defbeamertemplate*{section in toc}{cs} {%
+  \leavevmode\leftskip=2ex%
+  \llap{%
+    \usebeamerfont*{section number projected}%
+    \usebeamercolor{section number projected}%
+    \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+      \color{bg}
+      \pgfpathcircle{\pgfpoint{-0.02em}{.59ex}}{1.2ex}
+      \pgfusepath{fill}
+      \pgftext[base]{\color{fg}\inserttocsectionnumber}
+    \end{pgfpicture}\kern1.25ex%
+  }%
+  \inserttocsection\par
+}
+
+\defbeamertemplate*{subsection in toc}{cs}{%
+  \leavevmode\leftskip=2em\inserttocsubsection\par
+}
+
+\defbeamertemplate*{subsubsection in toc}{cs} {%
+  \leavevmode\normalsize
+  \usebeamerfont{subsection in toc}%
+  \leftskip=3em%
+  \usebeamerfont{subsubsection in toc}%
+  \inserttocsubsubsection\par
+}
+
+%%
+\def\beamer@themecs@listsettings{%
+  \global\itemsep=0pt%
+  \global\parsep=0pt%
+}
+
+\defbeamertemplate*{itemize item}{cs}{%
+  \beamer@themecs@listsettings
+  \small\raise0.5pt\hbox{\textbullet}%
+}
+\defbeamertemplate*{itemize subitem}{cs}{%
+  \beamer@themecs@listsettings
+  \footnotesize\raise0.5pt\hbox{\textbullet}%
+}
+\defbeamertemplate*{itemize subsubitem}{cs}{%
+  \beamer@themecs@listsettings
+  \footnotesize\raise0.5pt\hbox{\textbullet}%
+}
+  
+\defbeamertemplate*{enumerate item}{cs} {%
+  \beamer@themecs@listsettings
+  \usebeamerfont*{item projected}%
+  \usebeamercolor[bg]{item projected}%
+  \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.75ex}}{1.2ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertenumlabel}
+  \end{pgfpicture}%
+}[action]{%
+  \setbeamerfont{item projected}{size=\scriptsize}%
+}
+
+\defbeamertemplate*{enumerate subitem}{cs} {%
+  \beamer@themecs@listsettings
+  \usebeamerfont*{subitem projected}%
+  \usebeamercolor[bg]{subitem projected}%
+  \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.75ex}}{1.2ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertsubenumlabel}
+  \end{pgfpicture}%
+}
+
+\defbeamertemplate*{enumerate subsubitem}{cs} {%
+  \beamer@themecs@listsettings
+  \usebeamerfont*{subsubitem projected}%
+  \usebeamercolor[bg]{subsubitem projected}%
+  \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.75ex}}{1.2ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertsubsubenumlabel}
+  \end{pgfpicture}%
+}
+
+\defbeamertemplate*{enumerate mini template}{cs} {%
+  \beamer@themecs@listsettings
+  \usebeamerfont*{\beameritemnestingprefix item projected}%
+  \usebeamercolor[bg]{\beameritemnestingprefix item projected}%
+  \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.75ex}}{1.2ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertenumlabel}
+  \end{pgfpicture}%
+}
+
+
+\mode<presentation>
+
+\setbeamertemplate{items}[cs]
+\setbeamertemplate{sections/subsections in toc}[cs]
+\def\beamer@themecs@tmp{true}
+\ifx\beamer@themecs@rounded\beamer@themecs@tmp
+  \setbeamertemplate{blocks}[rounded][shadow=\beamer@themecs@shadow]
+\else
+  \setbeamertemplate{blocks}[default]
+\fi
+\setbeamertemplate{title page}[default]%
+  [colsep=-4bp,rounded=\beamer@themecs@rounded,shadow=\beamer@themecs@shadow]
+\setbeamertemplate{part page}[default]%
+  [colsep=-4bp,rounded=\beamer@themecs@rounded,shadow=\beamer@themecs@shadow]
+
+\mode
+<all>
+
+\endinput

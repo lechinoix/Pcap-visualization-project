@@ -1,0 +1,19 @@
+{
+  "connexion": [
+    { "IPSrc" : "192.168.10.2", "IPDest" : "192.168.10.3","PortSrc" : "1024", "PortDest" : "22"},
+    { "IPSrc" : "192.168.10.2", "IPDest" : "192.168.10.4","PortSrc" : "1025", "PortDest" : "80"},
+    { "IPSrc" : "192.168.10.3", "IPDest" : "192.168.10.2","PortSrc" : "22", "PortDest" : "1024"},
+    { "IPSrc" : "192.168.10.4", "IPDest" : "192.168.10.2","PortSrc" : "80", "PortDest" : "1025"}
+  ]
+}
+
+{
+  "connexion": [
+    [{ "IPSrc" : "192.168.10.2"},{ "IPDest" : "192.168.10.3"},{"PortSrc" : "1024"}, {"PortDest" : "22"}, {"NombreTrame" : 38}],
+    [{ "IPSrc" : "192.168.10.2"},{ "IPDest" : "192.168.10.4"},{"PortSrc" : "1025"}, {"PortDest" : "80"}, {"NombreTrame" : 38}],
+    [{ "IPSrc" : "192.168.10.3"},{ "IPDest" : "192.168.10.2"},{"PortSrc" : "22"}, {"PortDest" : "1024"}, {"NombreTrame" : 38}],
+    [{ "IPSrc" : "192.168.10.4"},{ "IPDest" : "192.168.10.2"},{"PortSrc" : "80"}, {"PortDest" : "1025"}, {"NombreTrame" : 38}],
+  ]
+}
+
+

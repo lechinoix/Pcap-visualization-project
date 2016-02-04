@@ -1,2 +1,4 @@
 *.pyc
 *~
+/PcapViewer/migrations
+/PcapViewer/static/parsed
