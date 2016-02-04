@@ -1,7 +1,7 @@
 \beamer@endinputifotherversion {3.33pt}
 \select@language {french}
-\beamer@sectionintoc {1}{Sujet - Objectifs - Choix}{2}{0}{1}
+\beamer@sectionintoc {1}{Retour sur les choix technologiques}{2}{0}{1}
 \beamer@sectionintoc {2}{D\IeC {\'e}tails techniques}{8}{0}{2}
-\beamer@sectionintoc {3}{D\IeC {\'e}monstration}{12}{0}{3}
-\beamer@sectionintoc {4}{Travail \IeC {\`a} venir}{15}{0}{4}
-\beamer@sectionintoc {5}{Conclusion}{17}{0}{5}
+\beamer@sectionintoc {3}{D\IeC {\'e}monstration}{14}{0}{3}
+\beamer@sectionintoc {4}{Travail \IeC {\`a} venir}{16}{0}{4}
+\beamer@sectionintoc {5}{Conclusion}{18}{0}{5}

@@ -32,7 +32,7 @@
     \end{frame} 
   }
 
- \section{Sujet - Objectifs - Choix}
+ \section{Retour sur les choix technologiques}
   \begin{frame}
     \frametitle{Rappel du Sujet}
     \begin{itemize}
@@ -54,10 +54,10 @@
   \end{frame}
 
   \begin{frame}
-   \frametitle{Retour sur les choix technologique}
+   \frametitle{Retour sur les choix technologiques}
     \begin{itemize}
-      \item Nous voulions à l'origine interfacer plusieurs outils (Ettercap, ChaosReader, tcptrace...) \\
-      \item Finalement, Scapy nous permet de manipuler la trace réseau de façon satisfaisante. \\
+      \item Nous voulions à l'origine interfacer plusieurs outils (Ettercap, ChaosReader, tcptrace...) 
+      \item Finalement, Scapy nous permet de manipuler la trace réseau de façon satisfaisante.
       \item Enfin, le choix initial de PyQt a été remplacé par une interface web.
     \end{itemize}
   \end{frame}
@@ -83,14 +83,18 @@
   
   \section{Détails techniques}
   \begin{frame}
-   Schéma fonctionnel de notre programme :
+   Quatres tables dans la base de données :
+   \begin{center}
+    \includegraphics[scale=0.6]{postgre.png}
+   \end{center}
   \end{frame}
+  
   \begin{frame}
     \frametitle{Analyse du fichier pcap}
     \begin{itemize}
-     \item Libraire Scapy permet de lire nos fichiers .pcap, puis de manipuler les packets.\\
-     \item Une fonction parse parcourt tous les paquets. Des statistiques sont alors tirées du protocole en jeux, \\
-     \item La fonction parse parcourt également tous les sessions, et enregistre les trames de chaque session\\
+     \item La libraire Scapy permet de lire nos fichiers, puis de manipuler les packets.
+     \item Une fonction parcourt tous les paquets. Les tables User et Stats sont alimentées 
+     \item Une fonction parcourt tous les sessions. Les tables Session et Trames sont alimentées
     \end{itemize}
     %Montrer le code réduit
   \end{frame}
@@ -98,38 +102,33 @@
   \begin{frame}
     \frametitle{Performances du parser}
     \begin{itemize}
-     \item Les fichiers pcap peuvent atteindre plusieurs Giga assez rapidement. \\
-     \item Le programme n'écrit dans la base de donnée qu'une seule fois, à la fin de la collecte des données
-     \item Certaines tables sont simplement commit. Pour d'autre tables, le résultat est stocké dans un dictionnaire jusqu'à la fin.
+     \item Les fichiers pcap peuvent atteindre plusieurs Giga assez rapidement. 
+     \item L'écriture dans la base de donnée étant couteuse,le programme écrit dans la base de donnée une seule fois, à la fin de la collecte des données
     \end{itemize}
     %Afficher les résultats
   \end{frame}
   
   \begin{frame}
     \begin{center}
-      \includegraphics[scale=0.5]{parse-time.png}
+      \includegraphics[scale=0.3]{parse-time.png}
     \end{center} 
-  \end{frmae}
+  \end{frame}
   
   \begin{frame}
     \begin{center}
-       \includegraphics[scale=0.5]{parse-temps.png}
+       \includegraphics[scale=0.3]{parse-temps.png}
     \end{center} 
-  \end{frmae}
+  \end{frame}
 
   
  \section{Démonstration}
   \begin{frame}
     \frametitle{Lancement de l'outil}
-    Le projet est disponible sur https://github.com/lechinoix/Pcap-visualization-project  \\
+    Le projet est disponible sur https://github.com/lechinoix/Pcap-visualization-project \\
     Après avoir suivi la procédure d'installation, on démarre le serveur pour accéder à l'interface web \\
   \end{frame}
 
   %Ici une démonstration live de 5 min
-
-  \begin{frame}
-    \frametitle{Question, remarques ?}
-  \end{frame}
 
   \section{Travail à venir}
   \begin{frame}

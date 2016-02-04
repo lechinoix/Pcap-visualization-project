@@ -35,16 +35,16 @@ order=-1
 
 [item:presentation.tex]
 archive=true
-column=84
+column=32
 encoding=UTF-8
 highlight=LaTeX
-line=174
+line=109
 mode=LaTeX
 open=true
 order=0
 
 [view-settings,view=0,item:presentation.tex]
-CursorColumn=84
-CursorLine=174
+CursorColumn=32
+CursorLine=109
 JumpList=
-ViMarks=.,174,83,[,174,35,],174,83
+ViMarks=.,109,31,[,109,31,],109,31
