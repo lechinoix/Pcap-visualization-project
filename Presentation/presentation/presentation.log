@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.1.26)  4 FEB 2016 11:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.1.26)  4 FEB 2016 11:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1374,7 +1374,7 @@ Package pdftex.def Info: postgre.png used on input line 121.
 
 ] [14
 
-] <parse-time.png, id=431, 1033.8625pt x 574.145pt>
+] <parse-time.png, id=433, 1033.8625pt x 574.145pt>
 File: parse-time.png Graphic file (type png)
 
 <use parse-time.png>
@@ -1383,7 +1383,7 @@ Package pdftex.def Info: parse-time.png used on input line 148.
  [15
 
  <./parse-time.png>]
-<parse-temps.png, id=459, 859.21pt x 509.905pt>
+<parse-temps.png, id=461, 859.21pt x 509.905pt>
 File: parse-temps.png Graphic file (type png)
  <use parse-temps.png>
 Package pdftex.def Info: parse-temps.png used on input line 154.
@@ -1415,20 +1415,20 @@ Package pdftex.def Info: parse-temps.png used on input line 154.
 \tf@snm=\write8
 \openout8 = `presentation.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 204.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 204.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 205.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 205.
  (./presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 204.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 204.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 205.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 205.
 Package rerunfilecheck Info: File `presentation.out' has not changed.
 (rerunfilecheck)             Checksum: 73D081F507E7B2B08BB248C5FBE830BC;275.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 204.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 205.
  ) 
 Here is how much of TeX's memory you used:
- 21170 strings out of 494991
- 408716 string characters out of 6180055
+ 21178 strings out of 494991
+ 408780 string characters out of 6180055
  480426 words of memory out of 5000000
- 23824 multiletter control sequences out of 15000+600000
+ 23832 multiletter control sequences out of 15000+600000
  44545 words of font info for 59 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  50i,18n,59p,392b,873s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1436,7 +1436,7 @@ Here is how much of TeX's memory you used:
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/urw/helvetic/uhvr8a.pfb>
-Output written on presentation.pdf (23 pages, 146058 bytes).
+Output written on presentation.pdf (23 pages, 146228 bytes).
 PDF statistics:
  711 PDF objects out of 1000 (max. 8388607)
  660 compressed objects within 7 object streams
