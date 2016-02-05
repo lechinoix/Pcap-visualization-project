@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.1.26)  4 FEB 2016 16:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.1.26)  5 FEB 2016 13:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1376,7 +1376,7 @@ Package pdftex.def Info: postgre.png used on input line 134.
 
 ] [15
 
-] <parse-time.png, id=459, 1033.8625pt x 574.145pt>
+] <parse-time.png, id=460, 1033.8625pt x 574.145pt>
 File: parse-time.png Graphic file (type png)
 
 <use parse-time.png>
@@ -1385,7 +1385,7 @@ Package pdftex.def Info: parse-time.png used on input line 161.
  [16
 
  <./parse-time.png>]
-<parse-temps.png, id=486, 859.21pt x 509.905pt>
+<parse-temps.png, id=487, 859.21pt x 509.905pt>
 File: parse-temps.png Graphic file (type png)
  <use parse-temps.png>
 Package pdftex.def Info: parse-temps.png used on input line 167.
@@ -1448,7 +1448,7 @@ Here is how much of TeX's memory you used:
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/urw/helvetic/uhvr8a.pfb>
-Output written on presentation.pdf (24 pages, 163851 bytes).
+Output written on presentation.pdf (24 pages, 163657 bytes).
 PDF statistics:
  739 PDF objects out of 1000 (max. 8388607)
  685 compressed objects within 7 object streams
