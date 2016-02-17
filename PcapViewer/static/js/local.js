@@ -16,9 +16,8 @@ $(document).ready(function(){
     // Catching sessions on first load
     var sessions = loadedSessions;
     var users = loadedUsers.sort(function(a, b){
-    	return a['exchanged']['Volume'] - b['exchanged']['Volume'];
+    	return b['exchanged']['Volume'] - a['exchanged']['Volume'];
     });
-    console.log(users);
 	
 /* ============================
 
@@ -296,14 +295,14 @@ socket.on('newData', function(data){
 	if('users' in data){
 		$('.left-bar .tab-content #hosts table tbody').html('');
 		users = data['users'].sort(function(a, b){
-			return a["exchanged"]["volume"] - b["exchanged"]["volume"];
+			return b["exchanged"]["Volume"] - a["exchanged"]["Volume"];
 		});
 		updateUsers(users);
 	}
 	if('stats' in data){
 		$('.left-bar .tab-content #services table tbody').html('');
 		stats = data['stats'].sort(function(a, b){
-			return a["value"] - b["value"];
+			return b["value"] - a["value"];
 		});
 		updateStats(stats);
 	}

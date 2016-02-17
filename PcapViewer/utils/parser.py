@@ -131,7 +131,7 @@ def extract_session(summary,data):
         portDest = Dst[1]
         protocol = get_protocol(data[0])
         if not(hostDest.endswith(".255") or hostSrc.endswith(".255")):
-            sess = Session(hostSrc,hostDest,portSrc,portDest,protocol) 
+            sess = Session(hostDest,hostSrc,portSrc,portDest,protocol) 
             db_session.add(sess) 
             for pkt in data:
                 feed_trames(pkt,sess)
@@ -140,64 +140,65 @@ def feed_user(user,pkt):
     """Create a dictionnary of the users, which will be added to the DB during add() execution"""
     if pkt.haslayer(IP):
         ip = pkt.getlayer(IP) 
-        length = len(pkt)
-        # length = sys.getsizeof(ip)
-        protocol = get_protocol(ip)
-        if ip.src in user:
-            user[ip.src]["Volume"] += length
-            if protocol in user[ip.src]["Protocole"]:
-                user[ip.src]["Protocole"][protocol]["Volumeout"] += length
-                user[ip.src]["Protocole"][protocol]["Nombreout"] += 1
-            else:
-                user[ip.src]["Protocole"][protocol] = {
-                    "Volumein": 0,
-                    "Volumeout": length,
-                    "Nombrein": 0,
-                    "Nombreout": 1                      
-                }
-        else:
-            user[ip.src]={
-                "Volume": length,
-                "Protocole":
-                  {
-                      protocol:
-                      {
+        if not(ip.src.endswith('.255') or ip.dst.endswith('.255')):
+            length = len(pkt)
+            # length = sys.getsizeof(ip)
+            protocol = get_protocol(ip)
+            if ip.src in user:
+                user[ip.src]["Volume"] += length
+                if protocol in user[ip.src]["Protocole"]:
+                    user[ip.src]["Protocole"][protocol]["Volumeout"] += length
+                    user[ip.src]["Protocole"][protocol]["Nombreout"] += 1
+                else:
+                    user[ip.src]["Protocole"][protocol] = {
                         "Volumein": 0,
                         "Volumeout": length,
                         "Nombrein": 0,
-                        "Nombreout": 1
-                      }
-                  }
-            }
-
-        if ip.dst in user:
-            user[ip.dst]["Volume"] += length
-
-            if protocol in user[ip.dst]["Protocole"]:
-                user[ip.dst]["Protocole"][protocol]["Volumein"] += length
-                user[ip.dst]["Protocole"][protocol]["Nombrein"] += 1
-            
+                        "Nombreout": 1                      
+                    }
             else:
-                user[ip.dst]["Protocole"][protocol] = {
-                    "Volumein": length,
-                    "Volumeout": 0,
-                    "Nombrein": 1,
-                    "Nombreout": 0
-                }
-        else:
-            user[ip.dst] ={
-                "Volume": length,
-                "Protocole":
-                  {
-                      protocol:
+                user[ip.src]={
+                    "Volume": length,
+                    "Protocole":
                       {
-                        "Volumein": length,
-                        "Volumeout":0,
-                        "Nombrein":1,
-                        "Nombreout":0
+                          protocol:
+                          {
+                            "Volumein": 0,
+                            "Volumeout": length,
+                            "Nombrein": 0,
+                            "Nombreout": 1
+                          }
                       }
-                  }
-            }
+                }
+    
+            if ip.dst in user:
+                user[ip.dst]["Volume"] += length
+    
+                if protocol in user[ip.dst]["Protocole"]:
+                    user[ip.dst]["Protocole"][protocol]["Volumein"] += length
+                    user[ip.dst]["Protocole"][protocol]["Nombrein"] += 1
+                
+                else:
+                    user[ip.dst]["Protocole"][protocol] = {
+                        "Volumein": length,
+                        "Volumeout": 0,
+                        "Nombrein": 1,
+                        "Nombreout": 0
+                    }
+            else:
+                user[ip.dst] ={
+                    "Volume": length,
+                    "Protocole":
+                      {
+                          protocol:
+                          {
+                            "Volumein": length,
+                            "Volumeout":0,
+                            "Nombrein":1,
+                            "Nombreout":0
+                          }
+                      }
+                }
     
 def add(user,stat):
     """Add the users and the stats in the session."""
