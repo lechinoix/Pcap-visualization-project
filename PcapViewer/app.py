@@ -23,8 +23,12 @@ def index(pcap = ''):
     """Display home page"""
     users = User.query.all()
     stats = Stat.query.all()
-    sessions = Session.query.all()
-    return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions)
+    sessions = Session.query.all()       
+    treemap = []
+    for user in users:
+        treemap.append(user.treemap_layout())
+    
+    return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions, treemap=treemap)
 
 # @app.route('/list')
 # def listPcap():

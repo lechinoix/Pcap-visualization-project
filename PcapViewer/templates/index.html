@@ -80,7 +80,10 @@
 					<button id="parallel-btn" class="btn btn-default" type="button">Parallel</button>
 					<button id="treemap-btn" class="btn btn-default" type="button">Treemap</button>
 					<div id="view-wrapper" class="panel panel-default">
-						
+						<form id="radio-treemap" class="hidden">
+						  <label><input type="radio" name="mode" value="size" checked> Size</label>
+						  <label><input type="radio" name="mode" value="count"> Count</label>
+						</form>
 					</div>
 				</div>
 				<div class="info-wrapper col-md-3">
@@ -145,6 +148,17 @@ var loadedSessions = [
              }{% if not loop.last %},{% endif %}
              {% endfor %}
             ];
+ 
+ var loadedTreemap = {
+		 		'name':'users',
+		 		'children':
+		 			[
+	                {% for user in treemap %}
+						{{ user | tojson }}{% if not loop.last %},{% endif %}
+	                {% endfor %}
+		 		    ]
+ 				};
+ 
 </script>
 {% endblock %}
 		

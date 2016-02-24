@@ -18,6 +18,8 @@ $(document).ready(function(){
     var users = loadedUsers.sort(function(a, b){
     	return b['exchanged']['Volume'] - a['exchanged']['Volume'];
     });
+    
+    var treemap = loadedTreemap;
 	
 /* ============================
 
@@ -27,55 +29,58 @@ $(document).ready(function(){
 
 //Treemap View
 
-function displayTreemap(){
+function displayTreemap(data){
 	
-
+	console.log(data);
+	
+	d3.select("#radio-treemap").classed("hidden", false);
+	
 	var margin = {top: 40, right: 10, bottom: 10, left: 10},
 	    width = 900 - margin.left - margin.right,
-	    height = 450 - margin.top - margin.bottom;
+	    height = 500 - margin.top - margin.bottom;
 
 	var color = d3.scale.category20c();
 
+	select.selectAll("svg").remove();
+	
 	var treemap = d3.layout.treemap()
 	    .size([width, height])
 	    .sticky(true)
-	    .value(function(d) { return d.size; });
+	    .value(function(d) { return d.Volumeout; });
 
 	var div = d3.select("#view-wrapper");
-	select.selectAll("svg").remove();
+	
 	svg = select.append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	d3.json("static/parsed/flare2.json", function(error, root) {
-	  if (error) throw error;
+	var root = data;
+	
+	var node = div.datum(root).selectAll(".node")
+    .data(treemap.nodes)
+	  .enter().append("div")
+	    .attr("class", "node")
+	    .call(position)
+	    .style("background", function(d) { return d.children ? color(d.name) : null; })
+	    .text(function(d) { return d.children ? null : d.parent.name + ' / ' + d.name; });
+	
+	d3.selectAll("input").on("change", function change() {
+	  var value = this.value === "count"
+	      ? function(d) { return d.Nombreout; }
+	      : function(d) { return d.Volumeout; };
 
-	  var node = div.datum(root).selectAll(".node")
-	      .data(treemap.nodes)
-	    .enter().append("div")
-	      .attr("class", "node")
-	      .call(position)
-	      .style("background", function(d) { return d.children ? color(d.name) : null; })
-	      .text(function(d) { return d.children ? null : d.name; });
-
-	  d3.selectAll("input").on("change", function change() {
-	    var value = this.value === "count"
-	        ? function() { return 1; }
-	        : function(d) { return d.size; };
-
-	    node
-	        .data(treemap.value(value).nodes)
-	      .transition()
-	        .duration(1500)
-	        .call(position);
-	  });
+	node
+    .data(treemap.value(value).nodes)
+    .transition()
+      .duration(1500)
+      .call(position);
 	});
 
 	function position() {
-	  this.style("left", function(d) { return d.x + "px"; })
-	      .style("top", function(d) { return d.y + "px"; })
+	  this.style("left", function(d) { return d.x + 30 + "px"; })
+	      .style("top", function(d) { return d.y + 100 + "px"; })
 	      .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
 	      .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
 	}
@@ -87,6 +92,7 @@ var line, dragging, x, y, foreground, background, axis, margin, height, width, g
 
 function displayParallel(data){
 	
+	d3.select("#radio-treemap").classed("hidden", true);
 
 	// Define the window width, height and margins
 	margin = {top: 30, right: 10, bottom: 10, left: 10},
@@ -249,7 +255,7 @@ $("#network-btn").on("click", function(e){
 })
 
 $("#treemap-btn").on("click", function(e){
-	displayTreemap();
+	displayTreemap(treemap);
 })
 
 $("form#upload-form").on('submit', function(e){
@@ -298,6 +304,7 @@ socket.on('newData', function(data){
 			return b["exchanged"]["Volume"] - a["exchanged"]["Volume"];
 		});
 		updateUsers(users);
+		displayTreemap(treemap);
 	}
 	if('stats' in data){
 		$('.left-bar .tab-content #services table tbody').html('');

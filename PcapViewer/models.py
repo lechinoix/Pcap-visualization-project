@@ -91,6 +91,16 @@ class User(Base):
                 'exchanged':self.exchanged
                 }
         
+    def treemap_layout(self):
+        formatExchanged = []
+        for key,value in self.exchanged['Protocole'].items():
+            formatExchanged.append({'name':key, 'Volumeout':value['Volumeout'], 'Nombreout':value['Nombreout']})
+        return {
+               'id':self.id,
+               'name':self.address,
+               'children':formatExchanged
+               }
+        
 class Stat(Base):
     __tablename__ = 'Stat'
     id = Column(Integer, primary_key=True)
