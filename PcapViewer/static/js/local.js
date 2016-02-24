@@ -113,6 +113,7 @@ function displayParallel(data){
 	// Create the window and the g container
 	select = d3.select("#view-wrapper");
 	select.selectAll("svg").remove();
+	select.selectAll(".node").remove();
 	svg = select.append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
