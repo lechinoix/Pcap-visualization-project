@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*-
+
 from scapy.all import *
 from datetime import datetime
 import sys
@@ -26,7 +28,7 @@ def get_protocol(pkt):
         elif pkt[TCP].dport == 20 or pkt[TCP].sport == 20:
             protocol = "FTP"
         elif pkt[TCP].dport == 21 or pkt[TCP].sport == 21:
-            protocol = "FTP"
+            protocol = "FTP"    
         elif pkt[TCP].dport == 22 or pkt[TCP].sport == 22:
             protocol = "SSH"
         elif pkt[TCP].dport == 25 or pkt[TCP].sport == 25:
@@ -35,7 +37,9 @@ def get_protocol(pkt):
             protocol = "HTTP"
         elif pkt[TCP].dport == 88 or pkt[TCP].sport == 88:
             protocol = "KERBEROS"
-        elif pkt[TCP].dport == 110 or pkt[TCP].dport == 109 or pkt[TCP].sport == 110 or pkt[TCP].sport == 109:
+        elif pkt[TCP].dport == 109 or pkt[TCP].dport == 109:
+            protocol = "POP2"
+        elif pkt[TCP].dport == 110 or pkt[TCP].dport == 110:
             protocol = "POP3"
         elif pkt[TCP].dport == 115 or pkt[TCP].sport == 115:
             protocol = "SFTP"
@@ -56,10 +60,20 @@ def get_protocol(pkt):
         else:
             protocol = "TCP"
     elif pkt.haslayer(UDP):
+        if pkt[UDP].dport == 156 or pkt[UDP].sport == 156:
+            protocol = "SQL"
         if pkt[UDP].dport == 53 or pkt[UDP].sport == 53:
             protocol = "DNS"
         elif pkt[UDP].dport == 5353 or pkt[UDP].sport == 5353:
             protocol = "MDNS"
+        elif pkt[UDP].dport == 1900 or pkt[UDP].sport == 1900:
+            protocol = "SSDP"
+        elif pkt[UDP].dport == 137 or pkt[UDP].sport == 137:
+            protocol = "NBNS"
+        elif pkt[UDP].dport == 547 or pkt[UDP].sport == 547 or pkt[UDP].dport == 546 or pkt[UDP].sport == 546:
+            protocol = "DHCPv6"
+        elif pkt[UDP].dport == 67 or pkt[UDP].sport == 67 or pkt[UDP].dport == 68 or pkt[UDP].sport == 68:
+            protocol = "DHCP"
         else:
             protocol = "UDP"
     elif pkt.haslayer(ARP):
@@ -76,7 +90,8 @@ def feed_stats(stat, packet):
     if protocol in  stat:
         stat[protocol] += 1 
     else:
-        stat[protocol] = 1  
+        stat[protocol] = 1
+
 
 def feed_trames(pkt,session):
     """Populate the Packet Table is the packet is involved in a recognised protocol only"""
@@ -113,7 +128,13 @@ def feed_trames(pkt,session):
         if pkt.haslayer(Raw):
             data = {"data" : hexdump(pkt.getlayer(Raw))}
         
-        P = Packet(hostSrc,hostDest,portSrc,portDest,protocol,data,timestamp,session)
+        
+        if protocol == "LDAP" or protocol == "IMAP" or protocol == "POP3" or protocol == "SMTP" or protocol == "HTTP":
+            secure=0
+        else:
+            secure=1
+
+        P = Packet(hostSrc,hostDest,portSrc,portDest,protocol,data,timestamp,secure,session)
         db_session.add(P)
     if protocol == "IMAP":
         print pkt
@@ -122,15 +143,16 @@ def extract_session(summary,data):
     """Populate the Packet Table is the session is TCP or UDP protocol only"""
     s = summary.split(' ')
     # summary est de la forme UDP 192.168.11.228:21893 > 208.67.222.222:
-    if s[0] == "TCP" or s[0] == "UDP":
+    #if s[0] == "TCP" or s[0] == "UDP":
+    if s[0] == "TCP":
         Src = s[1].split(":")
         Dst = s[3].split(":")
         hostSrc = Src[0]
-        portSrc = Src[1]
+        portSrc = int(Src[1])
         hostDest = Dst[0]
-        portDest = Dst[1]
+        portDest = int(Dst[1])
         protocol = get_protocol(data[0])
-        if not(hostDest.endswith(".255") or hostSrc.endswith(".255")):
+        if not(protocol =="TCP" or hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc > 10000):
             sess = Session(hostDest,hostSrc,portSrc,portDest,protocol) 
             db_session.add(sess) 
             for pkt in data:
@@ -217,7 +239,6 @@ def parse(filename):
     user = {}
     stat = { "TOTAL" : 0 }
     mailpkts=[]
-    result = ""
     try:
         initiate()
     except Exception as e:
@@ -235,13 +256,13 @@ def parse(filename):
         t0 = time.clock()
         feed_stats(stat,pkt)
         t2 += time.clock()-t0
-    print result
     add(user,stat)
     
     print "Treemap Table generated : " + str(t1) + " seconds"
     print "Stat Table generated : "+ str(t2) + " seconds"
 
     t0 = time.clock()
+    #Ici on peut simplement executer os("tshark -r "+filename+" -q -z conv,tcp"), de passer les premieres lignes puis de les envoyer a extract Sess
     s = pcap.sessions()
     
     for summary,data in s.iteritems():

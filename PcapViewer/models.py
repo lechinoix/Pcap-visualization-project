@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Boolean
 from database import Base, db_session
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import relationship, backref
@@ -13,10 +13,11 @@ class Packet(Base):
     protocol = Column(String(80))
     data = Column(JSON)
     timestamp = Column(DateTime)
+    secure = Column(Integer)
     sessionId = Column(Integer, ForeignKey('Session.id'))
     session =  relationship('Session', backref=backref('posts', lazy='dynamic'))
     
-    def __init__(self, hostSrc, hostDest, portSrc, portDest, protocol, data={}, timestamp=None, session=None):
+    def __init__(self, hostSrc, hostDest, portSrc, portDest, protocol, data={}, timestamp=None, secure=1, session=None):
         self.hostSrc = hostSrc
         self.hostDest = hostDest
         self.portSrc = portSrc
@@ -24,6 +25,7 @@ class Packet(Base):
         self.protocol = protocol
         self.data = data
         self.timestamp = timestamp
+        self.secure = secure
         self.session = session
 
     def __repr__(self):
@@ -39,6 +41,7 @@ class Packet(Base):
                 'protocol':self.protocol,
                 'data':self.data,
                 'timestamp':self.timestamp,
+                'secure':self.secure,
                 'sessionId':self.session.id
                 }
 
