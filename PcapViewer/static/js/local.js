@@ -31,8 +31,6 @@ $(document).ready(function(){
 
 function displayTreemap(data){
 	
-	console.log(data);
-	
 	d3.select("#radio-treemap").classed("hidden", false);
 	
 	var margin = {top: 40, right: 10, bottom: 10, left: 10},
@@ -88,7 +86,7 @@ function displayTreemap(data){
 
 // Parallel View
 
-var line, dragging, x, y, foreground, background, axis, margin, height, width, g, data;
+var line, dragging, x, y, foreground, background, axis, margin, height, width, g, data, activeSessions;
 
 function displayParallel(data){
 	
@@ -144,7 +142,8 @@ function displayParallel(data){
     .selectAll("path")
       .data(data)
     .enter().append("path")
-      .attr("d", path);
+      .attr("d", path)
+      .attr("data-session", function(d){return d.id;});
 
   // Add blue foreground lines for focus.
   foreground = svg.append("g")
@@ -152,7 +151,8 @@ function displayParallel(data){
     .selectAll("path")
       .data(data)
     .enter().append("path")
-      .attr("d", path);
+      .attr("d", path)
+      .attr("data-session", function(d){return d.id;});
 
   // Add a group element for each dimension.
   g = svg.selectAll(".dimension")
@@ -237,7 +237,7 @@ function brush() {
     		return extents[i][0] <= d[p] && d[p] <= extents[i][1];
     	}
     }) ? null : "none";
-  });
+  }).each(function(d){});
 }
 
 /* ============================
@@ -324,74 +324,5 @@ socket.on('newData', function(data){
 displayParallel(sessions);
 
 updateUsers();
-
-// Unused
-
-//$('#upload-form :file').change(function(){
-//    var file = this.files[0];
-//    var name = file.name;
-//    var size = file.size;
-//    var type = file.type;
-//    
-//    console.log(type);
-//    
-//});
-
-
-//Network View
-
-//var select, svg, diameter, tree, diagonal, nodes, node, link, links;
-//
-//function displayNetwork(){
-//	
-//	diameter = 960;
-//
-//	tree = d3.layout.tree()
-//	    .size([360, diameter / 2 - 120])
-//	    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
-//
-//	diagonal = d3.svg.diagonal.radial()
-//	    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
-//
-//
-// select = d3.select("#view-wrapper");
-// select.selectAll("svg").remove();
-//	svg = select.append("svg")
-//	    .attr("width", diameter)
-//	    .attr("height", diameter - 150)
-//	  .append("g")
-//	    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-//
-//	d3.json("static/parsed/flare.json", function(error, root) {
-//	  if (error) throw error;
-//
-//	  nodes = tree.nodes(root),
-//	  links = tree.links(nodes);
-//
-//	  link = svg.selectAll(".link")
-//	      .data(links)
-//	    .enter().append("path")
-//	      .attr("class", "link")
-//	      .attr("d", diagonal);
-//
-//	  node = svg.selectAll(".node")
-//	      .data(nodes)
-//	    .enter().append("g")
-//	      .attr("class", "node")
-//	      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-//
-//	  node.append("circle")
-//	      .attr("r", 4.5);
-//
-//	  node.append("text")
-//	      .attr("dy", ".31em")
-//	      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-//	      .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
-//	      .text(function(d) { return d.name; });
-//	});
-//
-//	d3.select(self.frameElement).style("height", diameter - 150 + "px");
-//
-//}
 
 })

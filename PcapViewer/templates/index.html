@@ -151,13 +151,10 @@ var loadedSessions = [
  
  var loadedTreemap = {
 		 		'name':'users',
-		 		'children':
-		 			[
-	                {% for user in treemap %}
-						{{ user | tojson }}{% if not loop.last %},{% endif %}
-	                {% endfor %}
-		 		    ]
+		 		'children': {{ treemap | tojson }}
  				};
+ 
+ console.log(loadedTreemap);
  
 </script>
 {% endblock %}

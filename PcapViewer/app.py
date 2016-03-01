@@ -11,6 +11,7 @@ import os
 import json
 from flask.json import jsonify
 from database import db_session
+from utils.format import get_treemap
 
 from models import User, Session, Stat
 
@@ -24,9 +25,7 @@ def index(pcap = ''):
     users = User.query.all()
     stats = Stat.query.all()
     sessions = Session.query.all()       
-    treemap = []
-    for user in users:
-        treemap.append(user.treemap_layout())
+    treemap = get_treemap(users)
     
     return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions, treemap=treemap)
 
