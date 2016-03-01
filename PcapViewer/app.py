@@ -64,6 +64,29 @@ def reloadData():
             }
     socketio.emit('newData', json.dumps(data))
 
+# Pour l'instant cette fonction n'est pas appelée
+
+@socketio.on('refreshView')
+def refreshView(data):
+    """Refresh the view filtered by client"""
+    users = []
+    sessions = []
+    stats = []
+    print 'youhou'
+    for user in User.query.all():
+        users.append( user.as_dict() )
+    for stat in Stat.query.all():
+        stats.append( stat.as_dict() )
+    for session in Session.query.all():
+        if data[session['protocol']]==True:
+            sessions.append( stat.as_dict() )  
+    print "test !"
+    data = {
+            'users':users,
+            'sessions':sessions,
+            'stats':stats
+            }
+    socketio.emit('newData', json.dumps(data))
     
 # @app.route('/upload', methods=["GET", "POST"])
 # def upload():

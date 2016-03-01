@@ -298,18 +298,19 @@ function updateStats(stats){
 // La fonction
 $('#refreshButton').click(function(){
 	var protocols = [];
-	var length = $('.left-bar .tab-content #services table tbody tr').length;
-	for(i=0;i<length;i++){
-		$('.left-bar .tab-content #services table tbody tr').each(function(){
-			//Problème : c'est uniquement TOTAL qui passe en boucle..
-			var id = $('input').attr('id');
-			//Problème : Check is undefined
-			var checked = $('#'+id).prop("checked");
-			protocols.push({id:checked});
-
-		});
-	}
-
+	var length = $('.check-prot').length;
+	$('.check-prot').each(function(){
+		var id = $(this).attr('id');
+		console.log('id : '+id);
+		//Problème : Check is undefined
+		var checked = $(this).prop("checked");
+		//console.log('checked ? '+checked)
+		protocols.push({id:checked});
+	});
+	//A voir
+	socket.emit('refreshView',{'fileContent': protocols});
+	console.log('test');
+	
 	//Call the app.py refreshView Function
 });
 
