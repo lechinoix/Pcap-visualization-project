@@ -287,10 +287,31 @@ function updateStats(stats){
 	  		"<td>" + (i+1) + "</td>" +
 	  		"<td>" + stats[i]['name'] + "</td>" +
 	  		"<td>" + stats[i]['value'] + "</td>" +
-	  		"<td></td>" +
+	  		"<td><input name=\""+stats[i]['name']+"\" type=\"checkbox\"></td>" +
 	  		"</tr>");
 	}
 }
+
+ //Update Views depending of checkboxes
+// Il faut boucler sur les services, et si la checkbox est cochée,
+// On appelle updateview avecun tableau de booleans ?
+// La fonction
+$('#refreshButton').click(function(){
+	var protocols = [];
+	var length = $('.left-bar .tab-content #services table tbody tr').length;
+	for(i=0;i<length;i++){
+		$('.left-bar .tab-content #services table tbody tr').each(function(){
+			//Problème : c'est uniquement TOTAL qui passe en boucle..
+			var id = $('input').attr('id');
+			//Problème : Check is undefined
+			var checked = $('#'+id).prop("checked");
+			protocols.push({id:checked});
+
+		});
+	}
+
+	//Call the app.py refreshView Function
+});
 
 socket.on('successfullUpload', function(data){
 	$('#upModal').modal('hide');

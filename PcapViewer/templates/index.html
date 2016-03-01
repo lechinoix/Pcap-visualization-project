@@ -60,6 +60,7 @@
 				                <th>#</th>
 				                <th>Protocol</th>
 				                <th>Packets</th>
+				                <th><button id="refreshButton" onclick="updateView()">Refresh</button></th>
 				              </tr>
 				            </thead>
 				            <tbody>
@@ -68,6 +69,7 @@
 				                <td>{{ loop.index }}</td>
 				                <td>{{ stat.name }}</td>
 				                <td>{{ stat.value }}</td>
+				                <td><input id="{{ stat.name }}" value="checkbox" type="checkbox"></td>
 				              </tr>
 				             {% endfor %}
 				            </tbody>
