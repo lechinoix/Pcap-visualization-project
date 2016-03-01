@@ -5,6 +5,7 @@ from datetime import datetime
 import sys
 from models import Stat ,User, Packet, Session
 from database import db_session,init_db
+from subprocess import call
 #from netaddr import IPNetwork, IPAddress
 
 def hexdump(x):
@@ -152,7 +153,7 @@ def extract_session(summary,data):
         hostDest = Dst[0]
         portDest = int(Dst[1])
         protocol = get_protocol(data[0])
-        if not(protocol =="TCP" or hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc > 10000):
+        if not(protocol =="TCP" or hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc > 2000):
             sess = Session(hostDest,hostSrc,portSrc,portDest,protocol) 
             db_session.add(sess) 
             for pkt in data:
@@ -235,7 +236,8 @@ def add(user,stat):
 def parse(filename):
     """ Parses pcap file and populate de PostgreSQL Database. Populates User, Session, Stat and Packet Tables"""
 
-    t0 = 0; t1 = 0; t2 = 0; t3 = 0; t4 = 0
+    t0 = 0; t1 = 0; t2 = 0; t3 = 0; t4 = 0;
+    ttot=time.clock()
     user = {}
     stat = { "TOTAL" : 0 }
     mailpkts=[]
@@ -262,7 +264,7 @@ def parse(filename):
     print "Stat Table generated : "+ str(t2) + " seconds"
 
     t0 = time.clock()
-    #Ici on peut simplement executer os("tshark -r "+filename+" -q -z conv,tcp"), de passer les premieres lignes puis de les envoyer a extract Sess
+    
     s = pcap.sessions()
     
     for summary,data in s.iteritems():
@@ -276,6 +278,7 @@ def parse(filename):
     t4 += time.clock()-t0
     
     print "Commit in PostGreSQL done : " + str(t4) + " seconds"
+    print "Total time : " + str(time.clock()-ttot) + " seconds"
     print stat 
     return {}
 

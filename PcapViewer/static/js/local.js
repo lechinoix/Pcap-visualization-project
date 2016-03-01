@@ -287,10 +287,32 @@ function updateStats(stats){
 	  		"<td>" + (i+1) + "</td>" +
 	  		"<td>" + stats[i]['name'] + "</td>" +
 	  		"<td>" + stats[i]['value'] + "</td>" +
-	  		"<td></td>" +
+	  		"<td><input name=\""+stats[i]['name']+"\" type=\"checkbox\"></td>" +
 	  		"</tr>");
 	}
 }
+
+ //Update Views depending of checkboxes
+// Il faut boucler sur les services, et si la checkbox est cochée,
+// On appelle updateview avecun tableau de booleans ?
+// La fonction
+$('#refreshButton').click(function(){
+	var protocols = [];
+	var length = $('.check-prot').length;
+	$('.check-prot').each(function(){
+		var id = $(this).attr('id');
+		console.log('id : '+id);
+		//Problème : Check is undefined
+		var checked = $(this).prop("checked");
+		//console.log('checked ? '+checked)
+		protocols.push({id:checked});
+	});
+	//A voir
+	socket.emit('refreshView',{'fileContent': protocols});
+	console.log('test');
+	
+	//Call the app.py refreshView Function
+});
 
 socket.on('successfullUpload', function(data){
 	$('#upModal').modal('hide');
