@@ -10,7 +10,7 @@ from database import db_session
 from utils.format import get_treemap
 import eventlet
 
-from models import User, Session, Stat
+from models import User, Session, Stat, Packet
 
 eventlet.monkey_patch()
 app = Flask(__name__)
@@ -25,8 +25,8 @@ def index(pcap = ''):
     stats = Stat.query.all()
     sessions = Session.query.all()
     treemap = get_treemap(users)
-
-    return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions, treemap=treemap)
+    packets = Packet.query.all()
+    return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions, treemap=treemap, packets=packets)
 
 # @app.route('/list')
 # def listPcap():
@@ -79,21 +79,21 @@ def refreshView(data):
     print data["sessions"]
     socketio.emit('newData', json.dumps(data))
 
-# @app.route('/upload', methods=["GET", "POST"])
-# def upload():
-#     if request.method == "POST":
-#         print 'ok'
-#         print vars(request.files['files'])
-#         tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
-#         request.files['files'].save(tmpPath)
-#         pcap = parse(tmpPath)
-#         os.remove(tmpPath)
-#
-# #         except:
-# #             flash(u"Impossible to download ", "error")
-# #             return jsonify(error='An error occured')
-#
-#         return jsonify(success='Pcap uploaded successfully !')
+@app.route('/upload', methods=["GET", "POST"])
+def upload():
+    if request.method == "POST":
+        print 'ok'
+        print vars(request.files['files'])
+        tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
+        request.files['files'].save(tmpPath)
+        pcap = parse(tmpPath)
+        os.remove(tmpPath)
+
+#         except:
+#             flash(u"Impossible to download ", "error")
+#             return jsonify(error='An error occured')
+
+        return jsonify(success='Pcap uploaded successfully !')
 
 @app.errorhandler(404)
 def page_404(error):

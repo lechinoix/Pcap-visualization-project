@@ -1,78 +1,74 @@
 $(document).ready(function(){
 
 /* ============================
-
-	Initiating socket
-
+  Initiating socket
 ===============================*/
 
     // Catching sessions on first load
     var sessions = loadedSessions;
     var users = loadedUsers.sort(function(a, b){
-    	return b.exchanged.Volume - a.exchanged.Volume;
+      return b.exchanged.Volume - a.exchanged.Volume;
     });
 
     var treemap = loadedTreemap;
 
 /* ============================
-
-	Views with D3.js
-
+  Views with D3.js
 ===============================*/
 
 //Treemap View
 
 function displayTreemap(data){
 
-	d3.select("#radio-treemap").classed("hidden", false);
+  d3.select("#radio-treemap").classed("hidden", false);
 
-	var margin = {top: 40, right: 10, bottom: 10, left: 10},
-	    width = 900 - margin.left - margin.right,
-	    height = 500 - margin.top - margin.bottom;
+  var margin = {top: 40, right: 10, bottom: 10, left: 10},
+      width = 900 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
 
-	var color = d3.scale.category20c();
+  var color = d3.scale.category20c();
 
-	select.selectAll("svg").remove();
+  select.selectAll("svg").remove();
 
-	var treemap = d3.layout.treemap()
-	    .size([width, height])
-	    .sticky(true)
-	    .value(function(d) { return d.Volumeout; });
+  var treemap = d3.layout.treemap()
+      .size([width, height])
+      .sticky(true)
+      .value(function(d) { return d.Volumeout; });
 
-	var div = d3.select("#view-wrapper");
+  var div = d3.select("#view-wrapper");
 
-	svg = select.append("svg")
-	    .attr("width", width + margin.left + margin.right)
-	    .attr("height", height + margin.top + margin.bottom)
-	  .append("g")
-	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  svg = select.append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var root = data;
+  var root = data;
 
-	var node = div.datum(root).selectAll(".node")
+  var node = div.datum(root).selectAll(".node")
     .data(treemap.nodes)
-	  .enter().append("div")
-	    .attr("class", "node")
-	    .call(position)
-	    .style("background", function(d) { return d.children ? color(d.name) : null; })
-	    .text(function(d) { return d.children ? null : d.parent.name + ' / ' + d.name; });
+    .enter().append("div")
+      .attr("class", "node")
+      .call(position)
+      .style("background", function(d) { return d.children ? color(d.name) : null; })
+      .text(function(d) { return d.children ? null : d.parent.name + ' / ' + d.name; });
 
-	d3.selectAll("input").on("change", function change() {
-	  var value = this.value === "count" ? function(d) { return d.Nombreout; } : function(d) { return d.Volumeout; };
+  d3.selectAll("input").on("change", function change() {
+    var value = this.value === "count" ? function(d) { return d.Nombreout; } : function(d) { return d.Volumeout; };
 
-	node
+  node
     .data(treemap.value(value).nodes)
     .transition()
       .duration(1500)
       .call(position);
-	});
+  });
 
-	function position() {
-	  this.style("left", function(d) { return d.x + 30 + "px"; })
-	      .style("top", function(d) { return d.y + 100 + "px"; })
-	      .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
-	      .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
-	}
+  function position() {
+    this.style("left", function(d) { return d.x + 30 + "px"; })
+        .style("top", function(d) { return d.y + 100 + "px"; })
+        .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
+        .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
+  }
 }
 
 // Parallel View
@@ -81,46 +77,46 @@ var line, dragging, x, y, foreground, background, axis, margin, height, width, g
 
 function displayParallel(data){
 
-	d3.select("#radio-treemap").classed("hidden", true);
+  d3.select("#radio-treemap").classed("hidden", true);
 
-	// Define the window width, height and margins
-	margin = {top: 30, right: 10, bottom: 10, left: 10};
-	width = 960 - margin.left - margin.right;
-	height = 500 - margin.top - margin.bottom;
+  // Define the window width, height and margins
+  margin = {top: 30, right: 10, bottom: 10, left: 10};
+  width = 960 - margin.left - margin.right;
+  height = 500 - margin.top - margin.bottom;
 
-	// Init axis
-	x = d3.scale.ordinal().rangePoints([0, width], 1);
-	y = {};
+  // Init axis
+  x = d3.scale.ordinal().rangePoints([0, width], 1);
+  y = {};
 
-	dragging = {};
+  dragging = {};
 
-	// Init
-	line = d3.svg.line();
+  // Init
+  line = d3.svg.line();
 
-	axis = d3.svg.axis().orient("left");
+  axis = d3.svg.axis().orient("left");
 
-	// Create the window and the g container
-	select = d3.select("#view-wrapper");
-	select.selectAll("svg").remove();
-	select.selectAll(".node").remove();
-	svg = select.append("svg")
-	    .attr("width", width + margin.left + margin.right)
-	    .attr("height", height + margin.top + margin.bottom)
-	  .append("g")
-	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  // Create the window and the g container
+  select = d3.select("#view-wrapper");
+  select.selectAll("svg").remove();
+  select.selectAll(".node").remove();
+  svg = select.append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // Extract the list of dimensions and create a scale for each.
   x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
 
-	// Create ordinals dimensions
+  // Create ordinals dimensions
     if(d.toLowerCase() != "id" && d.substr(0,4).toLowerCase() != "port" && d.substr(0,4).toLowerCase() != "nomb" ){
-    	return y[d] = d3.scale.ordinal()
-    	.domain(d3.values(data).sort(function(a, b) {return d3.ascending(a[d], b[d]); }).map(function(obj){return obj[d];}))
-    	.rangePoints([height, 0]);
+      return y[d] = d3.scale.ordinal()
+      .domain(d3.values(data).sort(function(a, b) {return d3.ascending(a[d], b[d]); }).map(function(obj){return obj[d];}))
+      .rangePoints([height, 0]);
 
     // Create linear dimensions
      }else if(d.substr(0,3).toLowerCase() != "id"){
-		return y[d] = d3.scale.linear()
+    return y[d] = d3.scale.linear()
           .domain(d3.extent(data, function(p) { return +p[d]; }))
           .range([height, 0]);
     }
@@ -222,56 +218,54 @@ function brush() {
       extents = actives.map(function(p) { return y[p].brush.extent(); });
   foreground.style("display", function(d) {
     return actives.every(function(p, i) {
-    	if(typeof y[p].rangePoints === "function"){
-    		return extents[i][0] <= y[p](d[p]) && y[p](d[p]) <= extents[i][1];
-    	}else{
-    		return extents[i][0] <= d[p] && d[p] <= extents[i][1];
-    	}
+      if(typeof y[p].rangePoints === "function"){
+        return extents[i][0] <= y[p](d[p]) && y[p](d[p]) <= extents[i][1];
+      }else{
+        return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+      }
     }) ? null : "none";
   });
 }
 
 /* ============================
-
-	Events and connectors
-
+  Events and connectors
 ===============================*/
 
 
 $("#parallel-btn").on("click", function(e){
-	displayParallel(sessions);
+  displayParallel(sessions);
 });
 
 $("#network-btn").on("click", function(e){
-	displayNetwork();
+  displayNetwork();
 });
 
 $("#treemap-btn").on("click", function(e){
-	displayTreemap(treemap);
+  displayTreemap(treemap);
 });
 
 // Update side bar
 function updateUsers(){
-	for(i=0;i<users.length;i++){
-		$('.left-bar .tab-content #hosts table tbody').append("<tr>" +
-	  		"<td>" + (i+1) + "</td>" +
-	  		"<td>" + users[i].address + "</td>" +
-	  		"<td>" + users[i].exchanged.Volume + "</td>" +
-	  		"<td></td>" +
-	  		"</tr>");
-	}
+  for(i=0;i<users.length;i++){
+    $('.left-bar .tab-content #hosts table tbody').append("<tr>" +
+        "<td>" + (i+1) + "</td>" +
+        "<td>" + users[i].address + "</td>" +
+        "<td>" + users[i].exchanged.Volume + "</td>" +
+        "<td></td>" +
+        "</tr>");
+  }
 }
 
 // Update side bar
 function updateStats(stats){
-	for(i=0;i<stats.length;i++){
-		$('.left-bar .tab-content #services table tbody').append("<tr>" +
-	  		"<td>" + (i+1) + "</td>" +
-	  		"<td>" + stats[i].name + "</td>" +
-	  		"<td>" + stats[i].value + "</td>" +
-	  		"<td><input id=\"" + stats[i].name + "\" class=\"check-prot\" type=\"checkbox\" value=\"checkbox\"></td>" +
-	  		"</tr>");
-	}
+  for(i=0;i<stats.length;i++){
+    $('.left-bar .tab-content #services table tbody').append("<tr>" +
+        "<td>" + (i+1) + "</td>" +
+        "<td>" + stats[i].name + "</td>" +
+        "<td>" + stats[i].value + "</td>" +
+        "<td><input id=\"" + stats[i].name + "\" class=\"check-prot\" type=\"checkbox\" value=\"checkbox\"></td>" +
+        "</tr>");
+  }
 }
 
 $('.check-all').on('change', function(){
@@ -291,9 +285,9 @@ var socket = io.connect('http://' + document.domain + ':' + location.port);
 socket.on('connect', function() {
 
   $("form#upload-form").on('submit', function(e){
-  	e.preventDefault();
+    e.preventDefault();
 
-  	$('.status-container').html('Upload and Process to parse pcap');
+    $('.status-container').html('Upload and Process to parse pcap');
 
       socket.emit('uploadPcap', {fileContent: $(this)[0][0].files[0]});
 
@@ -302,51 +296,51 @@ socket.on('connect', function() {
   $('#refreshButton').click(function(e){
     e.preventDefault();
 
-  	var prot = [];
-  	var length = $('.check-prot').length;
+    var prot = [];
+    var length = $('.check-prot').length;
     var id  = '';
 
-  	$('.check-prot').each(function(){
-  		id = $(this).attr('id');
-  		//Problème : Check is undefined
-  		var checked = $(this).prop("checked");
-  		//console.log('checked ? '+checked)
-  		if(checked === true){
+    $('.check-prot').each(function(){
+      id = $(this).attr('id');
+      //Problème : Check is undefined
+      var checked = $(this).prop("checked");
+      //console.log('checked ? '+checked)
+      if(checked === true){
         prot.push(id);
       }
-  	});
-  	//A voir
-  	socket.emit('refreshView',{'fileContent': prot});
+    });
+    //A voir
+    socket.emit('refreshView',{'fileContent': prot});
 
-  	//Call the app.py refreshView Function
+    //Call the app.py refreshView Function
   });
 
   socket.on('successfullUpload', function(data){
-  	$('#upModal').modal('hide');
-  	$('.status-container').html(data.success);
+    $('#upModal').modal('hide');
+    $('.status-container').html(data.success);
   });
 
   socket.on('newData', function(data){
-  	data = JSON.parse(data);
-  	if('users' in data){
-  		$('.left-bar .tab-content #hosts table tbody').html('');
-  		users = data.users.sort(function(a, b){
-  			return b.exchanged.Volume - a.exchanged.Volume;
-  		});
-  		updateUsers(users);
-  		displayTreemap(treemap);
-  	}
-  	if('stats' in data){
-  		$('.left-bar .tab-content #services table tbody').html('');
-  		stats = data.stats.sort(function(a, b){
-  			return b.value - a.value;
-  		});
-  		updateStats(stats);
-  	}
-  	if('sessions' in data){
-  		sessions = data.sessions;
-  		displayParallel(sessions);
-  	}
+    data = JSON.parse(data);
+    if('users' in data){
+      $('.left-bar .tab-content #hosts table tbody').html('');
+      users = data.users.sort(function(a, b){
+        return b.exchanged.Volume - a.exchanged.Volume;
+      });
+      updateUsers(users);
+      displayTreemap(treemap);
+    }
+    if('stats' in data){
+      $('.left-bar .tab-content #services table tbody').html('');
+      stats = data.stats.sort(function(a, b){
+        return b.value - a.value;
+      });
+      updateStats(stats);
+    }
+    if('sessions' in data){
+      sessions = data.sessions;
+      displayParallel(sessions);
+    }
   });
   //
   // $(window).on('beforeunload', function(){

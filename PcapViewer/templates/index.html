@@ -95,6 +95,59 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-md-3">	
+				</div>
+				<div class="packet-wrapper col-md-6">
+				    <table class="table table-striped">
+		    		    <thead>
+			              <tr>
+			                <th>SessionId</th>
+			                <th>hostSrc</th>
+			                <th>portSrc</th>
+			                <th>hostDest</th>
+			                <th>portDest</th>
+			                <th>protocol</th>
+			                <th>data</th>
+			                <th>timestamp</th>
+			              </tr>
+			            </thead>
+					    <tbody>
+			            {% for packet in packets | sort(False, attribute="sessionId") %}
+			              <tr>
+	                        <td>{{ packet.sessionId }}</td>
+			                <td>{{ packet.hostSrc }}  </td>
+			                <td>{{ packet.portSrc }}  </td>
+			                <td>{{ packet.hostDest }} </td>
+			                <td>{{ packet.portDest }} </td>
+			                <td>{{ packet.protocol }} </td>
+
+			                {% if packet.data!="" %}
+				                <td>
+				                  <button type="button" class="btn" data-toggle="collapse" data-target="#demo-{{ packet.id }}">Show Data</button>
+				                </td>
+				                <td>{{ packet.timestamp }}</td>
+				              </tr>
+				              <tr class="collapse out" id="demo-{{ packet.id }}">
+				                <td colspan="8">
+				                  <div class="data">{{ packet.data }}</div>
+				                </td>
+				              </tr>
+							{% else %}
+				                <td>
+				                  No Data 
+				                </td>
+				                <td>{{ packet.timestamp }}</td>
+				              </tr>
+							{% endif %}
+			                
+			             {% endfor %}
+			            </tbody>
+		            </table>				
+				</div>
+				<div class="col-md-3">
+				</div>
+			</div>
 		</div>
 
 {% endblock %}
@@ -127,10 +180,12 @@
 		</div>
 {% endblock %}
 
-{% block javascript %}
+ {% block javascript %}
 <script>
 	var loadedSessions = [ {% for session in sessions %}{	'id':'{{ session.id }}','hostSrc':'{{ session.hostSrc }}','hostDest':'{{ session.hostDest }}','portSrc':'{{ session.portSrc }}','portDest':'{{ session.portDest }}','protocol':'{{ session.protocol }}'}{% if not loop.last %},{% endif %}{% endfor %} ];
 	var loadedUsers = [ {% for user in users %}{ 'id':'{{ user.id }}', 'address':'{{ user.address }}', 'exchanged':{{ user.exchanged | tojson }} }{% if not loop.last %},{% endif %}{% endfor %}];
  	var loadedTreemap = { 'name':'users',	'children': {{ treemap | tojson }} };
+ 	
+ 	// var loadedPackets = [ {% for packet in packets %}{ 'id':'{{ packet.id }}','hostSrc':'{{ packet.hostSrc }}','hostDest':'{{ packet.hostDest }}','portSrc':'{{ packet.portSrc }}','portDest':'{{ packet.portDest }}','protocol':'{{ packet.protocol }}','timestamp':'{{ packet.timestamp }}','sessionId':'{{ packet.sessionId }}'}{% if not loop.last %},{% endif %}{% endfor %} ];
 </script>
 {% endblock %}

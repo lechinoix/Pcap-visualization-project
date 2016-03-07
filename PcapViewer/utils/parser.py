@@ -95,70 +95,56 @@ def feed_stats(stat, packet):
         stat[protocol] = 1
 
 
-def feed_trames(pkt,session):
-    """Populate the Packet Table is the packet is involved in a recognised protocol only"""
-    timestamp = datetime.fromtimestamp(pkt.time).strftime('%Y-%m-%d %H:%M:%S')
-    protocol = get_protocol(pkt)
-    data={}
-    if protocol != "AUTRE":
-        if pkt.haslayer(IP):
-            ip = pkt.getlayer(IP)
-            hostSrc = ip.src
-            hostDest = ip.dst
-
-            if ip.haslayer(TCP):
-                tcp = ip.getlayer(TCP)
-                portSrc = tcp.sport
-                portDest = tcp.dport
-
-            elif ip.haslayer(UDP):
-                udp = ip.getlayer(UDP)
-                portSrc = udp.sport
-                portDest = udp.dport
-
-            else:
-                portSrc=None
-                portDest=None
-
-        elif pkt.haslayer(ARP):
-            arp = pkt.getlayer(ARP)
-            hostSrc = arp.psrc
-            hostDest = arp.pdst
-            portSrc = None
-            portDest = None
-
-        if pkt.haslayer(Raw):
-            data = {"data" : hexdump(pkt.getlayer(Raw))}
-
-
-        if protocol == "LDAP" or protocol == "IMAP" or protocol == "POP3" or protocol == "SMTP" or protocol == "HTTP":
-            secure=0
-        else:
-            secure=1
-
-        P = Packet(hostSrc,hostDest,portSrc,portDest,protocol,data,timestamp,secure,session)
-        db_session.add(P)
-    if protocol == "IMAP":
-        print pkt
-
-def extract_session(summary,data):
+def extract_session(summary,datas,sessionId):
     """Populate the Packet Table is the session is TCP or UDP protocol only"""
     s = summary.split(' ')
-    # summary est de la forme UDP 192.168.11.228:21893 > 208.67.222.222:
-    #if s[0] == "TCP" or s[0] == "UDP":
-    if s[0] == "TCP":
+    # summary looks like UDP 192.168.11.228:21893 > 208.67.222.222:
+    if s[0] == "TCP" or s[0] == "UDP":
+        #print summary
         Src = s[1].split(":")
         Dst = s[3].split(":")
         hostSrc = Src[0]
         portSrc = int(Src[1])
         hostDest = Dst[0]
         portDest = int(Dst[1])
-        protocol = get_protocol(data[0])
-        if not(hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc > 2000):
+        protocol = get_protocol(datas[0])
+
+        #We set a filter over the source port to avoid displaying each session two times
+        if not(hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc>1023):
+            
             sess = Session(hostDest,hostSrc,portSrc,portDest,protocol)
             db_session.add(sess)
-            for pkt in data:
-                feed_trames(pkt,sess)
+            #db_session.commit()
+            isFirst = True
+            data = ""
+
+            if protocol == "LDAP" or protocol == "IMAP" or protocol == "POP3" or protocol == "SMTP" or protocol == "HTTP":
+                secure=0
+            else:
+                secure=1
+
+            #print "New session "+ str(sessionId)
+
+            #We put all the packet in a single Row
+            for pkt in datas:
+
+                """Populate the Packet Table is the packet is involved in a recognised protocol only"""
+                
+                if pkt.haslayer(Raw):
+                    #print "Packet added for session "+str(sessionId)
+                    data += "\n"+hexdump(pkt.getlayer(Raw))
+                if isFirst:
+                    timestamp = datetime.fromtimestamp(pkt.time).strftime('%Y-%m-%d %H:%M:%S')
+                isFirst = False
+
+            dataToAdd = ""
+            if data != "":
+                dataToAdd = data
+            P = Packet(hostSrc,hostDest,portSrc,portDest,protocol,dataToAdd,timestamp,secure,sess)
+            db_session.add(P)
+
+            return (sessionId + 1)
+    return sessionId
 
 def feed_user(user,pkt):
     """Create a dictionnary of the users, which will be added to the DB during add() execution"""
@@ -267,9 +253,9 @@ def parse(filename):
     t0 = time.clock()
 
     s = pcap.sessions()
-
+    sessionId = 1
     for summary,data in s.iteritems():
-        extract_session(summary,data)
+        sessionId = extract_session(summary,data,sessionId)
     t3 += time.clock() - t0
 
     print "Sessions and Packets Tables generated : " + str(t3) + " seconds"

@@ -92,3 +92,10 @@ svg {
   position: absolute;
   text-indent: 2px;
 }
+
+/* Packet Display */
+
+.data{
+  max-width:1000px;
+  margin: 10px 25px;
+}
