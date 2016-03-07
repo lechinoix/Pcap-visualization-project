@@ -278,6 +278,14 @@ function updateStats(stats){
 	}
 }
 
+$('.check-all').on('change', function(){
+  if($('.check-all').prop('checked')){
+    $('.check-prot').prop("checked", true);
+  }else{
+    $('.check-prot').prop("checked", false);
+  }
+});
+
  //Update Views depending of checkboxes
 // Il faut boucler sur les services, et si la checkbox est cochée,
 // On appelle updateview avecun tableau de booleans ?

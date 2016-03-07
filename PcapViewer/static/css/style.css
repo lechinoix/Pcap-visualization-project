@@ -23,6 +23,12 @@ body {
 	max-height:530px;
 }
 
+/* Sidebar */
+
+#refreshButton{
+	margin-left: 5px;
+}
+
 /* Network View */
 
 .node circle {

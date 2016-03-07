@@ -1,5 +1,4 @@
 # -*- coding: utf8 -*-
-
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import *
