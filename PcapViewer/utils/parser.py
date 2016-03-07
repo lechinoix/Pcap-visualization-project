@@ -1,5 +1,7 @@
 # -*- coding: utf8 -*-
 
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import *
 from datetime import datetime
 import sys
@@ -18,7 +20,7 @@ def hexdump(x):
 
 def initiate():
     """ Execute a drop_all() followed by a create_all() that clean the database"""
-    init_db() 
+    init_db()
 
 def get_protocol(pkt):
     """Identified the protocol of a given packet"""
@@ -29,7 +31,7 @@ def get_protocol(pkt):
         elif pkt[TCP].dport == 20 or pkt[TCP].sport == 20:
             protocol = "FTP"
         elif pkt[TCP].dport == 21 or pkt[TCP].sport == 21:
-            protocol = "FTP"    
+            protocol = "FTP"
         elif pkt[TCP].dport == 22 or pkt[TCP].sport == 22:
             protocol = "SSH"
         elif pkt[TCP].dport == 25 or pkt[TCP].sport == 25:
@@ -49,7 +51,7 @@ def get_protocol(pkt):
         elif pkt[TCP].dport == 389 or pkt[TCP].sport == 389:
             protocol = "LDAP"
         elif pkt[TCP].dport == 443 or pkt[TCP].sport == 443:
-            protocol = "HTTPS"                
+            protocol = "HTTPS"
         elif pkt[TCP].dport == 445 or pkt[TCP].sport == 445:
             protocol = "SMB"
         elif pkt[TCP].dport == 636 or pkt[TCP].sport == 636:
@@ -89,7 +91,7 @@ def feed_stats(stat, packet):
     protocol = get_protocol(packet)
     stat["TOTAL"] += 1
     if protocol in  stat:
-        stat[protocol] += 1 
+        stat[protocol] += 1
     else:
         stat[protocol] = 1
 
@@ -101,7 +103,7 @@ def feed_trames(pkt,session):
     data={}
     if protocol != "AUTRE":
         if pkt.haslayer(IP):
-            ip = pkt.getlayer(IP) 
+            ip = pkt.getlayer(IP)
             hostSrc = ip.src
             hostDest = ip.dst
 
@@ -109,27 +111,27 @@ def feed_trames(pkt,session):
                 tcp = ip.getlayer(TCP)
                 portSrc = tcp.sport
                 portDest = tcp.dport
-                
+
             elif ip.haslayer(UDP):
                 udp = ip.getlayer(UDP)
                 portSrc = udp.sport
                 portDest = udp.dport
-                
+
             else:
                 portSrc=None
                 portDest=None
-                
+
         elif pkt.haslayer(ARP):
             arp = pkt.getlayer(ARP)
             hostSrc = arp.psrc
-            hostDest = arp.pdst  
+            hostDest = arp.pdst
             portSrc = None
             portDest = None
-       
+
         if pkt.haslayer(Raw):
             data = {"data" : hexdump(pkt.getlayer(Raw))}
-        
-        
+
+
         if protocol == "LDAP" or protocol == "IMAP" or protocol == "POP3" or protocol == "SMTP" or protocol == "HTTP":
             secure=0
         else:
@@ -153,16 +155,16 @@ def extract_session(summary,data):
         hostDest = Dst[0]
         portDest = int(Dst[1])
         protocol = get_protocol(data[0])
-        if not(protocol =="TCP" or hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc > 2000):
-            sess = Session(hostDest,hostSrc,portSrc,portDest,protocol) 
-            db_session.add(sess) 
+        if not(hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc > 2000):
+            sess = Session(hostDest,hostSrc,portSrc,portDest,protocol)
+            db_session.add(sess)
             for pkt in data:
                 feed_trames(pkt,sess)
 
 def feed_user(user,pkt):
     """Create a dictionnary of the users, which will be added to the DB during add() execution"""
     if pkt.haslayer(IP):
-        ip = pkt.getlayer(IP) 
+        ip = pkt.getlayer(IP)
         if not(ip.src.endswith('.255') or ip.dst.endswith('.255')):
             length = len(pkt)
             # length = sys.getsizeof(ip)
@@ -177,7 +179,7 @@ def feed_user(user,pkt):
                         "Volumein": 0,
                         "Volumeout": length,
                         "Nombrein": 0,
-                        "Nombreout": 1                      
+                        "Nombreout": 1
                     }
             else:
                 user[ip.src]={
@@ -193,14 +195,14 @@ def feed_user(user,pkt):
                           }
                       }
                 }
-    
+
             if ip.dst in user:
                 user[ip.dst]["Volume"] += length
-    
+
                 if protocol in user[ip.dst]["Protocole"]:
                     user[ip.dst]["Protocole"][protocol]["Volumein"] += length
                     user[ip.dst]["Protocole"][protocol]["Nombrein"] += 1
-                
+
                 else:
                     user[ip.dst]["Protocole"][protocol] = {
                         "Volumein": length,
@@ -222,13 +224,13 @@ def feed_user(user,pkt):
                           }
                       }
                 }
-    
+
 def add(user,stat):
     """Add the users and the stats in the session."""
     for el in user:
         U = User(el,user[el])
         db_session.add(U)
-    
+
     for el in stat:
         S = Stat(el,stat[el])
         db_session.add(S)
@@ -245,12 +247,12 @@ def parse(filename):
         initiate()
     except Exception as e:
         print e
-    
+
     tread = time.clock()
     pcap = rdpcap(filename)
-    
+
     print "Pcap file has been read : " + str(time.clock() - tread)
-    
+
     for pkt in pcap:
         t0 = time.clock()
         feed_user(user,pkt)
@@ -259,27 +261,27 @@ def parse(filename):
         feed_stats(stat,pkt)
         t2 += time.clock()-t0
     add(user,stat)
-    
+
     print "Treemap Table generated : " + str(t1) + " seconds"
     print "Stat Table generated : "+ str(t2) + " seconds"
 
     t0 = time.clock()
-    
+
     s = pcap.sessions()
-    
+
     for summary,data in s.iteritems():
         extract_session(summary,data)
-    t3 += time.clock() - t0    
+    t3 += time.clock() - t0
 
     print "Sessions and Packets Tables generated : " + str(t3) + " seconds"
-    
+
     t0 = time.clock()
     db_session.commit()
     t4 += time.clock()-t0
-    
+
     print "Commit in PostGreSQL done : " + str(t4) + " seconds"
     print "Total time : " + str(time.clock()-ttot) + " seconds"
-    print stat 
+    print stat
     return {}
 
 #-----------------------------------UNUSED FUNCTION-----------------------------------------#

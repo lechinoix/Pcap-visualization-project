@@ -273,7 +273,7 @@ function updateStats(stats){
 	  		"<td>" + (i+1) + "</td>" +
 	  		"<td>" + stats[i].name + "</td>" +
 	  		"<td>" + stats[i].value + "</td>" +
-	  		"<td><input name=\""+stats[i].name+"\" type=\"checkbox\"></td>" +
+	  		"<td><input id=\"" + stats[i].name + "\" class=\"check-prot\" type=\"checkbox\" value=\"checkbox\"></td>" +
 	  		"</tr>");
 	}
 }
@@ -295,10 +295,13 @@ socket.on('connect', function() {
 
   });
 
-  $('#refreshButton').click(function(){
+  $('#refreshButton').click(function(e){
+    e.preventDefault();
+
   	var prot = [];
   	var length = $('.check-prot').length;
     var id  = '';
+
   	$('.check-prot').each(function(){
   		id = $(this).attr('id');
   		//Problème : Check is undefined
@@ -310,7 +313,6 @@ socket.on('connect', function() {
   	});
   	//A voir
   	socket.emit('refreshView',{'fileContent': prot});
-  	console.log(prot);
 
   	//Call the app.py refreshView Function
   });
@@ -342,10 +344,10 @@ socket.on('connect', function() {
   		displayParallel(sessions);
   	}
   });
-
-  $(window).on('beforeunload', function(){
-      socket.close();
-  });
+  //
+  // $(window).on('beforeunload', function(){
+  //     socket.close();
+  // });
 
 });
 
