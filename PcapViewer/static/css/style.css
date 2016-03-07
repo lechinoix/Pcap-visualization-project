@@ -99,3 +99,8 @@ svg {
   max-width:1000px;
   margin: 10px 25px;
 }
+
+.packet-wrapper.col-md-6 {
+    max-height: 300px;
+    overflow: auto;
+}

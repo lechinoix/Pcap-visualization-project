@@ -227,6 +227,38 @@ function brush() {
   });
 }
 
+function displayPackets(packets){
+  for(i=0;i<packets.length;i++){
+    if (packets[i]["data"]!={}){
+      $('.packets .packet-wrapper table tbody').html("<tr>" +
+          "<td>" + packets[i]["sessionId"] + "</td>" +
+          "<td>" + packets[i]["hostSrc"] + "</td>" +
+          "<td>" + packets[i]["portSrc"] + "</td>" +
+          "<td>" + packets[i]["hostDest"] + "</td>" +
+          "<td>" + packets[i]["portDest"] + "</td>" +
+          "<td>" + packets[i]["protocol"] + "</td>" +
+          "<td> No Data </td>" +
+          "<td>" + packets[i]["timestamp"] + "</td>" +
+          "</tr>");
+    } else {
+      $('.packets .packet-wrapper table tbody').html("<tr>" +
+          "<td>" + packets[i]["sessionId"] + "</td>" +
+          "<td>" + packets[i]["hostSrc"] + "</td>" +
+          "<td>" + packets[i]["portSrc"] + "</td>" +
+          "<td>" + packets[i]["hostDest"] + "</td>" +
+          "<td>" + packets[i]["portDest"] + "</td>" +
+          "<td>" + packets[i]["protocol"] + "</td>" +
+          "<td>" +
+          "<button type=\"button\" class=\"btn\" data-toggle=\"collapse\" data-target=\"#demo-" + 
+          packets[i]["id"] + "\"> Show Data </button>" + 
+          "</td>" +
+          "<td>" + packets[i]["timestamp"] + "</td>" +
+          "</tr>");
+      // A finir (la partie data )
+    }
+  }
+}
+
 /* ============================
   Events and connectors
 ===============================*/
@@ -340,6 +372,11 @@ socket.on('connect', function() {
     if('sessions' in data){
       sessions = data.sessions;
       displayParallel(sessions);
+    }
+    if('packets' in data){
+      packets = data.packets;
+      console.log(packets);
+      displayPackets(packets);
     }
   });
   //
