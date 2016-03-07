@@ -49,18 +49,22 @@ def reloadData():
     users = []
     sessions = []
     stats = []
+    packets = []
     for user in User.query.all():
         users.append(user.as_dict())
     for session in Session.query.all():
         sessions.append(session.as_dict())
     for stat in Stat.query.all():
         stats.append(stat.as_dict())
+    for packet in Packet.query.all():
+        packets.append(packet.as_dict())
     data = {
             'users':users,
             'sessions':sessions,
-            'stats':stats
+            'stats':stats,
+            'packets':packets
             }
-    print data['sessions']
+    #print data['sessions']
     socketio.emit('newData', json.dumps(data))
 
 # Pour l'instant cette fonction n'est pas appelée
@@ -69,14 +73,20 @@ def reloadData():
 def refreshView(data):
     """Refresh the view filtered by client"""
     sessions = []
+    packets = []
     print data['fileContent']
     for session in Session.query.all():
         if session.protocol in data['fileContent']:
             sessions.append(session.as_dict())
+    for packet in Packet.query.all():
+        if packet.protocol in data['fileContent']:
+            print packet.protocol
+            packets.append(session.as_dict())       
     data = {
-            'sessions':sessions
+            'sessions':sessions,
+            'packets':packets
             }
-    print data["sessions"]
+    #print data["sessions"]
     socketio.emit('newData', json.dumps(data))
 
 @app.route('/upload', methods=["GET", "POST"])

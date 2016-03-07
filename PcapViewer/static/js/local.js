@@ -249,8 +249,7 @@ function displayPackets(packets){
           "<td>" + packets[i]["portDest"] + "</td>" +
           "<td>" + packets[i]["protocol"] + "</td>" +
           "<td>" +
-          "<button type=\"button\" class=\"btn\" data-toggle=\"collapse\" data-target=\"#demo-" + 
-          packets[i]["id"] + "\"> Show Data </button>" + 
+          "<button> </button>" + 
           "</td>" +
           "<td>" + packets[i]["timestamp"] + "</td>" +
           "</tr>");
