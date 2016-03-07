@@ -4,6 +4,8 @@ from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import relationship, backref
 
 class Packet(Base):
+    """ Whole data for a given packet """
+
     __tablename__ = 'Packet'
     id = Column(Integer, primary_key=True)
     hostSrc = Column(String(40))
@@ -15,8 +17,8 @@ class Packet(Base):
     timestamp = Column(DateTime)
     secure = Column(Integer)
     sessionId = Column(Integer, ForeignKey('Session.id'))
-    session =  relationship('Session', backref=backref('posts', lazy='dynamic'))
-    
+    session = relationship('Session', backref=backref('posts', lazy='dynamic'))
+
     def __init__(self, hostSrc, hostDest, portSrc, portDest, protocol, data={}, timestamp=None, secure=1, session=None):
         self.hostSrc = hostSrc
         self.hostDest = hostDest
@@ -53,7 +55,7 @@ class Session(Base):
     portSrc = Column(Integer)
     portDest = Column(Integer)
     protocol = Column(String(80))
-    
+
     def __init__(self, hostSrc, hostDest, portSrc, portDest, protocol):
         self.hostSrc = hostSrc
         self.hostDest = hostDest
@@ -63,7 +65,7 @@ class Session(Base):
 
     def __repr__(self):
         return '<Session %s -> %s>' % (self.hostSrc, self.hostDest)
-        
+
     def as_dict(self):
         return {
                 'id':self.id,
@@ -73,52 +75,52 @@ class Session(Base):
                 'portDest':self.portDest,
                 'protocol':self.protocol
                 }
-        
+
 class User(Base):
     __tablename__ = 'User'
     id = Column(Integer, primary_key=True)
     address = Column(String(40))
     exchanged = Column(JSON)
-    
+
     def __init__(self, address, exchanged):
         self.address = address
         self.exchanged = exchanged
-        
+
     def __repr__(self):
         return '<User %s>' % (self.address)
-    
+
     def as_dict(self):
         return {
                 'id':self.id,
                 'address':self.address,
                 'exchanged':self.exchanged
                 }
-        
+
     def treemap_layout(self):
         formatExchanged = []
-        for key,value in self.exchanged['Protocole'].items():
+        for key, value in self.exchanged['Protocole'].items():
             formatExchanged.append({'name':key, 'Volumeout':value['Volumeout'], 'Nombreout':value['Nombreout']})
         return {
                'id':self.id,
                'name':self.address,
                'children':formatExchanged
                }
-        
+
 class Stat(Base):
     __tablename__ = 'Stat'
     id = Column(Integer, primary_key=True)
     name = Column(String(80))
     value = Column(Integer)
     comment = Column(String(200))
-    
+
     def __init__(self, name, value, comment=None):
         self.name = name
         self.value = value
         self.comment = comment
-        
+
     def __repr__(self):
         return '%s' % (self.name)
-    
+
     def as_dict(self):
         return {
                 'id':self.id,

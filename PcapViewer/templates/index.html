@@ -21,7 +21,7 @@
 
 		<div id="content" class="container-fluid">
 			<div class="row">
-			
+
 			<!-- Flash messages for debug -->
 				{% with messages = get_flashed_messages(category_filter="error") %}
 		        {% if messages %}
@@ -33,7 +33,7 @@
 		        {% endif %}
 		        {% endwith %}
 		    <!-- End flash messages -->
-		    
+
 				<div class="left-bar col-md-3">
 					<ul id="left-tab" class="nav nav-tabs" role="tablist">
 						<li role="presentation" class="active"><a href="#hosts" aria-controls="hosts" role="tab" data-toggle="tab">Hosts</a></li>
@@ -96,7 +96,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 {% endblock %}
 
 {% block footer %}
@@ -129,35 +129,8 @@
 
 {% block javascript %}
 <script>
-var loadedSessions = [
-            {% for session in sessions %}
-            {	
-            	'id':'{{ session.id }}',
-            	'hostSrc':'{{ session.hostSrc }}',
-            	'hostDest':'{{ session.hostDest }}',
-            	'portSrc':'{{ session.portSrc }}',
-            	'portDest':'{{ session.portDest }}',
-            	'protocol':'{{ session.protocol }}'
-            }{% if not loop.last %},{% endif %}
-            {% endfor %}
-           ];
- var loadedUsers = [
-             {% for user in users %}
-             {	
-             	'id':'{{ user.id }}',
-             	'address':'{{ user.address }}',
-             	'exchanged':{{ user.exchanged | tojson }}
-             }{% if not loop.last %},{% endif %}
-             {% endfor %}
-            ];
- 
- var loadedTreemap = {
-		 		'name':'users',
-		 		'children': {{ treemap | tojson }}
- 				};
- 
- console.log(loadedTreemap);
- 
+	var loadedSessions = [ {% for session in sessions %}{	'id':'{{ session.id }}','hostSrc':'{{ session.hostSrc }}','hostDest':'{{ session.hostDest }}','portSrc':'{{ session.portSrc }}','portDest':'{{ session.portDest }}','protocol':'{{ session.protocol }}'}{% if not loop.last %},{% endif %}{% endfor %} ];
+	var loadedUsers = [ {% for user in users %}{ 'id':'{{ user.id }}', 'address':'{{ user.address }}', 'exchanged':{{ user.exchanged | tojson }} }{% if not loop.last %},{% endif %}{% endfor %}];
+ 	var loadedTreemap = { 'name':'users',	'children': {{ treemap | tojson }} };
 </script>
 {% endblock %}
-		

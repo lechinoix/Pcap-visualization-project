@@ -1,32 +1,31 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO
-from werkzeug.utils import secure_filename
 from utils.parser import parse
-from dbus.decorators import method
-from flask.helpers import flash
 import os
 import json
-from flask.json import jsonify
 from database import db_session
 from utils.format import get_treemap
+import eventlet
 
 from models import User, Session, Stat
 
+eventlet.monkey_patch()
 app = Flask(__name__)
 app.config.from_object('config.default')
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')
 
 @app.route('/')
 def index(pcap = ''):
     """Display home page"""
+
     users = User.query.all()
     stats = Stat.query.all()
-    sessions = Session.query.all()       
+    sessions = Session.query.all()
     treemap = get_treemap(users)
-    
+
     return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions, treemap=treemap)
 
 # @app.route('/list')
@@ -43,19 +42,19 @@ def upload(data):
     os.remove(tmpPath)
     reloadData()
     socketio.emit('successfullUpload', {'success': 'Got it !'})
-    
-    
+
+
 def reloadData():
     """Send new data to display to Client"""
     users = []
     sessions = []
     stats = []
     for user in User.query.all():
-        users.append( user.as_dict() )
+        users.append(user.as_dict())
     for session in Session.query.all():
-        sessions.append( session.as_dict() )
+        sessions.append(session.as_dict())
     for stat in Stat.query.all():
-        stats.append( stat.as_dict() )
+        stats.append(stat.as_dict())
     data = {
             'users':users,
             'sessions':sessions,
@@ -71,22 +70,21 @@ def refreshView(data):
     users = []
     sessions = []
     stats = []
-    print 'youhou'
+    print data
     for user in User.query.all():
-        users.append( user.as_dict() )
+        users.append(user.as_dict())
     for stat in Stat.query.all():
-        stats.append( stat.as_dict() )
+        stats.append(stat.as_dict())
     for session in Session.query.all():
-        if data[session['protocol']]==True:
-            sessions.append( stat.as_dict() )  
-    print "test !"
+        if session.protocol in data['fileContent']:
+            sessions.append(stat.as_dict())
     data = {
             'users':users,
             'sessions':sessions,
             'stats':stats
             }
     socketio.emit('newData', json.dumps(data))
-    
+
 # @app.route('/upload', methods=["GET", "POST"])
 # def upload():
 #     if request.method == "POST":
@@ -96,13 +94,13 @@ def refreshView(data):
 #         request.files['files'].save(tmpPath)
 #         pcap = parse(tmpPath)
 #         os.remove(tmpPath)
-#         
+#
 # #         except:
 # #             flash(u"Impossible to download ", "error")
 # #             return jsonify(error='An error occured')
-#          
+#
 #         return jsonify(success='Pcap uploaded successfully !')
-    
+
 @app.errorhandler(404)
 def page_404(error):
     """Display 404 error page"""
