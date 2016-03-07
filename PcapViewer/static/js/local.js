@@ -7,9 +7,6 @@ $(document).ready(function(){
 
 ===============================*/
 
-
-
-
     // Catching sessions on first load
     var sessions = loadedSessions;
     var users = loadedUsers.sort(function(a, b){
