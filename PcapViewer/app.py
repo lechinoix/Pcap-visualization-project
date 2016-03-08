@@ -80,8 +80,8 @@ def refreshView(data):
             sessions.append(session.as_dict())
     for packet in Packet.query.all():
         if packet.protocol in data['fileContent']:
-            print packet.protocol
-            packets.append(session.as_dict())       
+            print "Packet chosed (protocol) " + packet.protocol
+            packets.append(packet.as_dict())       
     data = {
             'sessions':sessions,
             'packets':packets

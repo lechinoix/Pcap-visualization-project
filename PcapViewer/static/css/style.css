@@ -103,4 +103,5 @@ svg {
 .packet-wrapper.col-md-6 {
     max-height: 300px;
     overflow: auto;
+    min-width: 400px;
 }

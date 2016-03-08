@@ -134,7 +134,7 @@ def extract_session(summary,datas,sessionId):
                     #print "Packet added for session "+str(sessionId)
                     data += "\n"+hexdump(pkt.getlayer(Raw))
                 if isFirst:
-                    timestamp = datetime.fromtimestamp(pkt.time).strftime('%Y-%m-%d %H:%M:%S')
+                    timestamp = str(datetime.fromtimestamp(pkt.time).strftime('%Y-%m-%d %H:%M:%S'))
                 isFirst = False
 
             dataToAdd = ""

@@ -14,12 +14,12 @@ class Packet(Base):
     portDest = Column(Integer)
     protocol = Column(String(80))
     data = Column(JSON)
-    timestamp = Column(DateTime)
+    timestamp = Column(String(80))
     secure = Column(Integer)
     sessionId = Column(Integer, ForeignKey('Session.id'))
     session = relationship('Session', backref=backref('posts', lazy='dynamic'))
 
-    def __init__(self, hostSrc, hostDest, portSrc, portDest, protocol, data={}, timestamp=None, secure=1, session=None):
+    def __init__(self, hostSrc, hostDest, portSrc, portDest, protocol, data={}, timestamp="", secure=1, session=None):
         self.hostSrc = hostSrc
         self.hostDest = hostDest
         self.portSrc = portSrc
@@ -38,7 +38,7 @@ class Packet(Base):
                 'id':self.id,
                 'hostSrc':self.hostSrc,
                 'hostDest':self.hostDest,
-                'portSrc':self.posrtSrc,
+                'portSrc':self.portSrc,
                 'portDest':self.portDest,
                 'protocol':self.protocol,
                 'data':self.data,
