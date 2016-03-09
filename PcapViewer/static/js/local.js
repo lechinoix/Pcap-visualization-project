@@ -459,7 +459,7 @@ $("#network-btn").on("click", function(e){
 });
 
 $("#treemap-btn").on("click", function(e){
-  mainTreemap({'title':'Treemap'}, treemap);
+  mainTreemap({}, treemap);
 });
 
 // Update side bar
@@ -547,7 +547,7 @@ socket.on('connect', function() {
         return b.exchanged.Volume - a.exchanged.Volume;
       });
       updateUsers(users);
-      mainTreemap({'title':'Treemap'}, treemap);
+      mainTreemap({}, treemap);
     }
     if('stats' in data){
       $('.left-bar .tab-content #services table tbody').html('');
