@@ -74,14 +74,12 @@ def refreshView(data):
     """Refresh the view filtered by client"""
     sessions = []
     packets = []
-    print data['fileContent']
     for session in Session.query.all():
         if session.protocol in data['fileContent']:
             sessions.append(session.as_dict())
     for packet in Packet.query.all():
         if packet.protocol in data['fileContent']:
-            print "Packet chosed (protocol) " + packet.protocol
-            packets.append(packet.as_dict())       
+            packets.append(packet.as_dict())
     data = {
             'sessions':sessions,
             'packets':packets
@@ -92,8 +90,6 @@ def refreshView(data):
 @app.route('/upload', methods=["GET", "POST"])
 def upload():
     if request.method == "POST":
-        print 'ok'
-        print vars(request.files['files'])
         tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
         request.files['files'].save(tmpPath)
         pcap = parse(tmpPath)

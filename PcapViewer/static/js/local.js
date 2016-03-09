@@ -18,57 +18,245 @@ $(document).ready(function(){
 
 //Treemap View
 
-function displayTreemap(data){
+var defaults = {
+    margin: {top: 24, right: 0, bottom: 0, left: 0},
+    rootname: "TOP",
+    format: ",d",
+    title: "",
+    width: 960,
+    height: 500
+};
 
-  d3.select("#radio-treemap").classed("hidden", false);
+function mainTreemap(o, data) {
 
-  var margin = {top: 40, right: 10, bottom: 10, left: 10},
-      width = 900 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+  var root,
+      opts = $.extend(true, {}, defaults, o),
+      formatNumber = d3.format(opts.format),
+      rname = opts.rootname,
+      margin = opts.margin,
+      theight = 36 + 16;
+
+  var width = opts.width - margin.left - margin.right,
+      height = opts.height - margin.top - margin.bottom - theight,
+      transitioning;
 
   var color = d3.scale.category20c();
 
-  select.selectAll("svg").remove();
+  var x = d3.scale.linear()
+      .domain([0, width])
+      .range([0, width]);
+
+  var y = d3.scale.linear()
+      .domain([0, height])
+      .range([0, height]);
 
   var treemap = d3.layout.treemap()
-      .size([width, height])
-      .sticky(true)
-      .value(function(d) { return d.Volumeout; });
+      .children(function(d, depth) { return depth ? null : d.values; })
+			.value(function(d){return d.Volumeout;})
+      .sort(function(a, b) { return a.Volumeout - b.Volumeout; })
+      .ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
+      .round(false);
 
-  var div = d3.select("#view-wrapper");
+  d3.select("#view-wrapper").selectAll("svg").remove();
 
-  svg = select.append("svg")
+  var svg = d3.select("#view-wrapper").append("svg")
       .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("height", height + margin.bottom + margin.top)
+      .style("margin-left", -margin.left + "px")
+      .style("margin.right", -margin.right + "px")
     .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .style("shape-rendering", "crispEdges");
 
-  var root = data;
+  var grandparent = svg.append("g")
+      .attr("class", "grandparent");
 
-  var node = div.datum(root).selectAll(".node")
-    .data(treemap.nodes)
-    .enter().append("div")
-      .attr("class", "node")
-      .call(position)
-      .style("background", function(d) { return d.children ? color(d.name) : null; })
-      .text(function(d) { return d.children ? null : d.parent.name + ' / ' + d.name; });
+  grandparent.append("rect")
+      .attr("y", -margin.top)
+      .attr("width", width)
+      .attr("height", margin.top);
 
-  d3.selectAll("input").on("change", function change() {
-    var value = this.value === "count" ? function(d) { return d.Nombreout; } : function(d) { return d.Volumeout; };
+  grandparent.append("text")
+      .attr("x", 6)
+      .attr("y", 6 - margin.top)
+      .attr("dy", ".75em");
 
-  node
-    .data(treemap.value(value).nodes)
-    .transition()
-      .duration(1500)
-      .call(position);
-  });
-
-  function position() {
-    this.style("left", function(d) { return d.x + 30 + "px"; })
-        .style("top", function(d) { return d.y + 100 + "px"; })
-        .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
-        .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
+  if (opts.title) {
+    $("#view-wrapper").prepend("<p class='title'>" + opts.title + "</p>");
   }
+  if (data instanceof Array) {
+    root = { key: rname, values: data };
+  } else {
+    root = data;
+  }
+
+  initializeTreemap(root);
+  accumulateTreemap(root);
+  layoutTreemap(root);
+  console.log(root);
+  displayTreemap(root);
+
+  if (window.parent !== window) {
+    var myheight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    window.parent.postMessage({height: myheight}, '*');
+  }
+
+  function initializeTreemap(root) {
+    root.x = root.y = 0;
+    root.dx = width;
+    root.dy = height;
+    root.depth = 0;
+  }
+
+  // Aggregate the values for internal nodes. This is normally done by the
+  // treemap layout, but not here because of our custom implementation.
+  // We also take a snapshot of the original children (values) to avoid
+  // the children being overwritten when when layout is computed.
+  function accumulateTreemap(d) {
+    return (d.values = d.values)
+        ? d.Volumeout = d.values.reduce(function(p, v) { return p + accumulateTreemap(v); }, 0)
+        : d.Volumeout;
+  }
+
+  // Compute the treemap layout recursively such that each group of siblings
+  // uses the same size (1×1) rather than the dimensions of the parent cell.
+  // This optimizes the layout for the current zoom state. Note that a wrapper
+  // object is created for the parent node for each group of siblings so that
+  // the parent’s dimensions are not discarded as we recurse. Since each group
+  // of sibling was laid out in 1×1, we must rescale to fit using absolute
+  // coordinates. This lets us use a viewport to zoom.
+  function layoutTreemap(d) {
+    if (d.values) {
+      treemap.nodes({values: d.values});
+			console.log(d.values);
+      d.values.forEach(function(c) {
+        c.x = d.x + c.x * d.dx;
+        c.y = d.y + c.y * d.dy;
+        c.dx *= d.dx;
+        c.dy *= d.dy;
+        c.parent = d;
+        layoutTreemap(c);
+      });
+    }
+  }
+
+  function displayTreemap(d) {
+    grandparent
+        .datum(d.parent)
+        .on("click", transitionTreemap)
+      .select("text")
+        .text(nameTreemap(d));
+
+    var g1 = svg.insert("g", ".grandparent")
+        .datum(d)
+        .attr("class", "depth");
+
+    var g = g1.selectAll("g")
+        .data(d.values)
+      .enter().append("g");
+
+    g.filter(function(d) { return d.values; })
+        .classed("children", true)
+        .on("click", transitionTreemap);
+
+    var children = g.selectAll(".child")
+        .data(function(d) { return d.values || [d]; })
+      .enter().append("g");
+
+    children.append("rect")
+        .attr("class", "child")
+        .call(rectTreemap)
+      .append("title")
+        .text(function(d) { return d.key + " (" + formatNumber(d.Volumeout) + ")"; });
+    children.append("text")
+        .attr("class", "ctext")
+        .text(function(d) { return d.key; })
+        .call(text2Treemap);
+
+    g.append("rect")
+        .attr("class", "parent")
+        .call(rectTreemap);
+
+    var t = g.append("text")
+        .attr("class", "ptext")
+        .attr("dy", ".75em");
+
+    t.append("tspan")
+        .text(function(d) { return d.key; });
+    t.append("tspan")
+        .attr("dy", "1.0em")
+        .text(function(d) { return formatNumber(d.Volumeout); });
+    t.call(textTreemap);
+
+    g.selectAll("rect")
+        .style("fill", function(d) { return color(d.key); });
+
+    function transitionTreemap(d) {
+      if (transitioning || !d) return;
+      transitioning = true;
+
+      var g2 = displayTreemap(d),
+          t1 = g1.transition().duration(750),
+          t2 = g2.transition().duration(750);
+
+      // Update the domain only after entering new elements.
+      x.domain([d.x, d.x + d.dx]);
+      y.domain([d.y, d.y + d.dy]);
+
+      // Enable anti-aliasing during the transition.
+      svg.style("shape-rendering", null);
+
+      // Draw child nodes on top of parent nodes.
+      svg.selectAll(".depth").sort(function(a, b) { return a.depth - b.depth; });
+
+      // Fade-in entering text.
+      g2.selectAll("text").style("fill-opacity", 0);
+
+      // Transition to the new view.
+      t1.selectAll(".ptext").call(textTreemap).style("fill-opacity", 0);
+      t1.selectAll(".ctext").call(text2Treemap).style("fill-opacity", 0);
+      t2.selectAll(".ptext").call(textTreemap).style("fill-opacity", 1);
+      t2.selectAll(".ctext").call(text2Treemap).style("fill-opacity", 1);
+      t1.selectAll("rect").call(rectTreemap);
+      t2.selectAll("rect").call(rectTreemap);
+
+      // Remove the old node when the transition is finished.
+      t1.remove().each("end", function() {
+        svg.style("shape-rendering", "crispEdges");
+        transitioning = false;
+      });
+    }
+
+    return g;
+  }
+
+  function textTreemap(text) {
+    text.selectAll("tspan")
+        .attr("x", function(d) { return x(d.x) + 6; });
+    text.attr("x", function(d) { return x(d.x) + 6; })
+        .attr("y", function(d) { return y(d.y) + 6; })
+        .style("opacity", function(d) { return this.getComputedTextLength() < x(d.x + d.dx) - x(d.x) ? 1 : 0; });
+  }
+
+  function text2Treemap(text) {
+    text.attr("x", function(d) { return x(d.x + d.dx) - this.getComputedTextLength() - 6; })
+        .attr("y", function(d) { return y(d.y + d.dy) - 6; })
+        .style("opacity", function(d) { return this.getComputedTextLength() < x(d.x + d.dx) - x(d.x) ? 1 : 0; });
+  }
+
+  function rectTreemap(rect) {
+    rect.attr("x", function(d) { return x(d.x); })
+        .attr("y", function(d) { return y(d.y); })
+        .attr("width", function(d) { return x(d.x + d.dx) - x(d.x); })
+        .attr("height", function(d) { return y(d.y + d.dy) - y(d.y); });
+  }
+
+  function nameTreemap(d) {
+    return d.parent
+        ? nameTreemap(d.parent) + " / " + d.key + " (" + formatNumber(d.Volumeout) + ")"
+        : d.key + " (" + formatNumber(d.Volumeout) + ")";
+  }
+
 }
 
 // Parallel View
@@ -76,8 +264,6 @@ function displayTreemap(data){
 var line, dragging, x, y, foreground, background, axis, margin, height, width, g, data, activeSessions;
 
 function displayParallel(data){
-
-  d3.select("#radio-treemap").classed("hidden", true);
 
   // Define the window width, height and margins
   margin = {top: 30, right: 10, bottom: 10, left: 10};
@@ -228,9 +414,10 @@ function brush() {
 }
 
 function displayPackets(packets){
+  $('.packets .packet-wrapper table tbody').html('');
   for(i=0;i<packets.length;i++){
     if (packets[i]["data"]!={}){
-      $('.packets .packet-wrapper table tbody').html("<tr>" +
+      $('.packets .packet-wrapper table tbody').append("<tr>" +
           "<td>" + packets[i]["sessionId"] + "</td>" +
           "<td>" + packets[i]["hostSrc"] + "</td>" +
           "<td>" + packets[i]["portSrc"] + "</td>" +
@@ -241,7 +428,7 @@ function displayPackets(packets){
           "<td>" + packets[i]["timestamp"] + "</td>" +
           "</tr>");
     } else {
-      $('.packets .packet-wrapper table tbody').html("<tr>" +
+      $('.packets .packet-wrapper table tbody').append("<tr>" +
           "<td>" + packets[i]["sessionId"] + "</td>" +
           "<td>" + packets[i]["hostSrc"] + "</td>" +
           "<td>" + packets[i]["portSrc"] + "</td>" +
@@ -249,7 +436,7 @@ function displayPackets(packets){
           "<td>" + packets[i]["portDest"] + "</td>" +
           "<td>" + packets[i]["protocol"] + "</td>" +
           "<td>" +
-          "<button> </button>" + 
+          "<button> </button>" +
           "</td>" +
           "<td>" + packets[i]["timestamp"] + "</td>" +
           "</tr>");
@@ -272,7 +459,7 @@ $("#network-btn").on("click", function(e){
 });
 
 $("#treemap-btn").on("click", function(e){
-  displayTreemap(treemap);
+  mainTreemap({'title':'Treemap'}, treemap);
 });
 
 // Update side bar
@@ -341,6 +528,7 @@ socket.on('connect', function() {
       }
     });
     //A voir
+    console.log('test');
     socket.emit('refreshView',{'fileContent': prot});
 
     //Call the app.py refreshView Function
@@ -359,7 +547,7 @@ socket.on('connect', function() {
         return b.exchanged.Volume - a.exchanged.Volume;
       });
       updateUsers(users);
-      displayTreemap(treemap);
+      mainTreemap({'title':'Treemap'}, treemap);
     }
     if('stats' in data){
       $('.left-bar .tab-content #services table tbody').html('');
@@ -374,14 +562,13 @@ socket.on('connect', function() {
     }
     if('packets' in data){
       packets = data.packets;
-      console.log(packets);
       displayPackets(packets);
     }
   });
-  //
-  // $(window).on('beforeunload', function(){
-  //     socket.close();
-  // });
+
+  $(window).on('beforeunload', function(){
+      socket.close();
+  });
 
 });
 
@@ -391,3 +578,56 @@ displayParallel(sessions);
 updateUsers();
 
 });
+
+// function displayTreemap(data){
+//
+//   d3.select("#radio-treemap").classed("hidden", false);
+//
+//   var margin = {top: 40, right: 10, bottom: 10, left: 10},
+//       width = 900 - margin.left - margin.right,
+//       height = 500 - margin.top - margin.bottom;
+//
+//   var color = d3.scale.category20c();
+//
+//   select.selectAll("svg").remove();
+//
+//   var treemap = d3.layout.treemap()
+//       .size([width, height])
+//       .sticky(true)
+//       .value(function(d) { return d.Volumeout; });
+//
+//   var div = d3.select("#view-wrapper");
+//
+//   svg = select.append("svg")
+//       .attr("width", width + margin.left + margin.right)
+//       .attr("height", height + margin.top + margin.bottom)
+//     .append("g")
+//       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+//
+//   var root = data;
+//
+//   var node = div.datum(root).selectAll(".node")
+//     .data(treemap.nodes)
+//     .enter().append("div")
+//       .attr("class", "node")
+//       .call(position)
+//       .style("background", function(d) { return d.children ? color(d.name) : null; })
+//       .text(function(d) { return d.children ? null : d.parent.name + ' / ' + d.name; });
+//
+//   d3.selectAll("input").on("change", function change() {
+//     var value = this.value === "count" ? function(d) { return d.Nombreout; } : function(d) { return d.Volumeout; };
+//
+//   node
+//     .data(treemap.value(value).nodes)
+//     .transition()
+//       .duration(1500)
+//       .call(position);
+//   });
+//
+//   function position() {
+//     this.style("left", function(d) { return d.x + 30 + "px"; })
+//         .style("top", function(d) { return d.y + 100 + "px"; })
+//         .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
+//         .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
+//   }
+// }

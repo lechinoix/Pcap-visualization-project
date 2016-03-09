@@ -99,11 +99,11 @@ class User(Base):
     def treemap_layout(self):
         formatExchanged = []
         for key, value in self.exchanged['Protocole'].items():
-            formatExchanged.append({'name':key, 'Volumeout':value['Volumeout'], 'Nombreout':value['Nombreout']})
+            formatExchanged.append({'key':key, 'Volumeout':value['Volumeout'], 'Nombreout':value['Nombreout']})
         return {
                'id':self.id,
-               'name':self.address,
-               'children':formatExchanged
+               'key':self.address,
+               'values':formatExchanged
                }
 
 class Stat(Base):

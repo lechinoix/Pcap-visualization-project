@@ -82,10 +82,6 @@
 					<button id="parallel-btn" class="btn btn-default" type="button">Parallel</button>
 					<button id="treemap-btn" class="btn btn-default" type="button">Treemap</button>
 					<div id="view-wrapper" class="panel panel-default">
-						<form id="radio-treemap" class="hidden">
-						  <label><input type="radio" name="mode" value="size" checked> Size</label>
-						  <label><input type="radio" name="mode" value="count"> Count</label>
-						</form>
 					</div>
 				</div>
 				<div class="info-wrapper col-md-3">
@@ -96,7 +92,7 @@
 				</div>
 			</div>
 			<div class="row packets">
-				<div class="col-md-3">	
+				<div class="col-md-3">
 				</div>
 				<div class="packet-wrapper col-md-6">
 				    <table class="table table-striped" id="table-scroll">
@@ -135,15 +131,15 @@
 				              </tr>
 							{% else %}
 				                <td>
-				                  No Data 
+				                  No Data
 				                </td>
 				                <td>{{ packet.timestamp }}</td>
 				              </tr>
 							{% endif %}
-			                
+
 			             {% endfor %}
 			            </tbody>
-		            </table>				
+		            </table>
 				</div>
 				<div class="col-md-3">
 				</div>
@@ -184,8 +180,8 @@
 <script>
 	var loadedSessions = [ {% for session in sessions %}{	'id':'{{ session.id }}','hostSrc':'{{ session.hostSrc }}','hostDest':'{{ session.hostDest }}','portSrc':'{{ session.portSrc }}','portDest':'{{ session.portDest }}','protocol':'{{ session.protocol }}'}{% if not loop.last %},{% endif %}{% endfor %} ];
 	var loadedUsers = [ {% for user in users %}{ 'id':'{{ user.id }}', 'address':'{{ user.address }}', 'exchanged':{{ user.exchanged | tojson }} }{% if not loop.last %},{% endif %}{% endfor %}];
- 	var loadedTreemap = { 'name':'users',	'children': {{ treemap | tojson }} };
- 	
+ 	var loadedTreemap = { 'key':'Hosts',	'values': {{ treemap | tojson }} };
+
  	// var loadedPackets = [ {% for packet in packets %}{ 'id':'{{ packet.id }}','hostSrc':'{{ packet.hostSrc }}','hostDest':'{{ packet.hostDest }}','portSrc':'{{ packet.portSrc }}','portDest':'{{ packet.portDest }}','protocol':'{{ packet.protocol }}','timestamp':'{{ packet.timestamp }}','sessionId':'{{ packet.sessionId }}'}{% if not loop.last %},{% endif %}{% endfor %} ];
 </script>
 {% endblock %}
