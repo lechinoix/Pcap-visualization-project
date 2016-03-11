@@ -93,7 +93,6 @@ function mainTreemap(o, data) {
   initializeTreemap(root);
   accumulateTreemap(root);
   layoutTreemap(root);
-  console.log(root);
   displayTreemap(root);
 
   if (window.parent !== window) {
@@ -128,7 +127,6 @@ function mainTreemap(o, data) {
   function layoutTreemap(d) {
     if (d.values) {
       treemap.nodes({values: d.values});
-			console.log(d.values);
       d.values.forEach(function(c) {
         c.x = d.x + c.x * d.dx;
         c.y = d.y + c.y * d.dy;
@@ -528,7 +526,6 @@ socket.on('connect', function() {
       }
     });
     //A voir
-    console.log('test');
     socket.emit('refreshView',{'fileContent': prot});
 
     //Call the app.py refreshView Function
@@ -547,6 +544,9 @@ socket.on('connect', function() {
         return b.exchanged.Volume - a.exchanged.Volume;
       });
       updateUsers(users);
+    }
+    if('treemap' in data){
+      treemap = data.treemap;
       mainTreemap({}, treemap);
     }
     if('stats' in data){
@@ -578,56 +578,3 @@ displayParallel(sessions);
 updateUsers();
 
 });
-
-// function displayTreemap(data){
-//
-//   d3.select("#radio-treemap").classed("hidden", false);
-//
-//   var margin = {top: 40, right: 10, bottom: 10, left: 10},
-//       width = 900 - margin.left - margin.right,
-//       height = 500 - margin.top - margin.bottom;
-//
-//   var color = d3.scale.category20c();
-//
-//   select.selectAll("svg").remove();
-//
-//   var treemap = d3.layout.treemap()
-//       .size([width, height])
-//       .sticky(true)
-//       .value(function(d) { return d.Volumeout; });
-//
-//   var div = d3.select("#view-wrapper");
-//
-//   svg = select.append("svg")
-//       .attr("width", width + margin.left + margin.right)
-//       .attr("height", height + margin.top + margin.bottom)
-//     .append("g")
-//       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-//
-//   var root = data;
-//
-//   var node = div.datum(root).selectAll(".node")
-//     .data(treemap.nodes)
-//     .enter().append("div")
-//       .attr("class", "node")
-//       .call(position)
-//       .style("background", function(d) { return d.children ? color(d.name) : null; })
-//       .text(function(d) { return d.children ? null : d.parent.name + ' / ' + d.name; });
-//
-//   d3.selectAll("input").on("change", function change() {
-//     var value = this.value === "count" ? function(d) { return d.Nombreout; } : function(d) { return d.Volumeout; };
-//
-//   node
-//     .data(treemap.value(value).nodes)
-//     .transition()
-//       .duration(1500)
-//       .call(position);
-//   });
-//
-//   function position() {
-//     this.style("left", function(d) { return d.x + 30 + "px"; })
-//         .style("top", function(d) { return d.y + 100 + "px"; })
-//         .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
-//         .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
-//   }
-// }

@@ -21,11 +21,12 @@ socketio = SocketIO(app, async_mode='eventlet')
 def index(pcap = ''):
     """Display home page"""
 
+    treemap = []
     users = User.query.all()
     stats = Stat.query.all()
     sessions = Session.query.all()
-    treemap = get_treemap(users)
     packets = Packet.query.all()
+    treemap = get_treemap(users)
     return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions, treemap=treemap, packets=packets)
 
 # @app.route('/list')
@@ -74,15 +75,26 @@ def refreshView(data):
     """Refresh the view filtered by client"""
     sessions = []
     packets = []
+    users = []
     for session in Session.query.all():
         if session.protocol in data['fileContent']:
             sessions.append(session.as_dict())
     for packet in Packet.query.all():
         if packet.protocol in data['fileContent']:
             packets.append(packet.as_dict())
+    for user in User.query.all():
+        exchanged = {}
+        for protocol in data['fileContent']:
+            if user.exchanged['Protocole'].has_key(protocol):
+                exchanged[protocol] = user.exchanged['Protocole'][protocol]
+        if exchanged:
+            user.exchanged['Protocole'] = exchanged
+            users.append(user)
+    treemap = get_treemap(users)
     data = {
             'sessions':sessions,
-            'packets':packets
+            'packets':packets,
+            'treemap':treemap
             }
     #print data["sessions"]
     socketio.emit('newData', json.dumps(data))

@@ -145,8 +145,8 @@ rect.parent {
   fill: #ee9700;
 }
 
-.children rect.parent,
-.grandparent rect {
+.children,
+.grandparent {
   cursor: pointer;
 }
 
@@ -155,6 +155,6 @@ rect.parent {
   fill-opacity: .5;
 }
 
-.children:hover rect.child {
-  fill: #bbb;
+.children:hover {
+  opacity:0.8;
 }
