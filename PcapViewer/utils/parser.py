@@ -269,6 +269,41 @@ def parse(filename):
     print stat
     return {}
 
+
+def get_whois_nets_iplist(ip_list):
+    """
+    This function will perform whois queries against a list of IP's and extract
+    the net ranges and if available the organization list of each and remover any
+    duplicate entries.
+    """
+    seen = {}
+    idfun = repr
+    found_nets = []
+    for ip in ip_list:
+        if ip != "no_ip":
+            # Find appropiate Whois Server for the IP
+            whois_server = get_whois(ip)
+            # If we get a Whois server Process get the whois and process.
+            if whois_server:
+                whois_data = whois(ip, whois_server)
+                arin_style = re.search('NetRange', whois_data)
+                ripe_apic_style = re.search('netname', whois_data)
+                if (arin_style or ripe_apic_style):
+                    net = get_whois_nets(whois_data)
+                    if net:
+                        for network in net:
+                            org = get_whois_orgname(whois_data)
+                            found_nets.append({'start': network[0], 'end': network[1], 'orgname': "".join(org)})
+                else:
+                    for line in whois_data.splitlines():
+                        recordentrie = re.match('^(.*)\s\S*-\w*\s\S*\s(\S*\s-\s\S*)', line)
+                        if recordentrie:
+                            org = recordentrie.group(1)
+                            net = get_whois_nets(recordentrie.group(2))
+                            for network in net:
+                                found_nets.append({'start': network[0], 'end': network[1], 'orgname': "".join(org)})
+    #Remove Duplicates
+    print [seen.setdefault(idfun(e), e) for e in found_nets if idfun(e) not in seen]
 #-----------------------------------UNUSED FUNCTION-----------------------------------------#
 
 # def get_web(filename):
