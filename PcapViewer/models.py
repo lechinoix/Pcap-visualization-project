@@ -51,16 +51,16 @@ class Session(Base):
     __tablename__ = 'Session'
     id = Column(Integer, primary_key=True)
     hostSrc = Column(String(40))
-    hostDest = Column(String(40))
     portSrc = Column(Integer)
     portDest = Column(Integer)
+    hostDest = Column(String(40))
     protocol = Column(String(80))
 
     def __init__(self, hostSrc, hostDest, portSrc, portDest, protocol):
         self.hostSrc = hostSrc
-        self.hostDest = hostDest
         self.portSrc = portSrc
         self.portDest = portDest
+        self.hostDest = hostDest
         self.protocol = protocol
 
     def __repr__(self):
@@ -70,9 +70,9 @@ class Session(Base):
         return {
                 'id':self.id,
                 'hostSrc':self.hostSrc,
-                'hostDest':self.hostDest,
                 'portSrc':self.portSrc,
                 'portDest':self.portDest,
+                'hostDest':self.hostDest,
                 'protocol':self.protocol
                 }
 

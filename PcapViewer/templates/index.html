@@ -2,19 +2,6 @@
 
 {% block navbar %}
 				<li><a href="" data-toggle="modal" data-target="#upModal">New Pcap</a></li>
-	            <li class="dropdown">
-	              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Options<span class="caret"></span></a>
-	              <ul class="dropdown-menu">
-	                <li><a href="#">Action</a></li>
-	                <li><a href="#">Another action</a></li>
-	                <li><a href="#">Something else here</a></li>
-	                <!-- <li role="separator" class="divider"></li>
-	                <li class="dropdown-header">Nav header</li>
-	                <li><a href="#">Separated link</a></li>
-	                <li><a href="#">One more separated link</a></li> -->
-	              </ul>
-	            </li>
-	            <li><a href="">About</a></li>
 {% endblock %}
 
 {% block content %}
@@ -35,47 +22,26 @@
 		    <!-- End flash messages -->
 
 				<div class="left-bar col-md-3">
-					<ul id="left-tab" class="nav nav-tabs" role="tablist">
-						<li role="presentation" class="active"><a href="#hosts" aria-controls="hosts" role="tab" data-toggle="tab">Hosts</a></li>
-						<li role="presentation"><a href="#services" aria-controls="services" role="tab" data-toggle="tab">Services</a></li>
-					</ul>
-					<div class="tab-content">
-						<div id="hosts" role="tabpanel" class="tab-pane active">
-						  <table class="table table-striped">
-				            <thead>
-				              <tr>
-				                <th>#</th>
-				                <th>Name</th>
-				                <th>Exchanged Volume</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				            </tbody>
-				          </table>
-						</div>
-						<div id="services" role="tabpanel" class="tab-pane">
-							<table class="table table-striped">
-				            <thead>
-				              <tr>
-				                <th>#</th>
-				                <th>Protocol</th>
-				                <th>Packets</th>
-				                <th><input class="check-all" type="checkbox" value="checkbox"/><button id="refreshButton">Refresh</button></th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				            {% for stat in stats | sort(True, attribute="value") %}
-				              <tr>
-				                <td>{{ loop.index }}</td>
-				                <td>{{ stat.name }}</td>
-				                <td>{{ stat.value }}</td>
-				                <td><input class="check-prot" id="{{ stat.name }}" value="checkbox" type="checkbox"></td>
-				              </tr>
-				             {% endfor %}
-				            </tbody>
-				          </table>
-						</div>
-					</div>
+					<table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Protocol</th>
+                <th>Packets</th>
+                <th><input class="check-all" type="checkbox" value="checkbox"/><button id="refreshButton">Refresh</button></th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for stat in stats | sort(True, attribute="value") %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ stat.name }}</td>
+                <td>{{ stat.value }}</td>
+                <td><input class="check-prot" id="{{ stat.name }}" value="checkbox" type="checkbox"></td>
+              </tr>
+             {% endfor %}
+            </tbody>
+          </table>
 				</div>
 				<div class="visu-wrapper col-md-6">
 

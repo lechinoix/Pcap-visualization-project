@@ -4,13 +4,13 @@ $(document).ready(function(){
   Initiating socket
 ===============================*/
 
-    // Catching sessions on first load
-    var sessions = loadedSessions;
-    var users = loadedUsers.sort(function(a, b){
-      return b.exchanged.Volume - a.exchanged.Volume;
-    });
+  // Catching sessions on first load
+  var sessions = loadedSessions;
+  var users = loadedUsers.sort(function(a, b){
+    return b.exchanged.Volume - a.exchanged.Volume;
+  });
 
-    var treemap = loadedTreemap;
+  var treemap = loadedTreemap;
 
 /* ============================
   Views with D3.js
@@ -19,12 +19,12 @@ $(document).ready(function(){
 //Treemap View
 
 var defaults = {
-    margin: {top: 24, right: 0, bottom: 0, left: 0},
-    rootname: "TOP",
+    margin: {top: 20, right: 10, bottom: 0, left: 10},
+    rootname: "Hosts",
     format: ",d",
     title: "",
-    width: 960,
-    height: 500
+    width: 900,
+    height: 578
 };
 
 function mainTreemap(o, data) {
@@ -57,7 +57,7 @@ function mainTreemap(o, data) {
       .ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
       .round(false);
 
-  d3.select("#view-wrapper").selectAll("svg").remove();
+  d3.select("#view-wrapper").selectAll("*").remove();
 
   var svg = d3.select("#view-wrapper").append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -267,6 +267,7 @@ function displayParallel(data){
   margin = {top: 30, right: 10, bottom: 10, left: 10};
   width = 960 - margin.left - margin.right;
   height = 500 - margin.top - margin.bottom;
+  tension = (typeof tension !== 'undefined') ? tension : 0.75;
 
   // Init axis
   x = d3.scale.ordinal().rangePoints([0, width], 1);
@@ -275,14 +276,37 @@ function displayParallel(data){
   dragging = {};
 
   // Init
-  line = d3.svg.line();
+  line = d3.svg.line()
+  .interpolate("cardinal")
+  .tension(tension);
 
   axis = d3.svg.axis().orient("left");
 
   // Create the window and the g container
   select = d3.select("#view-wrapper");
-  select.selectAll("svg").remove();
-  select.selectAll(".node").remove();
+  select.selectAll("*").remove();
+
+  slider = select.append("div").attr("id", "sliderWrapper");
+
+  labelSlider = slider.append("label")
+    .html("tension : " + tension)
+    .attr("class", "labelSlider");
+
+  slider.append("input")
+    .attr("type", "range")
+    .attr("id", "slider")
+    .attr("min", "0")
+    .attr("max", "1")
+    .attr("step", "0.05")
+    .attr("value", tension)
+    .on("input", function(){
+      tension = +this.value;
+      line.tension(tension);
+      labelSlider.html("tension : " + tension);
+      background.attr("d", path);
+      foreground.attr("d", path);
+    });
+
   svg = select.append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -538,19 +562,12 @@ socket.on('connect', function() {
 
   socket.on('newData', function(data){
     data = JSON.parse(data);
-    if('users' in data){
-      $('.left-bar .tab-content #hosts table tbody').html('');
-      users = data.users.sort(function(a, b){
-        return b.exchanged.Volume - a.exchanged.Volume;
-      });
-      updateUsers(users);
-    }
     if('treemap' in data){
       treemap = data.treemap;
       mainTreemap({}, treemap);
     }
     if('stats' in data){
-      $('.left-bar .tab-content #services table tbody').html('');
+      $('.left-bar table tbody').html('');
       stats = data.stats.sort(function(a, b){
         return b.value - a.value;
       });

@@ -18,15 +18,15 @@ body {
 	margin-top:45px;
 }
 
-.tab-content{
-	overflow:auto;
-	max-height:530px;
-}
-
 /* Sidebar */
 
 #refreshButton{
 	margin-left: 5px;
+}
+
+.left-bar{
+	overflow:auto;
+	max-height:595px;
 }
 
 /* Network View */
@@ -51,6 +51,24 @@ body {
 
 svg {
   font: 10px sans-serif;
+}
+
+#sliderWrapper *{
+	display:inline-block;
+}
+
+#sliderWrapper label{
+	width:100px;
+}
+
+#slider{
+	width:200px;
+	vertical-align: middle;
+	cursor:grab;
+}
+
+#slider:active{
+	cursor:grabbing;
 }
 
 .background path {
