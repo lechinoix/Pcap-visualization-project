@@ -45,9 +45,13 @@
 				</div>
 				<div class="visu-wrapper col-md-6">
 
-					<button id="parallel-btn" class="btn btn-default" type="button">Parallel</button>
-					<button id="treemap-btn" class="btn btn-default" type="button">Treemap</button>
-					<div id="view-wrapper" class="panel panel-default">
+					<ul class="nav nav-tabs" role="tablist">
+				    <li role="presentation" class="active"><a href="#parallel-wrapper" aria-controls="parallel" role="tab" data-toggle="tab">Parallel</a></li>
+				    <li role="presentation"><a href="#treemap-wrapper" aria-controls="treemap" role="tab" data-toggle="tab">Treemap</a></li>
+					</ul>
+					<div class="tab-content">
+						<div role="tabpanel" id="parallel-wrapper" class="panel panel-default tab-pane active"></div>
+						<div role="tabpanel" id="treemap-wrapper" class="panel panel-default tab-pane"></div>
 					</div>
 				</div>
 				<div class="info-wrapper col-md-3">

@@ -60,9 +60,9 @@ function mainTreemap(o, data) {
       .ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
       .round(false);
 
-  d3.select("#view-wrapper").selectAll("*").remove();
+  d3.select("#treemap-wrapper").selectAll("*").remove();
 
-  var svg = d3.select("#view-wrapper").append("svg")
+  var svg = d3.select("#treemap-wrapper").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.bottom + margin.top)
       .style("margin-left", -margin.left + "px")
@@ -85,7 +85,7 @@ function mainTreemap(o, data) {
       .attr("dy", ".75em");
 
   if (opts.title) {
-    $("#view-wrapper").prepend("<p class='title'>" + opts.title + "</p>");
+    $("#treemap-wrapper").prepend("<p class='title'>" + opts.title + "</p>");
   }
   if (data instanceof Array) {
     root = { key: rname, values: data };
@@ -286,7 +286,7 @@ function displayParallel(data){
   axis = d3.svg.axis().orient("left");
 
   // Create the window and the g container
-  select = d3.select("#view-wrapper");
+  select = d3.select("#parallel-wrapper");
   select.selectAll("*").remove();
 
   slider = select.append("div").attr("id", "sliderWrapper");
@@ -506,18 +506,6 @@ $("#treemap-btn").on("click", function(e){
 });
 
 // Update side bar
-function updateUsers(){
-  for(i=0;i<users.length;i++){
-    $('.left-bar .tab-content #hosts table tbody').append("<tr>" +
-        "<td>" + (i+1) + "</td>" +
-        "<td>" + users[i].address + "</td>" +
-        "<td>" + users[i].exchanged.Volume + "</td>" +
-        "<td></td>" +
-        "</tr>");
-  }
-}
-
-// Update side bar
 function updateStats(stats){
   for(i=0;i<stats.length;i++){
     $('.left-bar .tab-content #services table tbody').append("<tr>" +
@@ -610,9 +598,7 @@ socket.on('connect', function() {
 
 });
 
-
 displayParallel(sessions);
-
-updateUsers();
+mainTreemap({}, treemap);
 
 });
