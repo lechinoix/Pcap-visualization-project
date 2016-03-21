@@ -448,38 +448,42 @@ function brush() {
 }
 
 function brushend(){
-  displayPackets(packets);
+  var selectedPackets = [];
+  for(var i=0;i<packets.length;i++){
+    if(activeSessions.indexOf(packets[i].sessionId) >= 0){
+      selectedPackets.push(packets[i]);
+    }
+  }
+  displayPackets(selectedPackets);
 }
 
 function displayPackets(packets){
   $('.packet-wrapper table tbody').html('');
   for(i=0;i<packets.length;i++){
-    if(activeSessions.indexOf(packets[i].sessionId.toString()) >= 0){
-      if (packets[i].data != {}){
-        $('.packet-wrapper table tbody').append("<tr>" +
-            "<td>" + packets[i].sessionId + "</td>" +
-            "<td>" + packets[i].hostSrc + "</td>" +
-            "<td>" + packets[i].portSrc + "</td>" +
-            "<td>" + packets[i].hostDest + "</td>" +
-            "<td>" + packets[i].portDest + "</td>" +
-            "<td>" + packets[i].protocol + "</td>" +
-            "<td> No Data </td>" +
-            "<td>" + packets[i].timestamp + "</td>" +
-            "</tr>");
-      } else {
-        $('.packet-wrapper table tbody').append("<tr>" +
-            "<td>" + packets[i].sessionId + "</td>" +
-            "<td>" + packets[i].hostSrc + "</td>" +
-            "<td>" + packets[i].portSrc + "</td>" +
-            "<td>" + packets[i].hostDest + "</td>" +
-            "<td>" + packets[i].portDest + "</td>" +
-            "<td>" + packets[i].protocol + "</td>" +
-            "<td>" +
-            "<button> </button>" +
-            "</td>" +
-            "<td>" + packets[i].timestamp + "</td>" +
-            "</tr>");
-      }
+    if (packets[i].data != {}){
+      $('.packet-wrapper table tbody').append("<tr>" +
+          "<td>" + packets[i].sessionId + "</td>" +
+          "<td>" + packets[i].hostSrc + "</td>" +
+          "<td>" + packets[i].portSrc + "</td>" +
+          "<td>" + packets[i].hostDest + "</td>" +
+          "<td>" + packets[i].portDest + "</td>" +
+          "<td>" + packets[i].protocol + "</td>" +
+          "<td> No Data </td>" +
+          "<td>" + packets[i].timestamp + "</td>" +
+          "</tr>");
+    } else {
+      $('.packet-wrapper table tbody').append("<tr>" +
+          "<td>" + packets[i].sessionId + "</td>" +
+          "<td>" + packets[i].hostSrc + "</td>" +
+          "<td>" + packets[i].portSrc + "</td>" +
+          "<td>" + packets[i].hostDest + "</td>" +
+          "<td>" + packets[i].portDest + "</td>" +
+          "<td>" + packets[i].protocol + "</td>" +
+          "<td>" +
+          "<button> </button>" +
+          "</td>" +
+          "<td>" + packets[i].timestamp + "</td>" +
+          "</tr>");
     }
   }
 }
