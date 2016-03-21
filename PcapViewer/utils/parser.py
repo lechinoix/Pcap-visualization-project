@@ -112,8 +112,6 @@ def extract_session(summary,datas,sessionId):
         #We set a filter over the source port to avoid displaying each session two times
         if not(hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc>1023):
             
-            sess = Session(hostDest,hostSrc,portSrc,portDest,protocol)
-            db_session.add(sess)
             #db_session.commit()
             data = ""
             timestamp = str(datetime.fromtimestamp(datas[0].time).strftime('%Y-%m-%d %H:%M:%S'))
@@ -128,6 +126,8 @@ def extract_session(summary,datas,sessionId):
             else:
                 secure=1
 
+            sess = Session(hostSrc,hostDest,portSrc,portDest,protocol,secure)
+            db_session.add(sess)
 
             dataToAdd = ""
             if data != "":
