@@ -112,30 +112,22 @@ def extract_session(summary,datas,sessionId):
         #We set a filter over the source port to avoid displaying each session two times
         if not(hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc>1023):
             
-            sess = Session(hostDest,hostSrc,portSrc,portDest,protocol)
-            db_session.add(sess)
             #db_session.commit()
-            isFirst = True
             data = ""
-
-            if protocol == "LDAP" or protocol == "IMAP" or protocol == "POP3" or protocol == "SMTP" or protocol == "HTTP":
+            timestamp = str(datetime.fromtimestamp(datas[0].time).strftime('%Y-%m-%d %H:%M:%S'))
+            if protocol == "LDAP" or protocol == "IMAP" or protocol == "POP3" or protocol == "SMTP" or protocol == "HTTP" or protocol == "LDAP" or protocol == "FTP":
                 secure=0
+                for pkt in datas:
+                    """Populate the Packet Table is the packet is involved in a recognised protocol only"""
+                    
+                    if pkt.haslayer(TCP):
+                        if pkt[TCP].payload:
+                            data += hexdump(pkt)
             else:
                 secure=1
 
-            #print "New session "+ str(sessionId)
-
-            #We put all the packet in a single Row
-            for pkt in datas:
-
-                """Populate the Packet Table is the packet is involved in a recognised protocol only"""
-                
-                if pkt.haslayer(Raw):
-                    #print "Packet added for session "+str(sessionId)
-                    data += "\n"+hexdump(pkt.getlayer(Raw))
-                if isFirst:
-                    timestamp = str(datetime.fromtimestamp(pkt.time).strftime('%Y-%m-%d %H:%M:%S'))
-                isFirst = False
+            sess = Session(hostSrc,hostDest,portSrc,portDest,protocol,secure)
+            db_session.add(sess)
 
             dataToAdd = ""
             if data != "":
