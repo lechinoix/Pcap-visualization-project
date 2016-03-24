@@ -76,20 +76,27 @@ def refreshView(data):
     sessions = []
     packets = []
     users = []
+    filterHosts = True
+    if data['topHosts'] == 'all':
+        filterHosts = False
+    print data['topHosts']
     for session in Session.query.all():
-        if session.protocol in data['fileContent']:
-            sessions.append(session.as_dict())
+        if session.protocol in data['protocols']:
+            if not filterHosts or session.hostSrc in data['topHosts'] or session.hostDest in data['topHosts']:
+                sessions.append(session.as_dict())
     for packet in Packet.query.all():
-        if packet.protocol in data['fileContent']:
-            packets.append(packet.as_dict())
+        if packet.protocol in data['protocols']:
+            if not filterHosts or packet.hostSrc in data['topHosts'] or packet.hostDest in data['topHosts']:
+                packets.append(packet.as_dict())
     for user in User.query.all():
         exchanged = {}
-        for protocol in data['fileContent']:
-            if user.exchanged['Protocole'].has_key(protocol):
-                exchanged[protocol] = user.exchanged['Protocole'][protocol]
-        if exchanged:
-            user.exchanged['Protocole'] = exchanged
-            users.append(user)
+        if not filterHosts or user.address in data['topHosts']:
+            for protocol in data['protocols']:
+                if user.exchanged['Protocole'].has_key(protocol):
+                    exchanged[protocol] = user.exchanged['Protocole'][protocol]
+            if exchanged:
+                user.exchanged['Protocole'] = exchanged
+                users.append(user)
     treemap = get_treemap(users)
     data = {
             'sessions':sessions,

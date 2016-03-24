@@ -457,35 +457,58 @@ function brushend(){
   displayPackets(selectedPackets);
 }
 
-function displayPackets(packets){
-  $('.packet-wrapper table tbody').html('');
-  for(i=0;i<packets.length;i++){
-    if (packets[i].data != {}){
-      $('.packet-wrapper table tbody').append("<tr>" +
-          "<td>" + packets[i].sessionId + "</td>" +
-          "<td>" + packets[i].hostSrc + "</td>" +
-          "<td>" + packets[i].portSrc + "</td>" +
-          "<td>" + packets[i].hostDest + "</td>" +
-          "<td>" + packets[i].portDest + "</td>" +
-          "<td>" + packets[i].protocol + "</td>" +
-          "<td> No Data </td>" +
-          "<td>" + packets[i].timestamp + "</td>" +
-          "</tr>");
-    } else {
-      $('.packet-wrapper table tbody').append("<tr>" +
-          "<td>" + packets[i].sessionId + "</td>" +
-          "<td>" + packets[i].hostSrc + "</td>" +
-          "<td>" + packets[i].portSrc + "</td>" +
-          "<td>" + packets[i].hostDest + "</td>" +
-          "<td>" + packets[i].portDest + "</td>" +
-          "<td>" + packets[i].protocol + "</td>" +
-          "<td>" +
-          "<button> </button>" +
-          "</td>" +
-          "<td>" + packets[i].timestamp + "</td>" +
-          "</tr>");
-    }
-  }
+function displayHistogram(users){
+
+  var width = 400,
+      height = 470;
+
+  var x = d3.scale.linear()
+      .range([0, width - 20]);
+
+  var chart = d3.select(".histogram")
+      .attr("width", width)
+      .attr("height", height);
+
+  var data = (users)
+      .sort(function(a,b){return b.exchanged.Volume - a.exchanged.Volume;})
+      .filter(function(d,i){return i < 10;});
+
+  x.domain([0, d3.max(data, function(d) { return d.exchanged.Volume; })]);
+
+  var barHeight = height / data.length;
+
+  var bar = chart.selectAll("g")
+      .data(data)
+    .enter().append("g")
+      .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+  bar.append("rect")
+      .attr("height", barHeight - 1)
+      .attr("x", 20)
+      .attr("width", function(d) { return x(d.exchanged.Volume); })
+      .attr("title", function(d){return d.address + " : " + d.exchanged.Volume + " bytes";});
+
+  bar.append("text")
+      .attr("y", barHeight / 2)
+      .attr("x", function(d) { return x(d.exchanged.Volume) - 50; })
+      .attr("dx", ".75em")
+      .text(function(d) { return d.address; });
+
+  bar.append("foreignObject")
+    .attr("class", "node")
+    .attr("width", 20)
+    .attr("height", 20)
+    .attr("y", barHeight / 2 - 10)
+      .append("xhtml:input")
+      .attr("type", "checkbox")
+      .attr("class", "check-host")
+      .attr("id", function(d){return d.address;})
+      .property("checked", true);
+}
+
+function type(d) {
+  d.value = +d.value; // coerce to number
+  return d;
 }
 
 /* ============================
@@ -517,11 +540,50 @@ function updateStats(stats){
   }
 }
 
-$('.check-all').on('change', function(){
-  if($('.check-all').prop('checked')){
+function displayPackets(packets){
+  $('.packet-wrapper table tbody').html('');
+  for(i=0;i<packets.length;i++){
+    if (packets[i].data != {}){
+      $('.packet-wrapper table tbody').append("<tr>" +
+      "<td>" + packets[i].sessionId + "</td>" +
+      "<td>" + packets[i].hostSrc + "</td>" +
+      "<td>" + packets[i].portSrc + "</td>" +
+      "<td>" + packets[i].hostDest + "</td>" +
+      "<td>" + packets[i].portDest + "</td>" +
+      "<td>" + packets[i].protocol + "</td>" +
+      "<td> No Data </td>" +
+      "<td>" + packets[i].timestamp + "</td>" +
+      "</tr>");
+    } else {
+      $('.packet-wrapper table tbody').append("<tr>" +
+      "<td>" + packets[i].sessionId + "</td>" +
+      "<td>" + packets[i].hostSrc + "</td>" +
+      "<td>" + packets[i].portSrc + "</td>" +
+      "<td>" + packets[i].hostDest + "</td>" +
+      "<td>" + packets[i].portDest + "</td>" +
+      "<td>" + packets[i].protocol + "</td>" +
+      "<td>" +
+      "<button> </button>" +
+      "</td>" +
+      "<td>" + packets[i].timestamp + "</td>" +
+      "</tr>");
+    }
+  }
+}
+
+$('#protCheckAll').on('change', function(){
+  if($(this).prop('checked')){
     $('.check-prot').prop("checked", true);
   }else{
     $('.check-prot').prop("checked", false);
+  }
+});
+
+$('#hostCheckAll').on('change', function(){
+  if($(this).prop('checked')){
+    $('.check-host').prop("checked", true);
+  }else{
+    $('.check-host').prop("checked", false);
   }
 });
 
@@ -542,24 +604,38 @@ socket.on('connect', function() {
 
   });
 
-  $('#refreshButton').click(function(e){
+  $('.refreshButton').click(function(e){
     e.preventDefault();
 
     var prot = [];
+    var topHosts = [];
     var length = $('.check-prot').length;
     var id  = '';
 
     $('.check-prot').each(function(){
       id = $(this).attr('id');
-      //Problème : Check is undefined
       var checked = $(this).prop("checked");
-      //console.log('checked ? '+checked)
       if(checked === true){
         prot.push(id);
       }
     });
+
+    $('.check-host').each(function(){
+      id = $(this).attr('id');
+      var checked = $(this).prop("checked");
+      if(checked === true){
+        topHosts.push(id);
+      }
+    });
+
+    if(topHosts.length === 0 || topHosts.length == $('.check-host').length){
+      topHosts = "all";
+    }
+
+    console.log(topHosts);
+
     //A voir
-    socket.emit('refreshView',{'fileContent': prot});
+    socket.emit('refreshView',{'protocols': prot, 'topHosts': topHosts});
 
     //Call the app.py refreshView Function
   });
@@ -600,5 +676,6 @@ socket.on('connect', function() {
 
 displayParallel(sessions);
 mainTreemap({}, treemap);
+displayHistogram(users);
 
 });

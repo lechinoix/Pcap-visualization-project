@@ -28,7 +28,7 @@
                 <th>#</th>
                 <th>Protocol</th>
                 <th>Packets</th>
-                <th><input class="check-all" type="checkbox" value="checkbox"/><button id="refreshButton">Refresh</button></th>
+                <th><input id="protCheckAll" type="checkbox" checked/><button class="refreshButton">Refresh</button></th>
               </tr>
             </thead>
             <tbody>
@@ -37,7 +37,7 @@
                 <td>{{ loop.index }}</td>
                 <td>{{ stat.name }}</td>
                 <td>{{ stat.value }}</td>
-                <td><input class="check-prot" id="{{ stat.name }}" value="checkbox" type="checkbox"></td>
+                <td><input class="check-prot"	 id="{{ stat.name }}" value="checkbox" type="checkbox" checked></td>
               </tr>
              {% endfor %}
             </tbody>
@@ -56,8 +56,11 @@
 				</div>
 				<div class="info-wrapper col-md-3">
 					<div class="panel panel-default">
-						<div class="panel-heading">Info</div>
-						<div class="panel-body"></div>
+						<div class="panel-heading"><input type="checkbox" id="hostCheckAll" checked>Top 10 hosts <button type="button" name="button" style="float:right" class="refreshButton">Refresh</button></div>
+						<div class="panel-body">
+							<svg class="histogram">
+							</svg>
+						</div>
 					</div>
 				</div>
 			</div>

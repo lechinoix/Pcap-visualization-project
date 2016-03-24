@@ -9,9 +9,12 @@ body {
 	margin-left:10px;
 }
 
-#view-wrapper {
-	margin-top:10px;
+#parallel-wrapper,
+#treemap-wrapper {
 	padding:10px;
+	border-top: none;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
 }
 
 .info-wrapper {
@@ -179,4 +182,26 @@ rect.parent {
 
 .children:hover {
   opacity:0.8;
+}
+
+/* Histogram chart */
+
+.histogram rect {
+  fill: steelblue;
+}
+
+.histogram text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.check-user-container {
+	border:thin black solid;
+	width:20px;
+	height:20px;
+}
+
+#hostCheckAll {
+	margin-right:10px;
 }
