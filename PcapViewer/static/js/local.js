@@ -11,6 +11,9 @@ $(document).ready(function(){
   });
 
   var treemap = loadedTreemap;
+  var packets = loadedPackets;
+
+  var insecuredProtocol = ['SMTP','IMAP','POP3','POP2','HTTP','LDAP','FTP'];
 
 /* ============================
   Views with D3.js
@@ -183,7 +186,7 @@ function mainTreemap(o, data) {
         .text(function(d) { return d.key; });
     t.append("tspan")
         .attr("dy", "1.0em")
-        .text(function(d) { return formatNumber(d.Volumeout); });
+        .text(function(d) { return formatNumber(d.Volumeout) + " bytes"; });
     t.call(textTreemap);
 
     g.selectAll("rect")
@@ -289,7 +292,7 @@ function displayParallel(data){
   slider = select.append("div").attr("id", "sliderWrapper");
 
   labelSlider = slider.append("label")
-    .html("tension : " + tension)
+    .html("Tension : " + tension)
     .attr("class", "labelSlider");
 
   slider.append("input")
@@ -302,7 +305,7 @@ function displayParallel(data){
     .on("input", function(){
       tension = +this.value;
       line.tension(tension);
-      labelSlider.html("tension : " + tension);
+      labelSlider.html("Tension : " + tension);
       background.attr("d", path);
       foreground.attr("d", path);
     });
@@ -347,6 +350,7 @@ function displayParallel(data){
       .data(data)
     .enter().append("path")
       .attr("d", path)
+      .attr("class", function(d){ return (insecuredProtocol.indexOf(d.protocol)) >= 0 ? "insecured" : null ;})
       .attr("data-session", function(d){return d.id;});
 
   // Add a group element for each dimension.
@@ -393,7 +397,7 @@ function displayParallel(data){
   g.append("g")
       .attr("class", "brush")
       .each(function(d) {
-        d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brushstart", brushstart).on("brush", brush));
+        d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brushstart", brushstart).on("brushend", brushend).on("brush", brush));
       })
     .selectAll("rect")
       .attr("x", -8)
@@ -423,46 +427,63 @@ function brushstart() {
 // Handles a brush event, toggling the display of foreground lines.
 function brush() {
   var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
-      extents = actives.map(function(p) { return y[p].brush.extent(); });
+      extents = actives.map(function(p) { return y[p].brush.extent(); }),
+      isSelected = false;
+      activeSessions = [];
   foreground.style("display", function(d) {
-    return actives.every(function(p, i) {
+    isSelected = actives.every(function(p, i) {
       if(typeof y[p].rangePoints === "function"){
         return extents[i][0] <= y[p](d[p]) && y[p](d[p]) <= extents[i][1];
       }else{
         return extents[i][0] <= d[p] && d[p] <= extents[i][1];
       }
-    }) ? null : "none";
+    });
+    if(isSelected){
+      activeSessions.push(d.id);
+      return null;
+    }else{
+      return "none";
+    }
   });
 }
 
+function brushend(){
+  var selectedPackets = [];
+  for(var i=0;i<packets.length;i++){
+    if(activeSessions.indexOf(packets[i].sessionId) >= 0){
+      selectedPackets.push(packets[i]);
+    }
+  }
+  displayPackets(selectedPackets);
+}
+
 function displayPackets(packets){
-  $('.packets .packet-wrapper table tbody').html('');
+  $('.packet-wrapper table tbody').html('');
   for(i=0;i<packets.length;i++){
-    if (packets[i]["data"]!={}){
-      $('.packets .packet-wrapper table tbody').append("<tr>" +
-          "<td>" + packets[i]["sessionId"] + "</td>" +
-          "<td>" + packets[i]["hostSrc"] + "</td>" +
-          "<td>" + packets[i]["portSrc"] + "</td>" +
-          "<td>" + packets[i]["hostDest"] + "</td>" +
-          "<td>" + packets[i]["portDest"] + "</td>" +
-          "<td>" + packets[i]["protocol"] + "</td>" +
+    if (packets[i].data != {}){
+      $('.packet-wrapper table tbody').append("<tr>" +
+          "<td>" + packets[i].sessionId + "</td>" +
+          "<td>" + packets[i].hostSrc + "</td>" +
+          "<td>" + packets[i].portSrc + "</td>" +
+          "<td>" + packets[i].hostDest + "</td>" +
+          "<td>" + packets[i].portDest + "</td>" +
+          "<td>" + packets[i].protocol + "</td>" +
           "<td> No Data </td>" +
-          "<td>" + packets[i]["timestamp"] + "</td>" +
+          "<td>" + packets[i].timestamp + "</td>" +
           "</tr>");
     } else {
-      $('.packets .packet-wrapper table tbody').append("<tr>" +
-          "<td>" + packets[i]["sessionId"] + "</td>" +
-          "<td>" + packets[i]["hostSrc"] + "</td>" +
-          "<td>" + packets[i]["portSrc"] + "</td>" +
-          "<td>" + packets[i]["hostDest"] + "</td>" +
-          "<td>" + packets[i]["portDest"] + "</td>" +
-          "<td>" + packets[i]["protocol"] + "</td>" +
+      $('.packet-wrapper table tbody').append("<tr>" +
+          "<td>" + packets[i].sessionId + "</td>" +
+          "<td>" + packets[i].hostSrc + "</td>" +
+          "<td>" + packets[i].portSrc + "</td>" +
+          "<td>" + packets[i].hostDest + "</td>" +
+          "<td>" + packets[i].portDest + "</td>" +
+          "<td>" + packets[i].protocol + "</td>" +
           "<td>" +
           "<button> </button>" +
           "</td>" +
-          "<td>" + packets[i]["timestamp"] + "</td>" +
+          "<td>" + packets[i].timestamp + "</td>" +
           "</tr>");
-      // A finir (la partie data )
     }
   }
 }

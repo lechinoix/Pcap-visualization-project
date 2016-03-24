@@ -147,7 +147,6 @@
 	var loadedSessions = [ {% for session in sessions %}{	'id':'{{ session.id }}','hostSrc':'{{ session.hostSrc }}','hostDest':'{{ session.hostDest }}','portSrc':'{{ session.portSrc }}','portDest':'{{ session.portDest }}','protocol':'{{ session.protocol }}'}{% if not loop.last %},{% endif %}{% endfor %} ];
 	var loadedUsers = [ {% for user in users %}{ 'id':'{{ user.id }}', 'address':'{{ user.address }}', 'exchanged':{{ user.exchanged | tojson }} }{% if not loop.last %},{% endif %}{% endfor %}];
  	var loadedTreemap = { 'key':'Hosts',	'values': {{ treemap | tojson }} };
-
- 	// var loadedPackets = [ {% for packet in packets %}{ 'id':'{{ packet.id }}','hostSrc':'{{ packet.hostSrc }}','hostDest':'{{ packet.hostDest }}','portSrc':'{{ packet.portSrc }}','portDest':'{{ packet.portDest }}','protocol':'{{ packet.protocol }}','timestamp':'{{ packet.timestamp }}','sessionId':'{{ packet.sessionId }}'}{% if not loop.last %},{% endif %}{% endfor %} ];
+ 	var loadedPackets = [ {% for packet in packets %}{ 'id':'{{ packet.id }}','hostSrc':'{{ packet.hostSrc }}','hostDest':'{{ packet.hostDest }}','portSrc':'{{ packet.portSrc }}','portDest':'{{ packet.portDest }}','protocol':'{{ packet.protocol }}','timestamp':'{{ packet.timestamp }}','sessionId':'{{ packet.sessionId }}'}{% if not loop.last %},{% endif %}{% endfor %} ];
 </script>
 {% endblock %}
