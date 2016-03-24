@@ -70,8 +70,14 @@ def get_protocol(pkt):
             protocol = "MDNS"
         elif pkt[UDP].dport == 1900 or pkt[UDP].sport == 1900:
             protocol = "SSDP"
+        elif pkt[UDP].dport == 123 or pkt[UDP].sport == 123:
+            protocol = "NTP"
         elif pkt[UDP].dport == 137 or pkt[UDP].sport == 137:
             protocol = "NBNS"
+        elif pkt[UDP].dport == 161 or pkt[UDP].sport == 161:
+            protocol = "SNMP"
+        elif pkt[UDP].dport == 427 or pkt[UDP].sport == 427:
+            protocol = "SLP"
         elif pkt[UDP].dport == 547 or pkt[UDP].sport == 547 or pkt[UDP].dport == 546 or pkt[UDP].sport == 546:
             protocol = "DHCPv6"
         elif pkt[UDP].dport == 67 or pkt[UDP].sport == 67 or pkt[UDP].dport == 68 or pkt[UDP].sport == 68:
@@ -126,7 +132,7 @@ def extract_session(summary,datas,sessionId):
             else:
                 secure=1
 
-            sess = Session(hostSrc,hostDest,portSrc,portDest,protocol,secure)
+            sess = Session(hostSrc,hostDest,portSrc,portDest,protocol)
             db_session.add(sess)
 
             dataToAdd = ""
