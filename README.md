@@ -1,9 +1,11 @@
 # Pcap-visualization-project
 ##### *Under development*
 
-Web based pcap visualisation tool, using a **Flask** server to parse a pcap with **scapy** and store it in a postgresql database and a web-browser interface to display datas with **D3.js**.
+This tool is a web based pcap visualisation tool, using a **Flask** server to parse a pcap with **scapy** and store it in a postgresql database and a web-browser interface to display datas with **D3.js**.
 
-It will be possible to target a part of a pcap thanks to filters (on hosts, services, time...), and then processing analysis on reconstructed pcap with classic pentest tools like **Ettercap** or **ChaosReader**.
+Use this tool if you want to figure out how the network looks like, the protocol used during the capture, identify the main actors of the network such as servers, and see unsecured exchanged data.
+
+It will be possible to target a part of a pcap thanks to filters (on hosts, services, time...), and then processing analysis on reconstructed pcap.
 
 
 ## Getting started
@@ -72,11 +74,21 @@ Go to the Pcap Files menu, then click on add new pcap. Choose your pcap file and
 
 ### How can you use the tool ?
 
-Start looking at the treemap visu, and find the most importants nodes in the network. You can remove uninteresting nodes by clicking on a close button of their square. 
+After starting the application, open your browser and load the following URL : 
+
+```
+http://localhost:5000/
+```
+
+You can easily upload your pcap file, its size must be under 50Mo though. On the sidebar you can visualize the different IP identified and the protocols used. There are two visualisation mode : Treemap & Parallel
+
+Start looking at the parallel view. Each line represents a session established during the capture. You can easily see the source and destination IP and port, as well as the procotol. It is possible to switch axes by clicking and dragging on it. This view helps you to identify servers (DNS, Kerberos, SMB, mail..) and most important IP address. You can easily filter protocols or IP to clearify the view. You can easily filter an address range by selecting it directly on the axe with your mouse. Filtering on unsecured protocol helps you finding which IP aren't configured correctly.
+
+Then start looking at the treemap visu. This gives you a good idea about what the network looks like globally and find the most importants networks in the network in terms of volume exchanged or number of packets exchanged. You can remove uninteresting nodes by filtering the hosts on the left panel.
+
+Under the views, you can see packet detail and the data exchanged for each filtered session. For unsecured protocols, the data of each packet of the session has been aggregated, as a "Follow TCP Stream" command would do in Wireshark.
 
 Look more closely at those, with the network visualization of its communications with other hosts. This view could be a tree with the node on top and then ramifications with the communications by protocol to different users. Big users could be written bigger.
-
-This could also be seen on the parallel view that gives and idea about what the network looks like globally. You could reload the tool with only certain users, and only certain services, or remove one of those in the sidebar.
 
 There will be an analysis button at the bottom of this bar to run analysis on the current selection.
 
@@ -103,15 +115,11 @@ We think about processing data in background while displaying the current conten
 
 **Bootstrap :** Web framework to ensure scalability of the application and precreated useful components.
 
-### Pentest tools
-
-**Chaos reader :** Usefull to reconstruct files or images. 
-
-**Ettercap :** Can process a pcap to catch passwords, detect OS and other passive analysis. Offers an API that we need to interface with our python program.
-
 <br><hr><br>
 
 #### Some interesting docs about wireshark visu projects :
+
+*A whitepaper about packet analysis :* [Practical Packet Analysis] (http://repository.root-me.org/R%C3%A9seau/EN%20-%20Practical%20packet%20analysis%20-%20Wireshark.pdf)
 
 *A wireshark plugin coded during a google summer code :* [Wireviz](https://www.wireshark.org/lists/wireshark-dev/201107/msg00218.html)
 
@@ -119,5 +127,4 @@ We think about processing data in background while displaying the current conten
 
 *Some guy asking why we are so late in our project :* [Where is the visu ?](https://ask.wireshark.org/questions/9884/data-visualization-options-in-wireshark)
 
-*Read me for wireshark plugin :* [Plugin Wireshark](https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=doc/README.plugins)
 

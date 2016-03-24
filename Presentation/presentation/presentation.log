@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.1.26)  4 FEB 2016 08:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.1.26)  5 FEB 2016 13:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1356,48 +1356,68 @@ LaTeX Font Info:    Font shape `OMS/phv/m/n' in size <10> not available
 
 ] (./presentation.toc) [8
 
-] <postgre.png, id=272, 482.80376pt x 263.98625pt>
-File: postgre.png Graphic file (type png)
+] [9
 
-<use postgre.png>
-Package pdftex.def Info: postgre.png used on input line 90.
-(pdftex.def)             Requested size: 289.6845pt x 158.39296pt.
- [9
-
- <./postgre.png>] [10
+] [10
 
 ] [11
 
+] [12
+
 ]
-<parse-time.png, id=354, 1033.8625pt x 574.145pt>
-File: parse-time.png Graphic file (type png)
- <use parse-time.png>
-Package pdftex.def Info: parse-time.png used on input line 115.
-(pdftex.def)             Requested size: 310.16115pt x 172.24483pt.
- [12
-
- <./parse-time.png>] <parse-temps.png, id=381, 859.21pt x 509.905pt>
-File: parse-temps.png Graphic file (type png)
-
-<use parse-temps.png>
-Package pdftex.def Info: parse-temps.png used on input line 121.
-(pdftex.def)             Requested size: 257.76498pt x 152.97267pt.
+<postgre.png, id=377, 482.80376pt x 263.98625pt>
+File: postgre.png Graphic file (type png)
+ <use postgre.png>
+Package pdftex.def Info: postgre.png used on input line 134.
+(pdftex.def)             Requested size: 289.6845pt x 158.39296pt.
  [13
 
- <./parse-temps.png>] (./presentation.toc) [14
+ <./postgre.png>] [14
+
+] [15
+
+] <parse-time.png, id=460, 1033.8625pt x 574.145pt>
+File: parse-time.png Graphic file (type png)
+
+<use parse-time.png>
+Package pdftex.def Info: parse-time.png used on input line 161.
+(pdftex.def)             Requested size: 310.16115pt x 172.24483pt.
+ [16
+
+ <./parse-time.png>]
+<parse-temps.png, id=487, 859.21pt x 509.905pt>
+File: parse-temps.png Graphic file (type png)
+ <use parse-temps.png>
+Package pdftex.def Info: parse-temps.png used on input line 167.
+(pdftex.def)             Requested size: 257.76498pt x 152.97267pt.
+ [17
+
+ <./parse-temps.png>] (./presentation.toc) [18
+
+] (./presentation.toc) [19
+
+] [20
 
 ]
-[15
+[21
 
-] (./presentation.toc) [16
+] (./presentation.toc) [22
 
-] [17
+] [23
 
-] (./presentation.toc) [18
+] <json.png, id=685, 240.9pt x 548.0475pt>
+File: json.png Graphic file (type png)
 
-] [19
+<use json.png>
+Package pdftex.def Info: json.png used on input line 209.
+(pdftex.def)             Requested size: 96.35828pt x 219.2151pt.
 
-]
+Overfull \vbox (5.50813pt too high) detected at line 209
+ []
+
+[24
+
+ <./json.png>]
 \tf@nav=\write6
 \openout6 = `presentation.nav'.
 
@@ -1407,35 +1427,31 @@ Package pdftex.def Info: parse-temps.png used on input line 121.
 \tf@snm=\write8
 \openout8 = `presentation.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 153.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 153.
-
-(./presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 153.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 153.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 211.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 211.
+ (./presentation.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 211.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 211.
 Package rerunfilecheck Info: File `presentation.out' has not changed.
 (rerunfilecheck)             Checksum: 73D081F507E7B2B08BB248C5FBE830BC;275.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 153.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 211.
  ) 
 Here is how much of TeX's memory you used:
- 21163 strings out of 494991
- 408645 string characters out of 6180055
+ 21187 strings out of 494991
+ 408874 string characters out of 6180055
  480426 words of memory out of 5000000
- 23824 multiletter control sequences out of 15000+600000
+ 23838 multiletter control sequences out of 15000+600000
  44545 words of font info for 59 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  50i,18n,59p,392b,873s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{Navigation20} has been referenced but does not ex
-ist, replaced by a fixed one
-
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/urw/helvetic/uhvr8a.pfb>
-Output written on presentation.pdf (19 pages, 137628 bytes).
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/urw/helvetic/uhvr8a.pfb>
+Output written on presentation.pdf (24 pages, 163657 bytes).
 PDF statistics:
- 606 PDF objects out of 1000 (max. 8388607)
- 560 compressed objects within 6 object streams
- 45 named destinations out of 1000 (max. 500000)
- 121 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 739 PDF objects out of 1000 (max. 8388607)
+ 685 compressed objects within 7 object streams
+ 54 named destinations out of 1000 (max. 500000)
+ 126 words of extra memory for PDF output out of 10000 (max. 10000000)
 

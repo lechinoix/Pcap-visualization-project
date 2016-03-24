@@ -9,18 +9,27 @@ body {
 	margin-left:10px;
 }
 
-#view-wrapper {
-	margin-top:10px;
+#parallel-wrapper,
+#treemap-wrapper {
 	padding:10px;
+	border-top: none;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
 }
 
 .info-wrapper {
 	margin-top:45px;
 }
 
-.tab-content{
+/* Sidebar */
+
+#refreshButton{
+	margin-left: 5px;
+}
+
+.left-bar{
 	overflow:auto;
-	max-height:500px;
+	max-height:595px;
 }
 
 /* Network View */
@@ -45,6 +54,24 @@ body {
 
 svg {
   font: 10px sans-serif;
+}
+
+#sliderWrapper *{
+	display:inline-block;
+}
+
+#sliderWrapper label{
+	width:100px;
+}
+
+#slider{
+	width:200px;
+	vertical-align: middle;
+	cursor:grab;
+}
+
+#slider:active{
+	cursor:grabbing;
 }
 
 .background path {
@@ -74,4 +101,107 @@ svg {
 .axis text {
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
   cursor: move;
+}
+
+.foreground path.insecured {
+	stroke:red;
+}
+
+/* Treemap View */
+
+.node {
+  border: solid 1px white;
+  font: 10px sans-serif;
+  line-height: 12px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+}
+
+/* Packet Display */
+
+.data{
+  max-width:1000px;
+  margin: 10px 25px;
+}
+
+.packet-wrapper.col-md-6 {
+    max-height: 300px;
+    overflow: auto;
+    min-width: 400px;
+}
+
+/* Zoomable Treemap */
+
+.title {
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+text {
+  pointer-events: none;
+}
+
+.grandparent text {
+  font-weight: bold;
+}
+
+rect {
+  fill: none;
+  stroke: #fff;
+}
+
+rect.parent,
+.grandparent rect {
+  stroke-width: 2px;
+}
+
+rect.parent {
+    pointer-events: none;
+}
+
+.grandparent rect {
+  fill: orange;
+}
+
+.grandparent:hover rect {
+  fill: #ee9700;
+}
+
+.children,
+.grandparent {
+  cursor: pointer;
+}
+
+.children rect.parent {
+  fill: #bbb;
+  fill-opacity: .5;
+}
+
+.children:hover {
+  opacity:0.8;
+}
+
+/* Histogram chart */
+
+.histogram rect {
+  fill: steelblue;
+}
+
+.histogram text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.check-user-container {
+	border:thin black solid;
+	width:20px;
+	height:20px;
+}
+
+#hostCheckAll {
+	margin-right:10px;
 }

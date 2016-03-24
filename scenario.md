@@ -21,11 +21,11 @@ La sidebar lui permet de voir tous les protocoles en jeux dans ce pcap :
 - (LDAP,POP3,IMAP,SMTP,DNS,HTTP) sont intéressant,
 - (LDAPS ,IMAPS,HTTPS ,KERBROS,ARP,ICMP,SMB) le sont moins.
 
-La sidebar lui permet aussi de voir toutes les IP en jeux dans le pcap, et ainsi reperer des sous-réseau.
+La sidebar lui permet aussi de voir toutes les IP en jeux dans le pcap, et ainsi reperer des sous-réseaux.
 
-En filtrant sur les protocoles sont sécurisé, l'attaquant peut voir sur la vue en barre parallèle quelles machines sont non sécurisées. L'attaquant extrait alors les mots de passes et autres informations contenues dans les protocoles non sécurisés
+En filtrant sur les protocoles, l'attaquant peut voir sur la vue en barre parallèle quelles machines sont non sécurisées. L'attaquant extrait alors les mots de passes et autres informations contenues dans les protocoles non sécurisés
 
-L'attaquant observe ensuite la vue TreeMap. Il repère alors des IP ne dialoguant que dans un protocole : DHCP, DNS, SMB : cela lui permet d'identifier les serveur internes. En switchant de vue et en filtrant sur ces protocole l'hypothèse est validée.
+L'attaquant observe ensuite la vue TreeMap. Il repère alors des IP ne dialoguant que dans un protocole : DHCP, DNS, SMB : cela lui permet d'identifier les serveur internes. En switchant de vue et en filtrant sur ces protocoles l'hypothèse est validée.
 
 Enfin, la vue géographique des IP permet d'identifier des sessions douteuses provenant de Russie. En filtrant sur ces IP, l'attaquant extrait le pcap correspondant uniquement à ces sessions. Celui lui permet d'étudier plus en profondeur (sur Wireshark) et d'observer des attaques menées depuis la russie
 

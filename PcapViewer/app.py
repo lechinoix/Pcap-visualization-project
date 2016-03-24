@@ -1,30 +1,33 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO
-from werkzeug.utils import secure_filename
 from utils.parser import parse
-from dbus.decorators import method
-from flask.helpers import flash
 import os
 import json
-from flask.json import jsonify
 from database import db_session
+from utils.format import get_treemap
+import eventlet
 
-from models import User, Session, Stat
+from models import User, Session, Stat, Packet
 
+eventlet.monkey_patch()
 app = Flask(__name__)
 app.config.from_object('config.default')
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')
 
 @app.route('/')
 def index(pcap = ''):
     """Display home page"""
+
+    treemap = []
     users = User.query.all()
     stats = Stat.query.all()
     sessions = Session.query.all()
-    return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions)
+    packets = Packet.query.all()
+    treemap = get_treemap(users)
+    return render_template('index.html', pcap=pcap, users=users, stats = stats, sessions=sessions, treemap=treemap, packets=packets)
 
 # @app.route('/list')
 # def listPcap():
@@ -40,43 +43,83 @@ def upload(data):
     os.remove(tmpPath)
     reloadData()
     socketio.emit('successfullUpload', {'success': 'Got it !'})
-    
-    
+
+
 def reloadData():
     """Send new data to display to Client"""
     users = []
     sessions = []
     stats = []
+    packets = []
     for user in User.query.all():
-        users.append( user.as_dict() )
+        users.append(user.as_dict())
     for session in Session.query.all():
-        sessions.append( session.as_dict() )
+        sessions.append(session.as_dict())
     for stat in Stat.query.all():
-        stats.append( stat.as_dict() )
+        stats.append(stat.as_dict())
+    for packet in Packet.query.all():
+        packets.append(packet.as_dict())
     data = {
             'users':users,
             'sessions':sessions,
-            'stats':stats
+            'stats':stats,
+            'packets':packets
             }
+    #print data['sessions']
     socketio.emit('newData', json.dumps(data))
 
-    
-# @app.route('/upload', methods=["GET", "POST"])
-# def upload():
-#     if request.method == "POST":
-#         print 'ok'
-#         print vars(request.files['files'])
-#         tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
-#         request.files['files'].save(tmpPath)
-#         pcap = parse(tmpPath)
-#         os.remove(tmpPath)
-#         
-# #         except:
-# #             flash(u"Impossible to download ", "error")
-# #             return jsonify(error='An error occured')
-#          
-#         return jsonify(success='Pcap uploaded successfully !')
-    
+# Pour l'instant cette fonction n'est pas appelée
+
+@socketio.on('refreshView')
+def refreshView(data):
+    """Refresh the view filtered by client"""
+    sessions = []
+    packets = []
+    users = []
+    filterHosts = True
+    if data['topHosts'] == 'all':
+        filterHosts = False
+    print data['topHosts']
+    for session in Session.query.all():
+        if session.protocol in data['protocols']:
+            if not filterHosts or session.hostSrc in data['topHosts'] or session.hostDest in data['topHosts']:
+                sessions.append(session.as_dict())
+    for packet in Packet.query.all():
+        if packet.protocol in data['protocols']:
+            if not filterHosts or packet.hostSrc in data['topHosts'] or packet.hostDest in data['topHosts']:
+                packets.append(packet.as_dict())
+    for user in User.query.all():
+        exchanged = {}
+        if not filterHosts or user.address in data['topHosts']:
+            for protocol in data['protocols']:
+                if user.exchanged['Protocole'].has_key(protocol):
+                    exchanged[protocol] = user.exchanged['Protocole'][protocol]
+            if exchanged:
+                user.exchanged['Protocole'] = exchanged
+                users.append(user)
+    treemap = get_treemap(users)
+    data = {
+            'sessions':sessions,
+            'packets':packets,
+            'treemap':treemap
+            }
+    #print data["sessions"]
+    socketio.emit('newData', json.dumps(data))
+
+@app.route('/upload', methods=["GET", "POST"])
+def upload():
+    if request.method == "POST":
+        tmpPath = app.config['UPLOAD_FOLDER'] + "tmp.cap"
+        request.files['files'].save(tmpPath)
+        pcap = parse(tmpPath)
+        os.remove(tmpPath)
+
+#         except:
+#             flash(u"Impossible to download ", "error")
+#             return jsonify(error='An error occured')
+
+        return jsonify(success='Pcap uploaded successfully !')
+
 @app.errorhandler(404)
 def page_404(error):
     """Display 404 error page"""
