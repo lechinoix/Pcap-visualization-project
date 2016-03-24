@@ -10,11 +10,17 @@ body {
 }
 
 #parallel-wrapper,
-#treemap-wrapper {
+#treemap-wrapper,
+#packet-wrapper {
 	padding:10px;
 	border-top: none;
 	border-top-left-radius: 0px;
 	border-top-right-radius: 0px;
+}
+
+#packet-wrapper {
+	overflow:auto;
+	max-height: 550px;
 }
 
 .info-wrapper {

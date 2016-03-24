@@ -48,10 +48,60 @@
 					<ul class="nav nav-tabs" role="tablist">
 				    <li role="presentation" class="active"><a href="#parallel-wrapper" aria-controls="parallel" role="tab" data-toggle="tab">Parallel</a></li>
 				    <li role="presentation"><a href="#treemap-wrapper" aria-controls="treemap" role="tab" data-toggle="tab">Treemap</a></li>
+						<li role="presentation"><a href="#packet-wrapper" aria-controls="details" role="tab" data-toggle="tab">Details</a></li>
 					</ul>
 					<div class="tab-content">
 						<div role="tabpanel" id="parallel-wrapper" class="panel panel-default tab-pane active"></div>
 						<div role="tabpanel" id="treemap-wrapper" class="panel panel-default tab-pane"></div>
+						<div role="tabpanel" id="packet-wrapper" class="panel panel-default tab-pane">
+							<div class="packet-wrapper">
+						    <table class="table table-striped" id="table-scroll">
+				    		    <thead>
+					              <tr>
+					                <th>SessionId</th>
+					                <th>hostSrc</th>
+					                <th>portSrc</th>
+					                <th>hostDest</th>
+					                <th>portDest</th>
+					                <th>protocol</th>
+					                <th>data</th>
+					                <th>timestamp</th>
+					              </tr>
+					            </thead>
+							    <tbody>
+					            {% for packet in packets | sort(False, attribute="sessionId") %}
+					              <tr>
+			                        <td>{{ packet.sessionId }}</td>
+					                <td>{{ packet.hostSrc }}  </td>
+					                <td>{{ packet.portSrc }}  </td>
+					                <td>{{ packet.hostDest }} </td>
+					                <td>{{ packet.portDest }} </td>
+					                <td>{{ packet.protocol }} </td>
+
+					                {% if packet.data!="" %}
+						                <td>
+						                  <button type="button" class="btn" data-toggle="collapse" data-target="#demo-{{ packet.id }}">Show Data</button>
+						                </td>
+						                <td>{{ packet.timestamp }}</td>
+						              </tr>
+						              <tr class="collapse out" id="demo-{{ packet.id }}">
+						                <td colspan="8">
+						                  <div class="data">{{ packet.data }}</div>
+						                </td>
+						              </tr>
+									{% else %}
+						                <td>
+						                  No Data
+						                </td>
+						                <td>{{ packet.timestamp }}</td>
+						              </tr>
+									{% endif %}
+
+					             {% endfor %}
+					            </tbody>
+				            </table>
+									</div>
+						</div>
 					</div>
 				</div>
 				<div class="info-wrapper col-md-3">
@@ -62,59 +112,6 @@
 							</svg>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class="row packets">
-				<div class="col-md-3">
-				</div>
-				<div class="packet-wrapper col-md-6">
-				    <table class="table table-striped" id="table-scroll">
-		    		    <thead>
-			              <tr>
-			                <th>SessionId</th>
-			                <th>hostSrc</th>
-			                <th>portSrc</th>
-			                <th>hostDest</th>
-			                <th>portDest</th>
-			                <th>protocol</th>
-			                <th>data</th>
-			                <th>timestamp</th>
-			              </tr>
-			            </thead>
-					    <tbody>
-			            {% for packet in packets | sort(False, attribute="sessionId") %}
-			              <tr>
-	                        <td>{{ packet.sessionId }}</td>
-			                <td>{{ packet.hostSrc }}  </td>
-			                <td>{{ packet.portSrc }}  </td>
-			                <td>{{ packet.hostDest }} </td>
-			                <td>{{ packet.portDest }} </td>
-			                <td>{{ packet.protocol }} </td>
-
-			                {% if packet.data!="" %}
-				                <td>
-				                  <button type="button" class="btn" data-toggle="collapse" data-target="#demo-{{ packet.id }}">Show Data</button>
-				                </td>
-				                <td>{{ packet.timestamp }}</td>
-				              </tr>
-				              <tr class="collapse out" id="demo-{{ packet.id }}">
-				                <td colspan="8">
-				                  <div class="data">{{ packet.data }}</div>
-				                </td>
-				              </tr>
-							{% else %}
-				                <td>
-				                  No Data
-				                </td>
-				                <td>{{ packet.timestamp }}</td>
-				              </tr>
-							{% endif %}
-
-			             {% endfor %}
-			            </tbody>
-		            </table>
-				</div>
-				<div class="col-md-3">
 				</div>
 			</div>
 		</div>
