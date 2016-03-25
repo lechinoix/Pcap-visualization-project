@@ -270,7 +270,7 @@ function displayParallel(data){
   margin = {top: 30, right: 10, bottom: 10, left: 10};
   width = 960 - margin.left - margin.right;
   height = 500 - margin.top - margin.bottom;
-  tension = (typeof tension !== 'undefined') ? tension : 0.75;
+  tension = (typeof tension !== 'undefined') ? tension : 1;
 
   // Init axis
   x = d3.scale.ordinal().rangePoints([0, width], 1);

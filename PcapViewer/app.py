@@ -98,13 +98,13 @@ def refreshView(data):
                 user.exchanged['Protocole'] = exchanged
                 users.append(user)
     treemap = get_treemap(users)
-    data = {
+    newData = {
             'sessions':sessions,
             'packets':packets,
             'treemap':treemap
             }
-    #print data["sessions"]
-    socketio.emit('newData', json.dumps(data))
+    print newData["sessions"]
+    socketio.emit('newData', json.dumps(newData))
 
 @app.route('/upload', methods=["GET", "POST"])
 def upload():

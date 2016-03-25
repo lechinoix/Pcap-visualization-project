@@ -29,8 +29,8 @@ body {
 
 /* Sidebar */
 
-#refreshButton{
-	margin-left: 5px;
+.refreshButton{
+	float: right;
 }
 
 .left-bar{
