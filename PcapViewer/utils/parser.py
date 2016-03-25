@@ -43,8 +43,12 @@ def get_protocol(pkt):
             protocol = "POP2"
         elif pkt[TCP].dport == 110 or pkt[TCP].dport == 110:
             protocol = "POP3"
+        elif pkt[TCP].dport == 113 or pkt[TCP].dport == 113:
+            protocol = "Authentification"
         elif pkt[TCP].dport == 115 or pkt[TCP].sport == 115:
             protocol = "SFTP"
+        elif pkt[TCP].dport == 139 or pkt[TCP].sport == 139:
+            protocol = "NetBIOS Session"
         elif pkt[TCP].dport == 220 or pkt[TCP].dport == 143 or pkt[TCP].sport == 220 or pkt[TCP].sport == 143:
             protocol = "IMAP"
         elif pkt[TCP].dport == 389 or pkt[TCP].sport == 389:
@@ -53,6 +57,10 @@ def get_protocol(pkt):
             protocol = "HTTPS"
         elif pkt[TCP].dport == 445 or pkt[TCP].sport == 445:
             protocol = "SMB"
+        elif pkt[TCP].dport == 515 or pkt[TCP].sport == 515:
+            protocol = "Printer"
+        elif pkt[TCP].dport == 524 or pkt[TCP].sport == 524:
+            protocol = "NCP"
         elif pkt[TCP].dport == 636 or pkt[TCP].sport == 636:
             protocol = "LDAPS"
         elif pkt[TCP].dport == 993 or pkt[TCP].sport == 993:
@@ -73,6 +81,8 @@ def get_protocol(pkt):
         elif pkt[UDP].dport == 123 or pkt[UDP].sport == 123:
             protocol = "NTP"
         elif pkt[UDP].dport == 137 or pkt[UDP].sport == 137:
+            protocol = "NetBIOS Name"
+        elif pkt[UDP].dport == 138 or pkt[UDP].sport == 138:
             protocol = "NBNS"
         elif pkt[UDP].dport == 161 or pkt[UDP].sport == 161:
             protocol = "SNMP"
@@ -114,14 +124,13 @@ def extract_session(summary,datas,sessionId):
         hostDest = Dst[0]
         portDest = int(Dst[1])
         protocol = get_protocol(datas[0])
-
         #We set a filter over the source port to avoid displaying each session two times
         if not(hostDest.endswith(".255") or hostSrc.endswith(".255") or portSrc>1023):
             
             #db_session.commit()
             data = ""
             timestamp = str(datetime.fromtimestamp(datas[0].time).strftime('%Y-%m-%d %H:%M:%S'))
-            if protocol == "LDAP" or protocol == "IMAP" or protocol == "POP3" or protocol == "SMTP" or protocol == "HTTP" or protocol == "LDAP" or protocol == "FTP":
+            if protocol == "LDAP" or protocol == "IMAP" or protocol == "POP3" or protocol == "SMTP" or protocol == "HTTP" or protocol == "FTP":
                 secure=0
                 for pkt in datas:
                     """Populate the Packet Table is the packet is involved in a recognised protocol only"""
