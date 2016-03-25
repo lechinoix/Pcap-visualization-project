@@ -80,10 +80,8 @@ def get_protocol(pkt):
             protocol = "SSDP"
         elif pkt[UDP].dport == 123 or pkt[UDP].sport == 123:
             protocol = "NTP"
-        elif pkt[UDP].dport == 137 or pkt[UDP].sport == 137:
+        elif pkt[UDP].dport == 137 or pkt[UDP].sport == 137 or pkt[UDP].dport == 138 or pkt[UDP].sport == 138:
             protocol = "NetBIOS Name"
-        elif pkt[UDP].dport == 138 or pkt[UDP].sport == 138:
-            protocol = "NBNS"
         elif pkt[UDP].dport == 161 or pkt[UDP].sport == 161:
             protocol = "SNMP"
         elif pkt[UDP].dport == 427 or pkt[UDP].sport == 427:
