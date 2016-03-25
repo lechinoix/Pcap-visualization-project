@@ -146,7 +146,8 @@ svg {
     margin-top: 6px;
     margin-bottom: 6px;
 }
-text {
+
+#treemap-wrapper text {
   pointer-events: none;
 }
 
