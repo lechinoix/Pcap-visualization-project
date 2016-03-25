@@ -43,8 +43,12 @@ def get_protocol(pkt):
             protocol = "POP2"
         elif pkt[TCP].dport == 110 or pkt[TCP].dport == 110:
             protocol = "POP3"
+        elif pkt[TCP].dport == 113 or pkt[TCP].dport == 113:
+            protocol = "Authentification"
         elif pkt[TCP].dport == 115 or pkt[TCP].sport == 115:
             protocol = "SFTP"
+        elif pkt[TCP].dport == 139 or pkt[TCP].sport == 139:
+            protocol = "NetBIOS Session"
         elif pkt[TCP].dport == 220 or pkt[TCP].dport == 143 or pkt[TCP].sport == 220 or pkt[TCP].sport == 143:
             protocol = "IMAP"
         elif pkt[TCP].dport == 389 or pkt[TCP].sport == 389:
@@ -53,6 +57,10 @@ def get_protocol(pkt):
             protocol = "HTTPS"
         elif pkt[TCP].dport == 445 or pkt[TCP].sport == 445:
             protocol = "SMB"
+        elif pkt[TCP].dport == 515 or pkt[TCP].sport == 515:
+            protocol = "Printer"
+        elif pkt[TCP].dport == 524 or pkt[TCP].sport == 524:
+            protocol = "NCP"
         elif pkt[TCP].dport == 636 or pkt[TCP].sport == 636:
             protocol = "LDAPS"
         elif pkt[TCP].dport == 993 or pkt[TCP].sport == 993:
@@ -72,8 +80,8 @@ def get_protocol(pkt):
             protocol = "SSDP"
         elif pkt[UDP].dport == 123 or pkt[UDP].sport == 123:
             protocol = "NTP"
-        elif pkt[UDP].dport == 137 or pkt[UDP].sport == 137:
-            protocol = "NBNS"
+        elif pkt[UDP].dport == 137 or pkt[UDP].sport == 137 or pkt[UDP].dport == 138 or pkt[UDP].sport == 138:
+            protocol = "NetBIOS Name"
         elif pkt[UDP].dport == 161 or pkt[UDP].sport == 161:
             protocol = "SNMP"
         elif pkt[UDP].dport == 427 or pkt[UDP].sport == 427:
@@ -90,7 +98,6 @@ def get_protocol(pkt):
         protocol = "ICMP"
 
     return protocol
-
 def feed_stats(stat, packet):
     """Create statistiques about protocols used, which will be added to the DB during add() execution"""
     protocol = get_protocol(packet)
